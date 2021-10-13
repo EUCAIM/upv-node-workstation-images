@@ -1,18 +1,10 @@
 
 REM =========================================== Building all the images ===========================================
-cd ubuntu_python_tensorflow_gpu
-docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu:1.1 .
-cd ..
+docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu:1.1 ubuntu_python_tensorflow_gpu
 pause
-
-cd ubuntu_python_tensorflow_gpu_desktop_vnc
-docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:1.1 .
-cd ..
+docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:1.1 ubuntu_python_tensorflow_gpu_desktop_vnc
 pause
-
-cd ubuntu_python_tensorflow_gpu_desktop_vnc_sshd
-docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc_sshd:1.1 .
-cd ..
+docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc_sshd:1.1 ubuntu_python_tensorflow_gpu_desktop_vnc_sshd
 
 REM ======================================== Deploying a container to test ========================================
 pause
@@ -44,7 +36,7 @@ docker login -u registryuser chaimeleon-eu.i3m.upv.es:10443
 docker push chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu:1.1
 docker push chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:1.1
 docker push chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc_sshd:1.1
-docker logout
+docker logout chaimeleon-eu.i3m.upv.es:10443
 
 REM ====================================== Removing local images ======================================
 pause

@@ -7,4 +7,5 @@ Configure 'build-test-push.cmd'
  - increase the version tag?
  - environment variables of `docker run`
  - user for `docker login`
+ 
 Then run 'build-test-push.cmd'
