@@ -10,45 +10,8 @@ import socket
 
 DEBUG = False
 
-def login(connection, path, user, password):
+def guacamole_login(connection, path, user, password):
     payload = urllib.parse.urlencode({'username' : user, 'password' : password})
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    connection.request("POST", path+"api/tokens", payload, headers)
-    res = connection.getresponse()
-    httpStatusCode = res.status
-    msg = res.read()  # whole response must be readed in order to do more requests using the same connection
-    if httpStatusCode != 200:
-        print('Login error. Code: %d %s' % (httpStatusCode, res.reason))
-        print(msg)
-        return ''
-    else:
-        print('Login success.')
-        response = json.loads(msg)
-        #print(response)
-        return response['authToken']
-        
-def login_oidc_step1(oidc_url, client_id, user, password):
-    auth = urllib.parse.urlparse(oidc_url)
-    connection = http.client.HTTPSConnection(auth.hostname, auth.port)
-
-    payload = urllib.parse.urlencode({'client_id' : client_id, 'username' : user, 'password' : password, 'grant_type': 'password'})
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    connection.request("POST", auth.path, payload, headers)
-    res = connection.getresponse()
-    httpStatusCode = res.status
-    msg = res.read()  # whole response must be readed in order to do more requests using the same connection
-    if httpStatusCode != 200:
-        print('Login error. Code: %d %s' % (httpStatusCode, res.reason))
-        print(msg)
-        return '', ''
-    else:
-        print('Login success.')
-        response = json.loads(msg)
-        #print(response)
-        return response['access_token'], response['session_state']
-        
-def login_oidc_step2(connection, path, id_token, session_state):
-    payload = urllib.parse.urlencode({'session_state' : session_state, 'id_token' : id_token})
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     connection.request("POST", path+"api/tokens", payload, headers)
     res = connection.getresponse()
@@ -157,10 +120,10 @@ if __name__ == "__main__":
                                                + '  python '+os.path.basename(__file__)+' --url https://chaimeleon-eu.i3m.upv.es/guacamole/ --user guacamoleUser '
                                                + '--guacd-host 10.111.51.93 --vnc-password somePassword --sftp-user tensor --sftp-password somePassword2 --debug')
     parser.add_argument('--url', type=str, required=True, help='Guacamole endpoint URL. Example: https://chaimeleon-eu.i3m.upv.es/guacamole/')
-    parser.add_argument('--user', type=str, required=True, help='User for the Guacamole API-REST endpoint login (or for the OIDC service if --oidc-url is set)')
-    parser.add_argument('--password', type=str, default='..........', help='Password for the Guacamole API-REST endpoint login (or for the OIDC service if --oidc-url is set) (if --password not set, it will be interactively asked)')
-    parser.add_argument('--oidc-url', type=str, default='', help='Optional URL to the OpenID-Connect authentication service. If empty, guacamole database auth will be used. Example: https://my-oidc-service.com/auth/realms/MYREALM/protocol/openid-connect/token')
-    parser.add_argument('--oidc-client-id', type=str, default='', help='Client id string for OpenID-Connect authentication. Only required if --oidc-url is set. Example: guacamole')
+    parser.add_argument('--user', type=str, required=True, help='User for the Guacamole API-REST endpoint login')
+    parser.add_argument('--password', type=str, default='..........', help='Password for the Guacamole API-REST endpoint login (you should have a user in guacamole database with a not empty password). ' 
+                                                                         + 'May be you can access to Guacamole web page using an OIDC account, in that case the password probably is not the same. '
+                                                                         + '(if --password is not set, it will be interactively asked)')
     parser.add_argument('--connection-name', type=str, default='date', help='Optional name for the new conection. If not provided, it will be generated from the current date.')
     parser.add_argument('--guacd-host', type=str, required=True)
     parser.add_argument('--vnc-password', type=str, required=True)
@@ -183,16 +146,9 @@ if __name__ == "__main__":
     if password == '..........':
         password = getpass("Password for "+args.user+ " in Guacamole: ")
 
-    oidc_url = args.oidc_url
-    if oidc_url != '':
-        print('Connecting to '+oidc_url)
-        access_token, session_state = login_oidc_step1(oidc_url, args.oidc_client_id, args.user, password)
-        if access_token == '': exit(code=1)
-        print('Connecting to '+args.url+ 'api/')
-        token = login_oidc_step2(connection, url.path, access_token, session_state)
-    else:
-        print('Connecting to '+args.url+ 'api/')
-        token = login(connection, url.path, args.user, password)
+    
+    print('Connecting to '+args.url+ 'api/')
+    token = guacamole_login(connection, url.path, args.user, password)
 
     if token=='': exit(code=1)
 

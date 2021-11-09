@@ -8,15 +8,16 @@ LABEL version="1.1"
 
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
-    apt-get -y install bash-completion ca-certificates curl iputils-ping netcat \
-                       man-db net-tools traceroute vim python-xattr parallel \
-                       python-pip python3-pip gnupg2 xattr pv bsdmainutils  \
-                       libsm6 libxrender1 libxext6 libgl1-mesa-glx  && \
-    apt-get clean
+    apt-get -y install --no-install-recommends \
+        bash-completion ca-certificates curl iputils-ping netcat \
+        man-db net-tools traceroute vim python-xattr parallel \
+        python-pip python3-pip gnupg2 xattr pv bsdmainutils  \
+        libsm6 libxrender1 libxext6 libgl1-mesa-glx  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install necessary packages
-RUN apt-get update && \
-    pip install opencv-contrib-python keras && \ 
+RUN pip install opencv-contrib-python keras && \ 
     pip install -U scikit-learn && \
     pip install matplotlib scikit-image pandas
 
