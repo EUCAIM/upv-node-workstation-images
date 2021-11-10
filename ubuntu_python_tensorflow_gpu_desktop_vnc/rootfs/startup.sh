@@ -57,7 +57,6 @@ fi
 
 if [ -n "$GUACAMOLE_USER" ]; then
     python /root/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
-                                              --oidc-url $OIDC_URL --oidc-client-id $OIDC_GUACAMOLE_CLIENT_ID \
                                               --guacd-host $GUACD_HOST --vnc-password $VNC_PASSWORD \
                                               --sftp-user $USER --sftp-password $PASSWORD \
                                               --debug --connection-name $(date +%Y-%m-%d-%H-%M-%S)--$HOSTNAME

@@ -1,9 +1,9 @@
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:1.1
+FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:1.2
 
 LABEL name="ubuntu_python_tensorflow_gpu_desktop_vnc_sshd"
 LABEL description="Container with ubuntu 18.04 (bionic) distribution with gpu (cuda 10.1), tensorflow 2.3.1, lxde desktop, vnc service and ssh service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="1.1"
+LABEL version="1.2"
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update \
