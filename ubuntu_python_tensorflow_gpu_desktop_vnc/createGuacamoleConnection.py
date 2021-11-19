@@ -51,7 +51,7 @@ def getConnectionGroupId(connection, path, token, user):
             print('Connection group id for '+user+' is '+groupId+'.')
         return groupId
 
-def createVncConnection(connection, path, token, connectionName, connectionGroupId, guacd_hostname, myIP, vnc_port, vnc_password, sftp_user, sftp_password):
+def createVncConnection(connection, path, token, connectionName, connectionGroupId, guacd_hostname, myIP, vnc_port, vnc_password, sftp_port, sftp_user, sftp_password):
     newConnection = {
         "name": connectionName,
         "parentIdentifier": connectionGroupId,
@@ -88,7 +88,7 @@ def createVncConnection(connection, path, token, connectionName, connectionGroup
 
             "enable-sftp": "true",
             "sftp-hostname": myIP,
-            "sftp-port": "22",
+            "sftp-port": sftp_port,
             "sftp-root-directory": "/",
             "sftp-username": sftp_user,
             "sftp-password": sftp_password,
@@ -159,9 +159,10 @@ if __name__ == "__main__":
 
     myIP = socket.gethostbyname(socket.gethostname())
     vnc_port = "5900"
+    sftp_port = "2222"
     print('Creating VNC connection for '+myIP+':'+vnc_port)
     connectionName = "pod-deployed-on-"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S') if args.connection_name == 'date' else args.connection_name
-    ret = createVncConnection(connection, url.path, token, connectionName, connectionGroupId, args.guacd_host, myIP, vnc_port, args.vnc_password, args.sftp_user, args.sftp_password )
+    ret = createVncConnection(connection, url.path, token, connectionName, connectionGroupId, args.guacd_host, myIP, vnc_port, args.vnc_password, sftp_port, args.sftp_user, args.sftp_password )
     if ret==False:
         exit(code=3)
             

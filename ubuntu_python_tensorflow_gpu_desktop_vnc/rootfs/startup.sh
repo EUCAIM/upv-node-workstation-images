@@ -4,66 +4,62 @@ if [ -z "$VNC_PASSWORD" ]; then
     export VNC_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;)
     echo "VNC password random generated: $VNC_PASSWORD"
 fi
-echo -n "$VNC_PASSWORD" > /.password1
-x11vnc -storepasswd $(cat /.password1) /.password2
-chmod 400 /.password*
-sed -i 's/^command=x11vnc.*/& -rfbauth \/.password2/' /etc/supervisor/conf.d/supervisord.conf
+echo -n "$VNC_PASSWORD" > /home/chaimeleon/.password1
+x11vnc -storepasswd $(cat /home/chaimeleon/.password1) /home/chaimeleon/.password2
+chmod 400 /home/chaimeleon/.password*
+sed -i 's/^command=x11vnc.*/& -rfbauth \/home\/chaimeleon\/.password2/' $SUPERVISOR_CONF_FILE
 
 if [ -n "$X11VNC_ARGS" ]; then
-    sed -i "s/^command=x11vnc.*/& ${X11VNC_ARGS}/" /etc/supervisor/conf.d/supervisord.conf
+    sed -i "s/^command=x11vnc.*/& ${X11VNC_ARGS}/" $SUPERVISOR_CONF_FILE
 fi
 
 if [ -n "$OPENBOX_ARGS" ]; then
-    sed -i "s#^command=/usr/bin/openbox\$#& ${OPENBOX_ARGS}#" /etc/supervisor/conf.d/supervisord.conf
+    sed -i "s#^command=/usr/bin/openbox\$#& ${OPENBOX_ARGS}#" $SUPERVISOR_CONF_FILE
 fi
 
 if [ -n "$RESOLUTION" ]; then
     sed -i "s/1024x768/$RESOLUTION/" /usr/local/bin/xvfb.sh
 fi
 
-USER=${USER:-root}
-HOME=/root
-if [ "$USER" != "root" ]; then
-    echo "* enable custom user: $USER"
-    useradd --create-home --shell /bin/bash --user-group --groups adm,sudo $USER
-    if [ -z "$PASSWORD" ]; then
-        echo "  set default password to \"ubuntu\""
-        PASSWORD=ubuntu
-    fi
-    HOME=/home/$USER
-    echo "$USER:$PASSWORD" | chpasswd
-    cp -r /root/{.config,.gtkrc-2.0,.asoundrc} ${HOME}
-    chown -R $USER:$USER ${HOME}
-    [ -d "/dev/snd" ] && chgrp -R adm /dev/snd
+USER=chaimeleon
+PREVIOUS_PASSWORD=chaimeleon
+
+if [ -z "$PASSWORD" ]; then
+    echo 'Error: $PASSWORD undefined'
+    exit 1
 fi
-sed -i -e "s|%USER%|$USER|" -e "s|%HOME%|$HOME|" /etc/supervisor/conf.d/supervisord.conf
+echo "Changing password for the user $USER"
+#echo "$USER:$PASSWORD" | chpasswd
+echo -e "$PREVIOUS_PASSWORD\n$PASSWORD\n$PASSWORD" | (passwd $USER)
+
+HOME=/home/$USER
+#[ -d "/dev/snd" ] && chgrp -R adm /dev/snd
+
+sed -i -e "s|%USER%|$USER|" -e "s|%HOME%|$HOME|" $SUPERVISOR_CONF_FILE
 
 # home folder
 if [ ! -x "$HOME/.config/pcmanfm/LXDE/" ]; then
     mkdir -p $HOME/.config/pcmanfm/LXDE/
     ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
-    chown -R $USER:$USER $HOME
 fi
 
-source /root/run.sh
-
-# create usefull links in HOME
-if [ -n "$PERSISTENT_HOME_MOUNT_POINT" ]; then
-    ln -s $PERSISTENT_HOME_MOUNT_POINT $HOME/persistent-home
-fi
-if [ -n "$DATASET_MOUNT_POINT" ]; then
-    ln -s $DATASET_MOUNT_POINT $HOME/dataset
-fi
+source /home/chaimeleon/.init/run.sh
 
 if [ -n "$GUACAMOLE_USER" ]; then
-    python /root/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
+    python /bin/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
                                               --guacd-host $GUACD_HOST --vnc-password $VNC_PASSWORD \
                                               --sftp-user $USER --sftp-password $PASSWORD \
-                                              --debug --connection-name $(date +%Y-%m-%d-%H-%M-%S)--$HOSTNAME
+                                              --debug --connection-name $GUACAMOLE_CONNECTION_NAME
+                                              # --connection-name $(date +%Y-%m-%d-%H-%M-%S)--$HOSTNAME
 fi
 
 # clean up
 export VNC_PASSWORD=
 PASSWORD=
 
-exec /bin/tini -- supervisord -n -c /etc/supervisor/supervisord.conf
+echo Running supervisor...
+#exec /bin/tini -- supervisord -n -c /etc/supervisor/supervisord.conf
+export TINI_SUBREAPER=
+# we change working directory to write there the supervisor log and pid file
+cd /home/chaimeleon/.supervisor
+exec /bin/tini -- supervisord -n -c $SUPERVISOR_CONF_FILE

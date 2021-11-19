@@ -4,7 +4,7 @@ FROM tensorflow/tensorflow:2.3.1-gpu
 LABEL name="ubuntu_python_tensorflow_gpu"
 LABEL description="Container with ubuntu 18.04 (bionic) distribution with python 3.6.9, gpu usage utilities (cuda 10.1) and tensorflow 2.3.1."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="1.1"
+LABEL version="2.0"
 
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
@@ -21,19 +21,30 @@ RUN pip install opencv-contrib-python keras && \
     pip install -U scikit-learn && \
     pip install matplotlib scikit-image pandas
 
-WORKDIR /tmp
-
 # Install poetry: popular dependecies manager, and used in the Quibim platform to install dependencies required for the image analysis modules.
 # And disable virtual environments (in a container usually there is only one project, one environment)
 RUN pip install poetry && poetry config virtualenvs.create false
 
-# Enable autocompletion
-RUN echo "source /etc/bash_completion" >> /root/.bashrc
+#RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo chaimeleon
+RUN useradd --create-home --shell /bin/bash --user-group chaimeleon
+# Default password "chaimeleon" for chaimeleon user
+# (setting the password is required if we want to install sshd and login with that user)
+RUN echo "chaimeleon:chaimeleon" | chpasswd
+
+USER chaimeleon:chaimeleon
+
+## Enable autocompletion
+#RUN echo "source /etc/bash_completion" >> /home/chaimeleon/.bashrc
+RUN poetry config virtualenvs.create false
 
 # Add dataset preparation script
-#ADD downloadEForms.py /root/downloadEForms.py
+#ADD downloadEForms.py /chaimeleon/.init/downloadEForms.py
+RUN mkdir -p /home/chaimeleon/datasets
+RUN mkdir -p /home/chaimeleon/persistent-home
 
 # Add entrypoint script
-ADD run.sh /root/run.sh
+# (useful if we want to do things with environment variables defined by the user)
+ADD run.sh /home/chaimeleon/.init/run.sh
 
-ENTRYPOINT ["/root/run.sh"]
+ENTRYPOINT ["/home/chaimeleon/.init/run.sh"]
+WORKDIR /home/chaimeleon
