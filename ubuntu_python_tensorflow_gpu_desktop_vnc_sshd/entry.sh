@@ -76,7 +76,7 @@ fi
 if [[ "${DISABLE_SFTP}" == "true" ]]; then
     echo "SFTP not enabled."
 else
-    echo "Subsystem   sftp    /usr/lib/ssh/sftp-server" >> $SSHD_CONFIG_FILE
+    echo "Subsystem   sftp    /usr/lib/openssh/sftp-server" >> $SSHD_CONFIG_FILE
 fi
 
 echo "
@@ -89,6 +89,5 @@ command=/usr/sbin/sshd -D -e -f $SSHD_CONFIG_FILE -E /home/chaimeleon/.custom_ss
 ## To debug the execution of sshd: 
 #/usr/sbin/sshd -D -e -f $SSHD_CONFIG_FILE
 
-
-/startup.sh
+/home/chaimeleon/.init/startup.sh
 

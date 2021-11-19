@@ -1,7 +1,7 @@
 setlocal
 set V0=2.0
-set V1=2.0
-set V2=2.1
+set V1=2.1
+set V2=2.2
 
 REM =========================================== Building all the images ===========================================
 docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu:%V0% ubuntu_python_tensorflow_gpu
