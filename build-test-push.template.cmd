@@ -13,8 +13,8 @@ docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_
 REM ======================================== Deploying a container to test ========================================
 pause
 docker run -d --rm -p 15900:5900 -p 3322:22 ^
-           -e USER="tensor" ^
-           -e PASSWORD="tensor" ^
+           -e VNC_PASSWORD="chaimeleon" ^
+           -e PASSWORD="chaimeleon" ^
            -e GUACAMOLE_URL=https://chaimeleon-eu.i3m.upv.es/guacamole/ ^
            -e GUACAMOLE_USER="guacamoleuser" ^
            -e GUACAMOLE_PASSWORD="XXXXXXX" ^

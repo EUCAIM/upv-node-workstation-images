@@ -25,8 +25,8 @@ USER=chaimeleon
 PREVIOUS_PASSWORD=chaimeleon
 
 if [ -z "$PASSWORD" ]; then
-    echo 'Error: $PASSWORD undefined'
-    exit 1
+    export PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;)
+    echo "$USER password random generated: $PASSWORD"
 fi
 echo "Changing password for the user $USER"
 #echo "$USER:$PASSWORD" | chpasswd
