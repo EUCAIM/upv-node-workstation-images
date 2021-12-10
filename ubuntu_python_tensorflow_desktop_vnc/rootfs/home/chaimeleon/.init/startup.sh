@@ -40,7 +40,7 @@ sed -i -e "s|%USER%|$USER|" -e "s|%HOME%|$HOME|" $SUPERVISOR_CONF_FILE
 # home folder
 if [ ! -x "$HOME/.config/pcmanfm/LXDE/" ]; then
     mkdir -p $HOME/.config/pcmanfm/LXDE/
-    ln -sf /usr/local/share/doro-lxde-wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
+    ln -sf /usr/local/share/wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
 fi
 
 source /home/chaimeleon/.init/run.sh
