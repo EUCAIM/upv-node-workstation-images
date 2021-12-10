@@ -1,10 +1,15 @@
-# Specific build arguments for ubuntu 18.04 with gpu (cuda 10.1)
-FROM tensorflow/tensorflow:2.3.1-gpu
+ARG TENSOR_IMAGE_TAG
+ARG CUDA_VERSION
+## Uncomment or include in "docker build --build-arg" for building with CUDA
+#ARG TENSOR_IMAGE_TAG="-gpu"
+#ARG CUDA_VERSION="cuda10"
 
-LABEL name="ubuntu_python_tensorflow_gpu"
-LABEL description="Container with ubuntu 18.04 (bionic) distribution with python 3.6.9, gpu usage utilities (cuda 10.1) and tensorflow 2.3.1."
+FROM tensorflow/tensorflow:2.3.1$TENSOR_IMAGE_TAG
+
+LABEL name="ubuntu_python_tensorflow"
+LABEL description="Container with ubuntu 18.04 (bionic), python 3.6.9, ${CUDA_VERSION} and tensorflow 2.3.1."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="2.0"
+LABEL version="2.0$CUDA_VERSION"
 
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \

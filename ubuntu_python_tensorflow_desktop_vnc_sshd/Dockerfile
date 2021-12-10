@@ -1,9 +1,13 @@
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc:2.1
+ARG CUDA_VERSION
+## Uncomment or include in "docker build --build-arg" for building with CUDA
+#ARG CUDA_VERSION="cuda10"
 
-LABEL name="ubuntu_python_tensorflow_gpu_desktop_vnc_sshd"
-LABEL description="Container with ubuntu 18.04 (bionic) distribution with gpu (cuda 10.1), tensorflow 2.3.1, lxde desktop, vnc service and ssh service."
+FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_desktop_vnc:2.1$CUDA_VERSION
+
+LABEL name="ubuntu_python_tensorflow_desktop_vnc_sshd"
+LABEL description="Container with ubuntu 18.04 (bionic), tensorflow 2.3.1, lxde desktop, vnc service and ssh service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="2.2"
+LABEL version="2.2$CUDA_VERSION"
 
 USER root
 ENV DEBIAN_FRONTEND noninteractive
