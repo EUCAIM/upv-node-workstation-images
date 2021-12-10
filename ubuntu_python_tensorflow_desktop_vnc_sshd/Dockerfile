@@ -2,7 +2,7 @@ ARG CUDA_VERSION
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda10"
 
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_desktop_vnc:2.1$CUDA_VERSION
+FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_desktop_vnc:2.2$CUDA_VERSION
 
 LABEL name="ubuntu_python_tensorflow_desktop_vnc_sshd"
 LABEL description="Container with ubuntu 18.04 (bionic), tensorflow 2.3.1, lxde desktop, vnc service and ssh service."

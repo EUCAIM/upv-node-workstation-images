@@ -19,7 +19,8 @@ RUN apt-get -y update && \
         python-pip python3-pip gnupg2 xattr pv bsdmainutils  \
         libsm6 libxrender1 libxext6 libgl1-mesa-glx  && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade pip       # The ubuntu package is not always up-to-date
 
 # Install necessary packages
 RUN pip install opencv-contrib-python keras && \ 
