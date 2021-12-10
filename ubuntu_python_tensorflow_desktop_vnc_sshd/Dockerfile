@@ -7,7 +7,7 @@ FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_
 LABEL name="ubuntu_python_tensorflow_desktop_vnc_sshd"
 LABEL description="Container with ubuntu 18.04 (bionic), tensorflow 2.3.1, lxde desktop, vnc service and ssh service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="2.2$CUDA_VERSION"
+LABEL version="2.3$CUDA_VERSION"
 
 USER root
 ENV DEBIAN_FRONTEND noninteractive

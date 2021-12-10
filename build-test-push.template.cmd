@@ -1,10 +1,10 @@
 setlocal
 set V0=2.0
-set V1=2.1
-set V2=2.2
+set V1=2.2
+set V2=2.3
 REM Uncomment for building with CUDA
-REM set TENSOR_IMAGE_TAG="-gpu"
-REM set CUDA_VERSION="cuda10"
+REM set TENSOR_IMAGE_TAG=-gpu
+REM set CUDA_VERSION=cuda10
 
 REM =========================================== Building all the images ===========================================
 docker build -t chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow:%V0%%CUDA_VERSION% ^

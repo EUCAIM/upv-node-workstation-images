@@ -7,7 +7,7 @@ FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow:
 LABEL name="ubuntu_python_tensorflow_desktop_vnc"
 LABEL description="Container with ubuntu 18.04 (bionic), tensorflow 2.3.1, lxde desktop and vnc service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="2.1$CUDA_VERSION"
+LABEL version="2.2$CUDA_VERSION"
 
 USER root
 RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
