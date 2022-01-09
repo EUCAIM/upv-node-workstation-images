@@ -45,9 +45,9 @@ RUN poetry config virtualenvs.create false
 
 # Add dataset preparation script
 #ADD downloadEForms.py /chaimeleon/.init/downloadEForms.py
-RUN mkdir -p /home/chaimeleon/datasets
-RUN mkdir -p /home/chaimeleon/persistent-home
-RUN mkdir -p /home/chaimeleon/persistent-shared-folder
+RUN mkdir -p /home/chaimeleon/datasets && \
+    mkdir -p /home/chaimeleon/persistent-home && \
+    mkdir -p /home/chaimeleon/persistent-shared-folder 
 
 # Add entrypoint script
 # (useful if we want to do things with environment variables defined by the user)
