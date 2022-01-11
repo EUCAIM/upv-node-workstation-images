@@ -46,8 +46,12 @@ fi
 source /home/chaimeleon/.init/run.sh
 
 if [ -n "$GUACAMOLE_USER" ]; then
+    VNC_HOST_PARAM=
+    if [ -n "$VNC_HOST" ]; then
+        VNC_HOST_PARAM="--vnc-host $VNC_HOST"
+    fi
     python /bin/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
-                                              --guacd-host $GUACD_HOST --vnc-password $VNC_PASSWORD \
+                                              --guacd-host $GUACD_HOST $VNC_HOST_PARAM --vnc-password $VNC_PASSWORD \
                                               --sftp-user $USER --sftp-password $PASSWORD \
                                               --debug --connection-name $GUACAMOLE_CONNECTION_NAME
                                               # --connection-name $(date +%Y-%m-%d-%H-%M-%S)--$HOSTNAME
