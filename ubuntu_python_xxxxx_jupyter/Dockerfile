@@ -1,12 +1,15 @@
 ARG CUDA_VERSION
+ARG AI_TOOL=tensorflow
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda10"
+## Uncomment or include in "docker build --build-arg" for building with pyTorch
+#ARG AI_TOOL=pytorch
 
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow:2.0$CUDA_VERSION
+FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_${AI_TOOL}:2.2$CUDA_VERSION
 
-LABEL name="ubuntu_python_tensorflow_jupyter"
-LABEL version="1.1$CUDA_VERSION"
-LABEL description="Container with ubuntu 18.04 (bionic), tensorflow 2.3.1 and jupyter notebooks web service."
+LABEL name="ubuntu_python_${AI_TOOL}_jupyter"
+LABEL version="1.2$CUDA_VERSION"
+LABEL description="Container with ubuntu 18.04 (bionic), $AI_TOOL and jupyter notebooks web service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
 USER root
@@ -27,10 +30,9 @@ RUN chmod +x /bin/tini
 
 RUN pip install jupyter
 
-
-COPY rootfs /
-RUN chown -R chaimeleon:chaimeleon /home/chaimeleon \
-    && chmod +x /home/chaimeleon/.init/startup.sh
+COPY --chown=chaimeleon:chaimeleon rootfs /
+#RUN chown -R chaimeleon:chaimeleon /home/chaimeleon \
+RUN chmod +x /home/chaimeleon/.init/startup.sh
 
 #ADD createGuacamoleConnection.py /bin/createGuacamoleConnection.py
 
