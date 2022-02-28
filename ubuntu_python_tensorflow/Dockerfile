@@ -19,11 +19,12 @@ RUN apt-get -y update && \
         python-pip python3-pip gnupg2 xattr pv bsdmainutils  \
         libsm6 libxrender1 libxext6 libgl1-mesa-glx  && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    pip install --upgrade pip       # The ubuntu package is not always up-to-date
+    rm -rf /var/lib/apt/lists/* 
 
-# Install necessary packages
-RUN pip install opencv-contrib-python keras && \ 
+# Install necessary packages (first upgrade pip and keyrings because ubuntu package is not always up-to-date)
+RUN pip install --upgrade pip && \
+    pip install --upgrade keyrings.alt && \
+    pip install opencv-contrib-python keras && \ 
     pip install -U scikit-learn && \
     pip install matplotlib scikit-image pandas
 

@@ -30,7 +30,7 @@ RUN chmod +x /bin/tini
 
 RUN pip install jupyter
 
-COPY --chown=chaimeleon:chaimeleon rootfs /
+COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
 #RUN chown -R chaimeleon:chaimeleon /home/chaimeleon \
 RUN chmod +x /home/chaimeleon/.init/startup.sh
 
