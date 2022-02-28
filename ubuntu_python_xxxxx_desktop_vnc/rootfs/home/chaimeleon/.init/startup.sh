@@ -50,7 +50,7 @@ if [ -n "$GUACAMOLE_USER" ]; then
     if [ -n "$VNC_HOST" ]; then
         VNC_HOST_PARAM="--vnc-host $VNC_HOST"
     fi
-    python /bin/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
+    python3 /bin/createGuacamoleConnection.py --url $GUACAMOLE_URL --user $GUACAMOLE_USER --password $GUACAMOLE_PASSWORD \
                                               --guacd-host $GUACD_HOST $VNC_HOST_PARAM --vnc-password $VNC_PASSWORD \
                                               --sftp-user $USER --sftp-password $PASSWORD \
                                               --debug --connection-name $GUACAMOLE_CONNECTION_NAME
