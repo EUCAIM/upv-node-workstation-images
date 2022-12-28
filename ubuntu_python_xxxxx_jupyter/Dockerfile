@@ -1,15 +1,21 @@
 ARG CUDA_VERSION
 ARG AI_TOOL=tensorflow
+ARG AI_TOOL_VERSION="unknown"
+ARG TARGET_VERSION="unknown"
+
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda10"
+
 ## Uncomment or include in "docker build --build-arg" for building with pyTorch
 #ARG AI_TOOL=pytorch
+#ARG AI_TOOL_VERSION="unknown"
+#ARG TARGET_VERSION="unknown"
 
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_${AI_TOOL}:2.2$CUDA_VERSION
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library/ubuntu_python_${AI_TOOL}:${AI_TOOL_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu_python_${AI_TOOL}_jupyter"
-LABEL version="1.2$CUDA_VERSION"
-LABEL description="Container with ubuntu 18.04 (bionic), $AI_TOOL and jupyter notebooks web service."
+LABEL version="${TARGET_VERSION}${CUDA_VERSION}"
+LABEL description="Container with ubuntu 18.04 (bionic), ${AI_TOOL} and jupyter notebooks web service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
 USER root
@@ -28,7 +34,7 @@ ARG TINI_VERSION=v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /bin/tini
 RUN chmod +x /bin/tini
 
-RUN pip install jupyter
+RUN pip install --no-cache-dir jupyter
 
 COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
 #RUN chown -R chaimeleon:chaimeleon /home/chaimeleon \

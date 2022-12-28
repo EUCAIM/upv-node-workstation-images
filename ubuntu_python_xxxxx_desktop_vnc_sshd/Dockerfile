@@ -1,16 +1,22 @@
 ARG CUDA_VERSION
 ARG AI_TOOL=tensorflow
+ARG AI_TOOL_VERSION="unkown"
+ARG TARGET_VERSION="unkown"
+
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda10"
+
 ## Uncomment or include in "docker build --build-arg" for building with pyTorch
 #ARG AI_TOOL=pytorch
+#ARG AI_TOOL_VERSION="unkown"
+#ARG TARGET_VERSION="unkown"
 
-FROM chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_${AI_TOOL}_desktop_vnc:2.3$CUDA_VERSION
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library/ubuntu_python_${AI_TOOL}_desktop_vnc:${AI_TOOL_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu_python_${AI_TOOL}_desktop_vnc_sshd"
+LABEL version="${TARGET_VERSION}${CUDA_VERSION}"
 LABEL description="Container with ubuntu 18.04 (bionic), ${AI_TOOL}, lxde desktop, vnc service and ssh service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL version="2.4$CUDA_VERSION"
 
 USER root
 ENV DEBIAN_FRONTEND noninteractive
