@@ -106,19 +106,22 @@ There are two types of image depending on how the user interact with your applic
 
  - No interactive, no UI.  
    If your application is launched in batch from the command line, without any interaction required by the user, 
-   then there is no need to create a helm chart for adding to the CHAIMELEON's apps catalog. 
-   Once the image is built and uploaded to the repository of bath images it will be listed and usable by jobman, 
+   then it is the easy case, there is **no need to create a helm chart** for adding to the CHAIMELEON's apps catalog. 
+   Once the image is built and uploaded to the repository of batch images it will be listed and **usable by jobman**, 
    i.e. the user can submit a job with that image for using your application.
    
  - Interactive, GUI or Web UI.  
-   If your app has a user interface intended for the user to interact with, then you need to install a desktop environment, details in the next chapter.
+   If your app has a user interface intended for the user to interact with, then you need to install a desktop environment, details in the next chapter.  
    If your app has a web user interface, then you need to install a desktop environment and also a web browser 
-   to let the user access to your web service running in the same machine ("http://localhost", the remote localhost).
-   You can think it is more simple and efficient in resources to put your web service in a platform public endpoint, 
-   directly accesible from the user's local desktop browser (so the remote desktop is not needed), 
-   but we can't do that due to the project restriction of downloading the medical data. 
-   This is only possible in exceptional cases of trusted applications that can ensure the data can't be downloaded by the user.
-
+   to let the user access to your web service running in the same machine ("http://localhost", the remote localhost)[^note].  
+   In order to use interactive images, **a helm chart must be created** and uploaded to the charts repository. 
+   This way a new application will appear in the CHAIMELEON's apps catalog and the user will be able to deploy a remote desktop with that image.
+   
+[^note]: You can think it is more simple and efficient in resources to put your web service in a platform public endpoint, 
+         directly accesible from the user's local desktop browser (so the remote desktop is not needed), 
+         but we can't do that due to the project restriction of downloading the medical data. 
+         This is only possible in exceptional cases of trusted applications that can ensure the data can't be downloaded by the user.  
+   
 ### (Optional) Include a desktop environment
 
 If your aplication has a graphical UI (or web UI), then you should install:
@@ -128,7 +131,7 @@ If your aplication has a graphical UI (or web UI), then you should install:
  
 You can take the dockerfile in `ubuntu_python_xxxxx_desktop_vnc` as an example or as a base for your dockerfile (putting it in the `FROM` instruction of yours).
 In this example "lxde" package is installed as a desktop environment (with other uselful tools), "x11vnc" package for the VNC service
-and "openssh-server" package for the SSH service.
+and "openssh-server" package for the SSH service.  
 It is important also to mention the installation of "supervisor" as a service to start and keep running the rest of services. 
 It is required and common in dockerized apps with more than one service.
   
@@ -137,4 +140,4 @@ If your application has a web interface then you can install a browser, for exam
 In our example `ubuntu_python_xxxxx_desktop_vnc` it is included.
 
 Also you may want to add an init script for starting the browser and go to initial web page of your application.
-
+  
