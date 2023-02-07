@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+/home/chaimeleon/.init/configure_sshd.sh
+
 if [ -z "$VNC_PASSWORD" ]; then
     export VNC_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;)
     echo "VNC password random generated: $VNC_PASSWORD"
@@ -43,6 +45,7 @@ if [ ! -x "$HOME/.config/pcmanfm/LXDE/" ]; then
     ln -sf /usr/local/share/wallpapers/desktop-items-0.conf $HOME/.config/pcmanfm/LXDE/
 fi
 
+# Run the init script of the base image
 source /home/chaimeleon/.init/run.sh
 
 if [ -n "$GUACAMOLE_USER" ]; then

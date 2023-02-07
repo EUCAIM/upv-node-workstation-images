@@ -89,5 +89,3 @@ command=/usr/sbin/sshd -D -e -f $SSHD_CONFIG_FILE -E /home/chaimeleon/.custom_ss
 ## To debug the execution of sshd: 
 #/usr/sbin/sshd -D -d -e -f $SSHD_CONFIG_FILE
 
-/home/chaimeleon/.init/startup.sh
-

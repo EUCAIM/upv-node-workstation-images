@@ -1,23 +1,24 @@
 ARG CUDA_VERSION
 ARG AI_TOOL=tensorflow
-ARG AI_TOOL_VERSION="unkown"
-ARG TARGET_VERSION="unkown"
+ARG AI_TOOL_VERSION="unknown"
+ARG TARGET_VERSION="unknown"
 
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
-#ARG CUDA_VERSION="cuda10"
+#ARG CUDA_VERSION="cuda11"
 
 ## Uncomment or include in "docker build --build-arg" for building with pyTorch
 #ARG AI_TOOL=pytorch
-#ARG AI_TOOL_VERSION="unkown"
-#ARG TARGET_VERSION="unkown"
+#ARG AI_TOOL_VERSION="unknown"
+#ARG TARGET_VERSION="unknown"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library/ubuntu_python_${AI_TOOL}:${AI_TOOL_VERSION}${CUDA_VERSION}
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu_python_${AI_TOOL}:${AI_TOOL_VERSION}${CUDA_VERSION}
 
-LABEL name="ubuntu_python_${AI_TOOL}_desktop_vnc"
+LABEL name="ubuntu_python_${AI_TOOL}_desktop"
 LABEL version="${TARGET_VERSION}${CUDA_VERSION}"
-LABEL description="Container with ubuntu 18.04 (bionic), ${AI_TOOL}, lxde desktop and vnc service."
+LABEL description="Container with ubuntu 22.04, python 3.10.6, ${AI_TOOL}, ${CUDA_VERSION}, lxde desktop, vnc and ssh services."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
+############## Things done by the root user ##############
 USER root
 RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
 
@@ -53,6 +54,21 @@ ADD createGuacamoleConnection.py /bin/createGuacamoleConnection.py
 
 #EXPOSE 80
 EXPOSE 5900
+
+########## SSH service installation
+RUN apt update \
+    && apt install -y --no-install-recommends git openssh-server \
+    && apt autoclean -y \
+    && apt autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+        
+COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
+RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
+
+EXPOSE 2222
+
+
+############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon
 
@@ -71,6 +87,12 @@ ENV VNC_PASSWORD= \
     GUACAMOLE_PASSWORD= \
     GUACD_HOST= \
     GUACAMOLE_CONNECTION_NAME=
+
+########## SSH service default values to environment variables which can be configured
+ENV SSH_ENABLE_PASSWORD_AUTH= \
+    TCP_FORWARDING= \
+    GATEWAY_PORTS= \
+    DISABLE_SFTP=
     
 #HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://127.0.0.1:6079/api/health
 ENTRYPOINT ["/home/chaimeleon/.init/startup.sh"]
