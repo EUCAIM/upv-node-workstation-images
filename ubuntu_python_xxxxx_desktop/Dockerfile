@@ -1,6 +1,6 @@
-ARG CUDA_VERSION
 ARG AI_TOOL=tensorflow
-ARG AI_TOOL_VERSION="unknown"
+ARG BASE_VERSION="unknown"
+ARG CUDA_VERSION
 ARG TARGET_VERSION="unknown"
 
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
@@ -8,10 +8,10 @@ ARG TARGET_VERSION="unknown"
 
 ## Uncomment or include in "docker build --build-arg" for building with pyTorch
 #ARG AI_TOOL=pytorch
-#ARG AI_TOOL_VERSION="unknown"
+#ARG BASE_VERSION="unknown"
 #ARG TARGET_VERSION="unknown"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu_python_${AI_TOOL}:${AI_TOOL_VERSION}${CUDA_VERSION}
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu_python_${AI_TOOL}:${BASE_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu_python_${AI_TOOL}_desktop"
 LABEL version="${TARGET_VERSION}${CUDA_VERSION}"

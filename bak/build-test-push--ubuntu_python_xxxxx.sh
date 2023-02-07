@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export REGISTRY_HOST=harbor.chaimeleon-eu.i3m.upv.es
-export REGISTRY_PATH=/chaimeleon-library/
+export REGISTRY_PATH=/chaimeleon-library-batch/
 
 export CUDA_VERSION=
 echo "Do you want to build with CUDA? (y/n)" && read RES
@@ -35,18 +35,9 @@ docker build -t ${REGISTRY_HOST}${REGISTRY_PATH}ubuntu_python_${AI_TOOL}:${TARGE
 # ======================================== Deploying a container to test ========================================
 echo "Do you want to run the container for testing? (y/n)" && read RES
 if [ "$RES" == "y" ]; then 
-    docker run -d --rm --name testing01 \
-               ${REGISTRY_HOST}${REGISTRY_PATH}ubuntu_python_${AI_TOOL}:${TARGET_VERSION}${CUDA_VERSION}
-
-    echo "Continue showing the log? (y/n)" && read RES
-    if [ "$RES" != "y" ]; then exit; fi
-    docker logs testing01
-    echo "Test VNC service: run a VNC client (tightVNC or tigerVNC) and connect to localhost:15900."
-    echo "Test file transfer: run SSH client and connect to localhost:3322"
-    
-    echo "Continue stopping the container? (y/n)" && read RES
-    if [ "$RES" != "y" ]; then exit; fi
-    docker stop testing01
+    echo "OK, when you end the testing write 'exit' to stop and remove the container."
+    docker run -it --rm --name testing01 \
+               ${REGISTRY_HOST}${REGISTRY_PATH}ubuntu_python_${AI_TOOL}:${TARGET_VERSION}${CUDA_VERSION} bash
 fi
 
 # ====================================== Uploading the images to registry ======================================
