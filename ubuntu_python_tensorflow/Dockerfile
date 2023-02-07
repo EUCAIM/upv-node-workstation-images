@@ -1,64 +1,51 @@
-ARG TENSOR_IMAGE_TAG=""
 ARG CUDA_VERSION=""
-ARG TARGET_VERSION="unkown"
+ARG BASE_VERSION="unknown"
+ARG TARGET_VERSION="unknown"
 
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
-#ARG TENSOR_IMAGE_TAG="-gpu"
-#ARG CUDA_VERSION="cuda10"
+#ARG CUDA_VERSION="cuda11"
 
-FROM tensorflow/tensorflow:2.3.1$TENSOR_IMAGE_TAG
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu_python:${BASE_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu_python_tensorflow"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
-LABEL description="Container with ubuntu 18.04 (bionic), python 3.6.9, ${CUDA_VERSION} and tensorflow 2.3.1."
+LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and tensorflow."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
-# Fix for "apt-get update" error "The nvidia repository is no longer signed"
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+############## Things done by the root user ##############
+USER root
 
-# Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
-        bash-completion ca-certificates curl iputils-ping netcat \
-        man-db net-tools traceroute vim python-xattr parallel \
-        python-pip python3-pip gnupg2 xattr pv bsdmainutils  \
-        libsm6 libxrender1 libxext6 libgl1-mesa-glx  && \
+        libsm6 libxrender1 libxext6 libgl1-mesa-glx zlib1g  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
 
-# Install necessary packages (first upgrade pip and keyrings because ubuntu package is not always up-to-date)
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --upgrade keyrings.alt && \
-    pip install --no-cache-dir opencv-contrib-python keras && \ 
-    pip install --no-cache-dir -U scikit-learn && \
-    pip install --no-cache-dir matplotlib scikit-image pandas pydicom
+# Installation of CUDNN extracted from nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+#ENV NV_CUDNN_VERSION=8.7.0.84
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends libcudnn8=8.7.0.84-1+cuda11.8  && \
+#    apt-mark hold libcudnn8  && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/* 
 
-# Install poetry: popular dependecies manager, and used in the Quibim platform to install dependencies required for the image analysis modules.
-# And disable virtual environments (in a container usually there is only one project, one environment)
-RUN pip install --no-cache-dir poetry && poetry config virtualenvs.create false
+# Upgrade pip and keyrings to avoid warnings and errors
+RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 
-#RUN useradd --create-home --shell /bin/bash --user-group --groups adm,sudo chaimeleon
-RUN groupadd -g 1000 chaimeleon && \
-    useradd --create-home --shell /bin/bash --uid 1000 --gid 1000 chaimeleon 
-# Default password "chaimeleon" for chaimeleon user
-# (setting the password is required if we want to install sshd and login with that user)
-RUN echo "chaimeleon:chaimeleon" | chpasswd
-
+############### Now change to normal user ################
 USER chaimeleon:chaimeleon
-
-## Enable autocompletion
-#RUN echo "source /etc/bash_completion" >> /home/chaimeleon/.bashrc
-RUN poetry config virtualenvs.create false
-
-# Add dataset preparation script
-#ADD downloadEForms.py /chaimeleon/.init/downloadEForms.py
-RUN mkdir -p /home/chaimeleon/datasets && \
-    mkdir -p /home/chaimeleon/persistent-home && \
-    mkdir -p /home/chaimeleon/persistent-shared-folder 
-
-# Add entrypoint script
-# (useful if we want to do things with environment variables defined by the user)
-ADD run.sh /home/chaimeleon/.init/run.sh
-
-ENTRYPOINT ["/home/chaimeleon/.init/run.sh"]
 WORKDIR /home/chaimeleon
+
+RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu11==8.7.0.84 && \
+                                     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib ; fi
+RUN pip3 install --no-cache-dir tensorflow==2.9.3
+
+
+# Verify cudnn (required only for cuda version, for use GPU):
+## ls /home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.8
+
+# Verify tensorflow: https://www.tensorflow.org/install/pip?hl=es-419#step-by-step_instructions
+## import tensorflow as tf
+## print(tf.reduce_sum(tf.random.normal([1000, 1000])))
+## print(tf.config.list_physical_devices('GPU'))
+
