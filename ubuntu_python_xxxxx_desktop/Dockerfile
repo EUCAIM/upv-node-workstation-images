@@ -32,7 +32,7 @@ RUN apt update \
                    mesa-utils libgl1-mesa-dri \
     && apt install -y --no-install-recommends --allow-unauthenticated \
                    xvfb x11vnc \
-                   vim-tiny wget less firefox ttf-ubuntu-font-family ttf-wqy-zenhei  \
+                   vim-tiny wget less firefox ttf-wqy-zenhei  \
     && apt install -y --no-install-recommends --allow-unauthenticated \
                    lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme \
     && apt autoclean -y \
@@ -50,7 +50,7 @@ COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
 RUN chmod +x /home/chaimeleon/.init/startup.sh \
     && chmod +x /usr/local/bin/xvfb.sh
 
-ADD createGuacamoleConnection.py /bin/createGuacamoleConnection.py
+RUN pip3 install --no-cache-dir guacli
 
 #EXPOSE 80
 EXPOSE 5900
@@ -77,7 +77,8 @@ RUN mkdir -p /home/chaimeleon/.supervisor/conf.d/ \
     && cp /etc/supervisor/conf.d/supervisord.conf $SUPERVISOR_CONF_FILE
 
 # default values to environment variables which can be configured
-ENV VNC_PASSWORD= \
+ENV VNC_HOST= \
+    VNC_PASSWORD= \
     PASSWORD= \
     X11VNC_ARGS= \
     OPENBOX_ARGS= \
