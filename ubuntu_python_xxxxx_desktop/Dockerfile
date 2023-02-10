@@ -23,21 +23,22 @@ USER root
 RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt update \
-    && apt install -y --no-install-recommends \
-                   software-properties-common curl apache2-utils \
-    && apt install -y --no-install-recommends --allow-unauthenticated \
-                   supervisor sudo net-tools zenity xz-utils \
-                   dbus-x11 x11-utils alsa-utils \
-                   mesa-utils libgl1-mesa-dri \
-    && apt install -y --no-install-recommends --allow-unauthenticated \
-                   xvfb x11vnc \
-                   vim-tiny wget less firefox ttf-wqy-zenhei  \
-    && apt install -y --no-install-recommends --allow-unauthenticated \
-                   lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme \
-    && apt autoclean -y \
-    && apt autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && \
+    apt install -y --no-install-recommends \
+                software-properties-common curl apache2-utils && \
+    apt install -y --no-install-recommends \
+                supervisor sudo net-tools zenity xz-utils \
+                dbus-x11 x11-utils alsa-utils mesa-utils libgl1-mesa-dri && \
+    add-apt-repository ppa:mozillateam/ppa && \
+    apt update && \
+    apt install -y --no-install-recommends \
+                xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei  && \
+    apt install -y --no-install-recommends \
+                lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme && \
+    apt autoclean -y && \
+    apt autoremove -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/bin/firefox-esr /usr/bin/firefox
     
 # tini to fix subreap
 ARG TINI_VERSION=v0.18.0
@@ -47,8 +48,8 @@ RUN chmod +x /bin/tini
 COPY rootfs/etc /etc/
 COPY rootfs/usr /usr/ 
 COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
-RUN chmod +x /home/chaimeleon/.init/startup.sh \
-    && chmod +x /usr/local/bin/xvfb.sh
+RUN chmod +x /home/chaimeleon/.init/startup.sh && \
+    chmod +x /usr/local/bin/xvfb.sh
 
 RUN pip3 install --no-cache-dir guacli
 
@@ -56,25 +57,24 @@ RUN pip3 install --no-cache-dir guacli
 EXPOSE 5900
 
 ########## SSH service installation
-RUN apt update \
-    && apt install -y --no-install-recommends git openssh-server \
-    && apt autoclean -y \
-    && apt autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && \
+    apt install -y --no-install-recommends git openssh-server && \
+    apt autoclean -y && \
+    apt autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
         
 COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
 RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
 
 EXPOSE 2222
 
-
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon
 
 ENV SUPERVISOR_CONF_FILE=/home/chaimeleon/.supervisor/conf.d/supervisord.conf
-RUN mkdir -p /home/chaimeleon/.supervisor/conf.d/ \
-    && cp /etc/supervisor/conf.d/supervisord.conf $SUPERVISOR_CONF_FILE
+RUN mkdir -p /home/chaimeleon/.supervisor/conf.d/ && \
+    cp /etc/supervisor/conf.d/supervisord.conf $SUPERVISOR_CONF_FILE
 
 # default values to environment variables which can be configured
 ENV VNC_HOST= \
