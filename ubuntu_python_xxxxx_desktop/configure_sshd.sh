@@ -24,6 +24,7 @@ UsePAM yes
 PidFile /home/chaimeleon/.custom_ssh/sshd.pid
 AcceptEnv LANG LC_*
 # UsePrivilegeSeparation no
+HostKeyAlgorithms rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,ssh-rsa,ssh-dss
 " > $SSHD_CONFIG_FILE
 
 create_hostkeys() {
