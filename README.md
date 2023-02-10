@@ -20,7 +20,14 @@ You will be interactively asked to select build with o without CUDA, which AI to
 
 
 ## How to design a workstation image for the CHAIMELEON platform
-This is a guide to create a container image for a workstation to be deployed by users in the CHAIMELEON platform.
+This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
+In this project you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
+You can take them as examples: 
+  - without desktop (for batch jobs): ubuntu_python, ubuntu_python_tensorflow, ubuntu_python_pytorch
+  - with desktop and browser (for interactive applications, GUI or WebUI): ubuntu_python_xxxxx_desktop, ubuntu_python_xxxxx_desktop_jupyter
+
+If your application requires python and some of the tools included in one of these images, you can take it as the base for your dockerfile, 
+putting it in the `FROM` instruction. 
 
 ### Template
 This is a template for the dockerfile (some details are explained in the next chapters):
@@ -88,12 +95,12 @@ PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;)
 echo -e "$PREVIOUS_PASSWORD\n$PASSWORD\n$PASSWORD" | (passwd $USER)
 ```
 
-For adding an init script you can do this: 
+For adding an init script you can do this (you should include in the ROOT part, no in the normal user part beacause `chmod` would fail): 
 ```
 # Add entrypoint script
 # (useful if we want to do things with environment variables defined by the user)
 ADD run.sh /home/chaimeleon/.init/run.sh
-
+RUN chmod +x /home/chaimeleon/.init/run.sh
 ENTRYPOINT ["/home/chaimeleon/.init/run.sh"]
 ```
 
@@ -114,13 +121,15 @@ There are two types of image depending on how the user interact with your applic
    If your app has a user interface intended for the user to interact with, then you need to install a desktop environment, details in the next chapter.  
    If your app has a web user interface, then you need to install a desktop environment and also a web browser 
    to let the user access to your web service running in the same machine ("http://localhost", the remote localhost)[^note].  
-   In order to use interactive images, **a helm chart must be created** and uploaded to the charts repository. 
-   This way a new application will appear in the CHAIMELEON's apps catalog and the user will be able to deploy a remote desktop with that image.
+   In order to use interactive images, **a helm chart must be created** (see the [helm chart guide](https://github.com/chaimeleon-eu/helm-chart-common)). 
+   And once uploaded to the charts repository, a new application will appear in the CHAIMELEON's apps catalog and the user will be able to deploy a remote desktop with that image.
    
 [^note]: You can think it is more simple and efficient in resources to put your web service in a platform public endpoint, 
          directly accesible from the user's local desktop browser (so the remote desktop is not needed), 
          but we can't do that due to the project restriction of downloading the medical data. 
          This is only possible in exceptional cases of trusted applications that can ensure the data can't be downloaded by the user.  
+         Usually the web apps allow download the data (directly or thru an API, if it is of type SPA) and, in this way, the user will be able to download to the remote desktop, 
+         but not to his/her local desktop, because the remote desktop app (Guacamole) is configured to allow upload but not download.
    
 ### (Optional) Include a desktop environment
 
@@ -129,7 +138,7 @@ If your aplication has a graphical UI (or web UI), then you should install:
  - a VNC service for let the user access to the remote desktop thru our Guacamole service
  - a SSH service for let the user upload files to the remote desktop thru our Guacamole service
  
-You can take the dockerfile in `ubuntu_python_xxxxx_desktop_vnc` as an example or as a base for your dockerfile (putting it in the `FROM` instruction of yours).
+You can take the dockerfile in `ubuntu_python_xxxxx_desktop_vnc` as an example or as the base for your dockerfile (putting it in the `FROM` instruction of yours).
 In this example "lxde" package is installed as a desktop environment (with other uselful tools), "x11vnc" package for the VNC service
 and "openssh-server" package for the SSH service.  
 It is important also to mention the installation of "supervisor" as a service to start and keep running the rest of services. 
@@ -141,3 +150,13 @@ In our example `ubuntu_python_xxxxx_desktop_vnc` it is included.
 
 Also you may want to add an init script for starting the browser and go to initial web page of your application.
   
+### Using GPU resources
+If your application can employ GPU resources to accelerate the computation you may want to install the CUDA toolkit 
+or just take as the base another image which includes the libraries (using the `FROM` instruction).
+For example you can take: "nvidia/cuda:10.2-runtime-ubuntu18.04" or "tensorflow/tensorflow:2.3.1-gpu".
+
+Generally, the images created by UPV for the CHAIMELEON project take the ubuntu official image as the base image, 
+and those with a tag which ends in `cuda10` or `cuda11` take the nvidia/cuda official image as the base image.
+
+
+
