@@ -1,22 +1,20 @@
 # workstation-images
 
 ### Build, test and push
-If you have made some change in any of the images, please open the script file (`build-test-push--XXXXX.sh`) according to the image you change and increase the version in the appropiate environment variable.
-If you want to apply the change also to the images based on the changed image you will have to increase the version also in them.
-Those are the dependencies:
+If you have made some change in any of the images, please open the script file (`build.py`) according to the image you change 
+and increase the version in the variable TARGET_VERSION of the appropiate build_xxxxxx_function.
+If you want to apply the change also to the images based on the changed image 
+you will have to adjust the version in the variable BASE_VERSION of them.
+Those are the dependencies of images:
 ```
- - ubuntu_python --> ubuntu_python_pytorch |-> ubuntu_python_pytorch_desktop_vnc --> ubuntu_python_pytorch_desktop_vnc_sshd
-                                           |-> ubuntu_python_pytorch_jupyter
- 
- - ubuntu_python_tensorflow |-> ubuntu_python_tensorflow_desktop_vnc --> ubuntu_python_tensorflow_desktop_vnc_sshd
-                            |-> ubuntu_python_tensorflow_jupyter
+ - ubuntu_python |-> ubuntu_python_tensorflow --> ubuntu_python_tensorflow_desktop --> ubuntu_python_tensorflow_desktop_jupyter
+                 |-> ubuntu_python_pytorch --> ubuntu_python_pytorch_desktop --> ubuntu_python_pytorch_desktop_jupyter
 ```
-Then simply run the script of the images you want to build.
+Then simply run the script
 ```
-chmod +x build-test-push--*.sh
-./build-test-push--ubuntu_python.sh
+python build.py
 ```
-You will be interactively asked to select build with o without CUDA, which AI tool to include, if you want to test, upload, etc.
+You will be interactively asked to select which image to build, with or without CUDA, if you want to test, upload, etc.
 
 
 ## How to design a workstation image for the CHAIMELEON platform
@@ -138,7 +136,7 @@ If your aplication has a graphical UI (or web UI), then you should install:
  - a VNC service for let the user access to the remote desktop thru our Guacamole service
  - a SSH service for let the user upload files to the remote desktop thru our Guacamole service
  
-You can take the dockerfile in `ubuntu_python_xxxxx_desktop_vnc` as an example or as the base for your dockerfile (putting it in the `FROM` instruction of yours).
+You can take the dockerfile in `ubuntu_python_xxxxx_desktop` as an example or as the base for your dockerfile (putting it in the `FROM` instruction of yours).
 In this example "lxde" package is installed as a desktop environment (with other uselful tools), "x11vnc" package for the VNC service
 and "openssh-server" package for the SSH service.  
 It is important also to mention the installation of "supervisor" as a service to start and keep running the rest of services. 
@@ -146,7 +144,7 @@ It is required and common in dockerized apps with more than one service.
   
 #### Include a browser 
 If your application has a web interface then you can install a browser, for example with: ``` apt install firefox ```.
-In our example `ubuntu_python_xxxxx_desktop_vnc` it is included.
+In our example `ubuntu_python_xxxxx_desktop_jupyter` it is included.
 
 Also you may want to add an init script for starting the browser and go to initial web page of your application.
   
