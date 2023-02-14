@@ -1,16 +1,16 @@
 # workstation-images
 
 ### Build, test and push
-If you have made some change in any of the images, please open the script file (`build.py`) according to the image you change 
-and increase the version in the variable TARGET_VERSION of the appropiate build_xxxxxx_function.
-If you want to apply the change also to the images based on the changed image 
-you will have to adjust the version in the variable BASE_VERSION of them.
+If you have made some change in any of the images, please open the script file (`build.py`) 
+and increase the version in the variables defined at the beginning.  
+You should increase the version and rebuild also the images based on the changed image.  
 Those are the dependencies of images:
 ```
  - ubuntu_python |-> ubuntu_python_tensorflow --> ubuntu_python_tensorflow_desktop --> ubuntu_python_tensorflow_desktop_jupyter
                  |-> ubuntu_python_pytorch --> ubuntu_python_pytorch_desktop --> ubuntu_python_pytorch_desktop_jupyter
 ```
-Then simply run the script
+
+Then simply run the script:
 ```
 python build.py
 ```

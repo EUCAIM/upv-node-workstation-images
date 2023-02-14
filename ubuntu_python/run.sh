@@ -6,5 +6,8 @@ if curl --connect-timeout 4 pypi.org; then
     pip3 install --upgrade keyrings.alt
 fi
 
+# The usual path for binaries of apps installed by the user
+export PATH=$PATH:/home/chaimeleon/.local/bin
+
 echo "$@" >.runcmd
 source .runcmd

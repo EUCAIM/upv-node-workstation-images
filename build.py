@@ -4,9 +4,21 @@ import argparse
 import enum
 import os
 
-REGISTRY_HOST="harbor.chaimeleon-eu.i3m.upv.es"
-REGISTRY_PATH_FOR_BATCH="/chaimeleon-library-batch/"
-REGISTRY_PATH_FOR_DESKTOP="/chaimeleon-library/"
+REGISTRY_HOST = "harbor.chaimeleon-eu.i3m.upv.es"
+REGISTRY_PATH_FOR_BATCH = "/chaimeleon-library-batch/"
+REGISTRY_PATH_FOR_DESKTOP = "/chaimeleon-library/"
+
+ubuntu_python_version = "3.1"
+
+ubuntu_python_tensorflow_version = "3.1"
+ubuntu_python_pytorch_version = "3.1"
+
+ubuntu_python_tensorflow_desktop_version = "3.3"
+ubuntu_python_pytorch_desktop_version = "3.3"
+
+ubuntu_python_tensorflow_desktop_jupyter_version = "3.3"
+ubuntu_python_pytorch_desktop_jupyter_version = "3.3"
+
 
 def cmd(command, exit_on_error=True):
     print(command)
@@ -44,9 +56,9 @@ def remove_local_image(image):
 def build_ubuntu_python(gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
-    TARGET_VERSION="3.0"
-    IMAGE_BASE="nvidia/cuda:11.8.0-runtime-ubuntu22.04" if gpu else "ubuntu:22.04"
-    CUDA_VERSION="cuda11" if gpu else ""
+    TARGET_VERSION = ubuntu_python_version
+    IMAGE_BASE = "nvidia/cuda:11.8.0-runtime-ubuntu22.04" if gpu else "ubuntu:22.04"
+    CUDA_VERSION = "cuda11" if gpu else ""
     
     target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_BATCH+"ubuntu_python:"+TARGET_VERSION+CUDA_VERSION
     cmd("docker build -t "+target_image
@@ -60,8 +72,6 @@ def build_ubuntu_python(gpu=None):
 
     upload_image(target_image)
 
-enum 
-
 class AI_TOOL(enum.Enum):
    tensorflow = 1
    pytorch = 2
@@ -70,11 +80,11 @@ def build_ubuntu_python_aitool(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
     if aitool == AI_TOOL.tensorflow.value:
-        TARGET_VERSION="3.0" 
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_tensorflow_version
+        BASE_VERSION = ubuntu_python_version
     else:  # aitool == AI_TOOL.pytorch.value
-        TARGET_VERSION="3.0" 
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_pytorch_version
+        BASE_VERSION = ubuntu_python_version
     
     CUDA_VERSION="cuda11" if gpu else ""
 
@@ -94,11 +104,11 @@ def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
     if aitool == AI_TOOL.tensorflow.value:
-        TARGET_VERSION="3.0"
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_tensorflow_desktop_version
+        BASE_VERSION = ubuntu_python_tensorflow_version
     else:  # aitool == AI_TOOL.pytorch.value
-        TARGET_VERSION="3.0"
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_pytorch_desktop_version
+        BASE_VERSION = ubuntu_python_pytorch_version
 
     CUDA_VERSION="cuda11" if gpu else ""
 
@@ -137,11 +147,11 @@ def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
     if aitool == AI_TOOL.tensorflow.value:
-        TARGET_VERSION="3.0"
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_tensorflow_desktop_jupyter_version
+        BASE_VERSION = ubuntu_python_tensorflow_desktop_version
     else:  # aitool == AI_TOOL.pytorch.value
-        TARGET_VERSION="3.0"
-        BASE_VERSION="3.0"
+        TARGET_VERSION = ubuntu_python_pytorch_desktop_jupyter_version
+        BASE_VERSION = ubuntu_python_pytorch_desktop_version
 
     CUDA_VERSION="cuda11" if gpu else ""
 

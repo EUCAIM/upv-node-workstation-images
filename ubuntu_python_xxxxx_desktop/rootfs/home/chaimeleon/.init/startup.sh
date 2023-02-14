@@ -48,6 +48,19 @@ fi
 # Run the init script of the base image
 source /home/chaimeleon/.init/run.sh
 
+## Jobman installation
+## The app now is installed by the init script in order to get the last version on container creation.
+## This is temporal due to the current frequency of updates.
+if [ -f /home/chaimeleon/persistent-shared-folder/apps/jobman/jobman.tar.gz ]; then
+    cd /home/chaimeleon/.local/lib
+    cp /home/chaimeleon/persistent-shared-folder/apps/jobman/jobman.tar.gz .
+    tar xzf jobman.tar.gz
+    ln -s /home/chaimeleon/.local/lib/jobman/bin/jobman /home/chaimeleon/.local/bin/
+    #The settings file customized for CHAIMELEON platform
+    mkdir /home/chaimeleon/.jobman
+    cp /home/chaimeleon/persistent-shared-folder/apps/jobman/settings.json /home/chaimeleon/.jobman/
+fi
+
 if [ -n "$GUACAMOLE_USER" ]; then
     VNC_HOST_PARAM=
     if [ -n "$VNC_HOST" ]; then

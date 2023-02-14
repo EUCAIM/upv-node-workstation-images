@@ -20,7 +20,7 @@ LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
 ############## Things done by the root user ##############
 USER root
-RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
+#RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && \
@@ -53,12 +53,27 @@ RUN chmod +x /home/chaimeleon/.init/startup.sh && \
 
 RUN pip3 install --no-cache-dir guacli
 
-#EXPOSE 80
 EXPOSE 5900
+
+########## jobman installation
+# The nodesource's script adds the PPA and do apt update
+RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
+    && apt install -y --no-install-recommends  nodejs git \
+    && rm -rf /var/lib/apt/lists/*
+## Currently only dependencies are installed here.
+## The app now is installed by the init script in order to get the last version on container creation.
+## This is temporal due to the current frequency of updates.
+#   && cd /opt \
+#   && git clone -b dev https://github.com/asalic/jobman.git \
+#   && cd jobman \
+#   && npm install \
+#   && npx tsc \
+#   && ln -s /opt/jobman/bin/jobman /usr/bin/
+#   && cp src/settings.json /home/chaimeleon/.jobman/
 
 ########## SSH service installation
 RUN apt update && \
-    apt install -y --no-install-recommends git openssh-server && \
+    apt install -y --no-install-recommends openssh-server && \
     apt autoclean -y && \
     apt autoremove -y && \
     rm -rf /var/lib/apt/lists/*
