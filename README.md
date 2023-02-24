@@ -190,6 +190,9 @@ Generally, the images created by UPV for the CHAIMELEON project take the ubuntu 
 and those with a tag which ends in `cuda10` or `cuda11` take the nvidia/cuda official image as the base image.
 
 ### Recommendations for reducing the image size
+Big-sized image can be problematic (space on disk) and take more time to download from the repository to create the container.  
+Besides, the smaller the image, the higher probability to be mantained in cache in the working node, so it don't have to be downloaded again when another user wants to use it.  
+You can reduce the size of your container image a lot with a few changes:  
  - Add the parameter `--no-cache-dir` to the installations with _pip_.  
    Example: `RUN pip install --no-cache-dir pydicom`
  - Add the parameter `--no-install-recommends` to the installations with _apt-get_.  
