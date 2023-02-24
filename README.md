@@ -194,12 +194,14 @@ Big-sized image can be problematic (space on disk) and take more time to downloa
 Besides, the smaller the image, the higher probability to be mantained in cache in the working node, so it don't have to be downloaded again when another user wants to use it.  
 You can reduce the size of your container image a lot with a few changes:  
  - Add the parameter `--no-cache-dir` to the installations with _pip_.  
-   Example: `RUN pip install --no-cache-dir pydicom`
+   Example: `RUN pip install --no-cache-dir pydicom`  
+   Example: `RUN pip install --no-cache-dir -r requirements.txt`
  - Add the parameter `--no-install-recommends` to the installations with _apt-get_.  
    If, when you put this parameter, some new error appears running your algorithm, 
    the cause of this can be that some required package were installed as a recommendation of another. 
    In that case just add the required package in the list of packages to install, 
-   don't rely on your required package will be recommended by the other package.
+   don't rely on your required package will be recommended by the other package.  
+   Example: `apt-get -y install --no-install-recommends python3-pip`
 
 ---
 
