@@ -33,6 +33,10 @@ This is a template for the dockerfile (some details are explained in the next ch
 ## Base image:
 FROM ...
 
+LABEL name="..."
+LABEL version="1.0"
+LABEL authorization="..."
+
 ############## Things done by the root user ##############
 USER root
 # Installation of tools and requirements:
@@ -59,6 +63,35 @@ ADD ...
 
 WORKDIR /home/chaimeleon
 ```
+
+### Labels
+If your repository on Github is of type "Private" or it has not a license that allows redistribution (like MIT, GPL, Apache...), 
+then we need that you include an authorization as a LABEL in Dockerfile like this: 
+```
+LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
+```
+Also if you want to specify the name and version of the image that will appear in the CHAIMELEON images repository,
+you can set the appropiate LABELS. For example:
+```
+LABEL name="my_cool_tool"
+LABEL version="1.0"
+```
+When the users list the images with `jobman images`, they will see that name and tag.
+
+### Description, usage and license
+The users will usually use your image via [jobman](https://github.com/chaimeleon-eu/jobman#workflow-and-examples).
+The command `jobman image details <image_name>` will show to the user this sections:
+ - `Description`: you can include a short description of the image, the utilities, the tools that include...
+ - `Usage`: the parameters accepted, those which the user can put after the "--" in the `jobman submit` command 
+            (they will be appended to the `ENTRYPOINT` of your image).
+ - `License`:  a link to the license document of your application (if any). You can [add one](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) easily.
+
+This sections will be copied from the _README.md_ file of your Github repository.  
+All of them are optional, if any of this sections are missing in your _README.md_ file, 
+then it will not be copied to the image and will be empty in the `jobman image details` command.
+
+You can take the _README.md_ of any of our images as an example, like this:  
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/README.md
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
@@ -156,5 +189,14 @@ For example you can take: "nvidia/cuda:10.2-runtime-ubuntu18.04" or "tensorflow/
 Generally, the images created by UPV for the CHAIMELEON project take the ubuntu official image as the base image, 
 and those with a tag which ends in `cuda10` or `cuda11` take the nvidia/cuda official image as the base image.
 
+### Recommendations for reducing the image size
+ - Add the parameter `--no-cache-dir` to the installations with _pip_.  
+   Example: `RUN pip install --no-cache-dir pydicom`
+ - Add the parameter `--no-install-recommends` to the installations with _apt-get_.  
+   If, when you put this parameter, some new error appears running your algorithm, 
+   the cause of this can be that some required package were installed as a recommendation of another. 
+   In that case just add the required package in the list of packages to install, 
+   don't rely on your required package will be recommended by the other package.
 
+---
 

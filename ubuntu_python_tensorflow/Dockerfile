@@ -11,6 +11,7 @@ LABEL name="ubuntu_python_tensorflow"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and tensorflow."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
+LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
 
 ############## Things done by the root user ##############
 USER root
@@ -36,8 +37,12 @@ RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon
 
+# Installation of cudnn libraries (required by tensorflow) only in case of the "cuda" version (GPU support)
 RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu11==8.7.0.84 && \
                                      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib ; fi
+# set the environment variable for the final container environment 
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+# Installation of Tensorflow
 RUN pip3 install --no-cache-dir tensorflow==2.9.3
 
 
