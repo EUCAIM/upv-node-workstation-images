@@ -1,7 +1,7 @@
 # ubuntu-python
 
 ## Description
-A basic image with ubuntu 22.04, python 3.10.6 and a few other useful tools/libraries like pandas, pydicom.
+A basic image with ubuntu 22.04, python 3.10.6 and a few other useful tools/libraries like pandas, pydicom.  
 The tags ending with `cuda11` includes also the CUDA toolkit/libraries.
 
 ## Usage

@@ -80,7 +80,7 @@ When the users list the images with `jobman images`, they will see that name and
 
 ### Description, usage and license
 The users will usually use your image via [jobman](https://github.com/chaimeleon-eu/jobman#workflow-and-examples).
-The command `jobman image details <image_name>` will show to the user this sections:
+The command `jobman image-details -i <image_name>` will show to the user this sections:
  - `Description`: you can include a short description of the image, the utilities, the tools that include...
  - `Usage`: the parameters accepted, those which the user can put after the "--" in the `jobman submit` command 
             (they will be appended to the `ENTRYPOINT` of your image).
@@ -92,6 +92,20 @@ then it will not be copied to the image and will be empty in the `jobman image d
 
 You can take the _README.md_ of any of our images as an example, like this:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/README.md
+
+#### Usage examples
+In the "Usage" section of your readme.md it is recommended to add some examples, as you can see in the previous link. 
+For that usage examples take into account that...
+ - Although you can put generic examples with `docker run`, you should put (additionally or instead) examples with `jobman submit`.
+ - In the arguments where the user set the path for **image inputs** you should use the path of datasets (`/home/chaimeleon/datasets/`).  
+   This directory is read-only and accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself.  
+   In this directory there is a subdirectory for every dataset selected for working by the user. 
+   And in every dataset there is an index file that should be used for walking through the contents of the dataset. 
+   Our recommendation for your algorithm is that simply accept as an argument the path of this file (`/home/chaimeleon/datasets/<dataset-id>/index.json`) and use it, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json).
+ - In the arguments of type result paths, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
+   This directory is accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself. 
+ 
+
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
