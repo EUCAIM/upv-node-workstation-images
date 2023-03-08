@@ -56,6 +56,8 @@ RUN echo "chaimeleon:chaimeleon" | chpasswd
 ADD run.sh /home/chaimeleon/.init/run.sh
 RUN chmod +x /home/chaimeleon/.init/run.sh
 
+COPY --chown=chaimeleon:chaimeleon application-examples /home/chaimeleon/application-examples/
+
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 
@@ -63,7 +65,7 @@ USER chaimeleon:chaimeleon
 #RUN echo "source /etc/bash_completion" >> /home/chaimeleon/.bashrc
 RUN poetry config virtualenvs.create false
 
-# Add dataset preparation script
+# Create the directories where some volumes will be mounted
 RUN mkdir -p /home/chaimeleon/datasets && \
     mkdir -p /home/chaimeleon/persistent-home && \
     mkdir -p /home/chaimeleon/persistent-shared-folder

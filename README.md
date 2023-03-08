@@ -99,13 +99,12 @@ For that usage examples take into account that...
  - Although you can put generic examples with `docker run`, you should put (additionally or instead) examples with `jobman submit`.
  - In the arguments where the user set the path for **image inputs** you should use the path of datasets (`/home/chaimeleon/datasets/`).  
    This directory is read-only and accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself.  
-   In this directory there is a subdirectory for every dataset selected for working by the user. 
+   In this directory there is a subdirectory for every dataset that the user selected for working. 
    And in every dataset there is an index file that should be used for walking through the contents of the dataset. 
-   Our recommendation for your algorithm is that simply accept as an argument the path of this file (`/home/chaimeleon/datasets/<dataset-id>/index.json`) and use it, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json).
- - In the arguments of type result paths, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
-   This directory is accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself. 
+   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) and use the index.json file that will be in that directory, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json) and [HERE](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/list-all-dcm-files.py) you can find a simple and useful example of reading this file for listing all DCM files.
+ - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
+   This directory is accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself. All the results that are not in the persistent directory will be lost at the end of job.
  
-
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
