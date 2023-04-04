@@ -24,6 +24,8 @@ USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Get the image up to date and install utility tools
+# 2023-02-07 Added python3-opencv now installed with apt because pip package (opencv-contrib-python) compiles from source and takes about 30 min, 
+#            and may require apt-package build-essential.
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
         bash-completion ca-certificates curl iputils-ping netcat \
@@ -32,13 +34,13 @@ RUN apt-get -y update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install required python packages
-# (first upgrade some essential packages to avoid later warnings/errors, because ubuntu packages is not always up-to-date)
-# opencv-contrib-python now installed with apt because pip package compiles from source and takes about 30 min, and may require apt-package build-essential)
+# Install required python packages (basic libraries for working with datasets)
+# First upgrade some essential packages to avoid later warnings/errors, because ubuntu packages is not always up-to-date
+# 2023-03-31 Added gdcm pylibjpeg pylibjpeg-libjpeg as required for visualizing some dicom files which use that format in the pixel array.
 RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt && \
     pip3 install --no-cache-dir keras && \
     pip3 install --no-cache-dir -U scikit-learn && \
-    pip3 install --no-cache-dir matplotlib scikit-image pandas pydicom
+    pip3 install --no-cache-dir matplotlib scikit-image pandas pydicom gdcm pylibjpeg pylibjpeg-libjpeg
 
 # Install poetry: popular dependecies manager, and used in the Quibim platform to install dependencies required for the image analysis modules.
 # And disable virtual environments (in a container usually there is only one project, one environment)

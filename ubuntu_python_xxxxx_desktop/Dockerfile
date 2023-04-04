@@ -35,8 +35,6 @@ RUN apt update && \
                 xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei  && \
     apt install -y --no-install-recommends \
                 lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme && \
-    apt autoclean -y && \
-    apt autoremove -y && \
     rm -rf /var/lib/apt/lists/* && \
     ln -s /usr/bin/firefox-esr /usr/bin/firefox
     
