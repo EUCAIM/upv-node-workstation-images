@@ -7,9 +7,11 @@ The tags ending with `cuda11` includes also the CUDA toolkit/libraries.
 ## Usage
 Put the command you want to execute after the `--` in the `jobman submit` command.  
 Examples:  
-  `jobman submit -i ubuntu-python-tensorflow:3.1 -- ls -l /home/chaimeleon/persistent-home/`  
-  `jobman submit -i ubuntu-python-tensorflow:3.1cuda11 -e -- nvidia-smi`  
-  `jobman submit -i ubuntu-python-tensorflow:3.1cuda11 -e -- python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+  `jobman submit -i ubuntu-python-tensorflow:3.2 -- ls -l persistent-home/`  
+  `jobman submit -i ubuntu-python-tensorflow:3.2cuda11 -e -- nvidia-smi`  
+  `jobman submit -i ubuntu-python-tensorflow:3.2cuda11 -e -- python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`  
+  `jobman submit -i ubuntu-python-tensorflow:3.2 -- python3 application-examples/list-all-dcm-files.py datasets/dc0dbf84-ebcf-470a-8b45-ef682ddafc6c`  
+  `jobman submit -i ubuntu-python-tensorflow:3.2 -- python3 application-examples/filter-series-by-orientation.py datasets/dc0dbf84-ebcf-470a-8b45-ef682ddafc6c Z_SAGITTAL persistent-home/index-prostate-sagittal.json`  
 
 ## License
 https://github.com/chaimeleon-eu/workstation-images/blob/main/LICENSE

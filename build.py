@@ -8,16 +8,16 @@ REGISTRY_HOST = "harbor.chaimeleon-eu.i3m.upv.es"
 REGISTRY_PATH_FOR_BATCH = "/chaimeleon-library-batch/"
 REGISTRY_PATH_FOR_DESKTOP = "/chaimeleon-library/"
 
-ubuntu_python_version = "3.1"
+ubuntu_python_version = "3.2"
 
-ubuntu_python_tensorflow_version = "3.1"
-ubuntu_python_pytorch_version = "3.1"
+ubuntu_python_tensorflow_version = "3.2"
+ubuntu_python_pytorch_version = "3.2"
 
-ubuntu_python_tensorflow_desktop_version = "3.3"
-ubuntu_python_pytorch_desktop_version = "3.3"
+ubuntu_python_tensorflow_desktop_version = "3.4"
+ubuntu_python_pytorch_desktop_version = "3.4"
 
-ubuntu_python_tensorflow_desktop_jupyter_version = "3.3"
-ubuntu_python_pytorch_desktop_jupyter_version = "3.3"
+ubuntu_python_tensorflow_desktop_jupyter_version = "3.4"
+ubuntu_python_pytorch_desktop_jupyter_version = "3.4"
 
 
 def cmd(command, exit_on_error=True):
