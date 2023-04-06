@@ -39,6 +39,13 @@ Image types, _jobman_ command and the catalog are explained in the next chapters
 
 For notifying new images or changes in your image that require to rebuild it, please contact us or [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository.
 
+### User guide
+Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
+So if you have not seen yet the user guide, it is a good moment:  
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb
+
+It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. Then you will be able to open Jupyter Notebooks and find the user guide in the subdirectory `application-examples` in the home directory.
+
 ## How to design a workstation image for the CHAIMELEON platform
 This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
 In this repository you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
@@ -126,13 +133,6 @@ For that usage examples take into account that...
    Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) and use the `index.json` file that will always be in that directory, with that name, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple and useful examples which read this file.
  - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
    This directory is also accessible using the same path in both the Desktop environment and the launched job environment. All the results that are not in the persistent directory will be lost at the end of the job.
-
-### User guide
-Before being a developer you should be a user in order to understand what is the expected behaviour of any application in the platform.  
-So if you have not seen yet the user guide, it is a good moment:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb
-
-It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. Then you will be able to open Jupyter Notebooks and find the user guide in the subdirectory `application-examples` in the home directory.
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
