@@ -1,10 +1,11 @@
 # workstation-images
+In this repository you can find the sources to build all the images created by UPV for the CHAIMELEON project.
 
 ### Build, test and push
-If you have made some change in any of the images, please open the script file (`build.py`) 
+After some change in any of the images, please open the script file (`build.py`) 
 and increase the version in the variables defined at the beginning.  
-You should increase the version and rebuild also the images based on the changed image.  
-Those are the dependencies of images:
+You should also increase the version of the images that are based on the changed image.  
+These are the dependencies of images:
 ```
  - ubuntu_python |-> ubuntu_python_tensorflow --> ubuntu_python_tensorflow_desktop --> ubuntu_python_tensorflow_desktop_jupyter
                  |-> ubuntu_python_pytorch --> ubuntu_python_pytorch_desktop --> ubuntu_python_pytorch_desktop_jupyter
@@ -16,10 +17,31 @@ python build.py
 ```
 You will be interactively asked to select which image to build, with or without CUDA, if you want to test, upload, etc.
 
+## Other images in CHAIMELEON platform
+ - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
+ - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) from BGU
+ - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) from Imperial
+ - [Privacy Preserver](https://github.com/chaimeleon-eu/image_batch_privacypreserver) from Imperial
+ - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) from Quibim
+
+## How to integrate your application in CHAIMELEON platform
+The normal procedure to integrate an application is creating a docker image which includes it and all the dependencies/libraries required to execute it.
+
+There are some conditions that the image must fulfill, as explained in the next chapter, which is a guide for developers to design the image.  
+Once the you have the dockerfile describing your image, you should upload it (with all the files needed for building the image) to a new repository in the [chaimeleon-eu](https://github.com/chaimeleon-eu) organization. 
+To easily find the repos in the organization, the name should be in the format `image_batch_YOUR_APPLICATION_NAME` or `image_interactive_YOUR_APPLICATION_NAME`.  
+We will check the image is according to the guide and then we will build and upload it to the CHAIMELEON image repository.
+So the users will see it in: 
+ - the list of `jobman images` command, if your application is non-interactive (batch)
+ - the catalog of applications to deploy, if your application is of type interactive.
+
+Image types, _jobman_ command and the catalog are explained in the next chapters.
+
+For notifying new images or changes in your image that require to rebuild it, please contact us or [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository.
 
 ## How to design a workstation image for the CHAIMELEON platform
 This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
-In this project you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
+In this repository you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
 You can take them as examples: 
   - without desktop (for batch jobs): ubuntu_python, ubuntu_python_tensorflow, ubuntu_python_pytorch
   - with desktop and browser (for interactive applications, GUI or WebUI): ubuntu_python_xxxxx_desktop, ubuntu_python_xxxxx_desktop_jupyter
@@ -98,12 +120,12 @@ In the "Usage" section of your readme.md it is recommended to add some examples,
 For that usage examples take into account that...
  - Although you can put generic examples with `docker run`, you should put (additionally or instead) examples with `jobman submit`.
  - In the arguments where the user set the path for **image inputs** you should use the path of datasets (`/home/chaimeleon/datasets/`).  
-   This directory is read-only and accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself.  
+   This directory is read-only and accessible using the same path in both the Desktop environment (from where the user launch jobs via jobman) and in the launched job environment.  
    In this directory there is a subdirectory for every dataset that the user selected for working. 
    And in every dataset there is an index file that should be used for walking through the contents of the dataset. 
-   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) and use the `index.json` file that will always be in that directory, with that name, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json) and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple and useful examples which read this file.
+   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) and use the `index.json` file that will always be in that directory, with that name, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple and useful examples which read this file.
  - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
-   This directory is accessible using the same path to both the Desktop instance (from where the user launch via jobman) and the launched job itself. All the results that are not in the persistent directory will be lost at the end of job.
+   This directory is also accessible using the same path in both the Desktop environment and the launched job environment. All the results that are not in the persistent directory will be lost at the end of the job.
 
 ### User guide
 Before being a developer you should be a user in order to understand what is the expected behaviour of any application in the platform.  
@@ -116,8 +138,11 @@ It is in Jupyter Notebook format, Github prints it very well but, if you want to
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
 Internet access is usually needed to install requirements and tools during the image building. 
 Once the image is built and moved to the CHAIMELEON repository, it will be used to create containers running within the platform, with no Internet access, 
-and so, any initial script that try to download anything from outside will fail. 
-The user only will be able to use browsers and tools like that to access internal services.
+and so, 
+ - any initial script that tries to download anything from outside will fail, 
+ - and any script or application executed by the user which tries to download anything from outside (Internet) will fail.
+Aside from this, you can see there is a browser in some of our images. 
+Indeed it is needed to access web applications and services running inside the cluster or even localy in the container itself.
 
 ### The "chaimeleon" user 
 The main process of the container will be run by the user with uid 1000 and gid 1000. 
@@ -126,7 +151,7 @@ or copy your application files into the container.
 The name is not important, but we recommend use "chaimeleon" to have an homogeneous environment whatever the type of workstation the user select for his/her work session.
 
 The "root" user is only used in image build time, 
-after the `USER` instruction all the processes will run with the normal user, including any init script, the shell accessed by SSH, 
+after the `USER  chaimeleon:chaimeleon` instruction all the processes will run with the normal user, including any init script, the shell accessed by SSH, 
 the desktop accessed by Guacamole or any web service (Jupyter Notebook, RStudio) for providing a web interface for the user.  
 The normal user should not be included into sudoers, the image repository admin will control that 
 (only in special cases the user can be added in sudoers for a concrete and safe command, never for any command).
@@ -182,7 +207,6 @@ There are two types of image depending on how the user interact with your applic
          but not to his/her local desktop, because the remote desktop app (Guacamole) is configured to allow upload but not download.
    
 ### (Optional) Include a desktop environment
-
 If your aplication has a graphical UI (or web UI), then you should install:
  - a light desktop environment for the user 
  - a VNC service for let the user access to the remote desktop thru our Guacamole service
