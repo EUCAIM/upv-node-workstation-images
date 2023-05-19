@@ -21,7 +21,7 @@ You will be interactively asked to select which image to build, with or without 
  - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
  - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) from BGU
  - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) from Imperial
- - [Privacy Preserver](https://github.com/chaimeleon-eu/image_batch_privacypreserver) from Imperial
+ - [Non-imaging Data Augmentation](https://github.com/chaimeleon-eu/image_batch_non-imaging-aug) from Imperial
  - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) from Quibim
 
 ## How to integrate your application in CHAIMELEON platform
@@ -35,9 +35,12 @@ So the users will see it in:
  - the list of `jobman images` command, if your application is non-interactive (batch)
  - the catalog of applications to deploy, if your application is of type interactive.
 
-Image types, _jobman_ command and the catalog are explained in the next chapters.
+The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
-For notifying new images or changes in your image that require to rebuild it, please contact us or [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository.
+**For notifying new images or changes in your image that require to rebuild it**, 
+please [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository 
+or contact us by email.
+It is recommended to add the label `version` (see [Labels](#labels)), increment it on every change and refer to its value in the issue.
 
 ### User guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
@@ -142,7 +145,7 @@ and so,
  - any initial script that tries to download anything from outside will fail, 
  - and any script or application executed by the user which tries to download anything from outside (Internet) will fail.
 Aside from this, you can see there is a browser in some of our images. 
-Indeed it is needed to access web applications and services running inside the cluster or even localy in the container itself.
+Indeed it is needed to access web applications and services running inside the cluster or even locally in the container itself.
 
 ### The "chaimeleon" user 
 The main process of the container will be run by the user with uid 1000 and gid 1000. 
