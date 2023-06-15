@@ -38,8 +38,7 @@ So the users will see it in:
 The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
 **For notifying new images or changes in your image that require to rebuild it**, 
-please [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository 
-or contact us by email.
+please [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository or contact us by email.
 It is recommended to add the label `version` (see [Labels](#labels)), increment it on every change and refer to its value in the issue.
 
 ### User guide
@@ -47,7 +46,9 @@ Before being a developer you should be a user: this way you can understand what 
 So if you have not seen yet the user guide, it is a good moment:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb
 
-It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. Then you will be able to open Jupyter Notebooks and find the user guide in the subdirectory `application-examples` in the home directory.
+It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, 
+you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. 
+Then you will be able to open Jupyter Notebooks and find the user guide in the subdirectory `application-examples` in the home directory.
 
 ## How to design a workstation image for the CHAIMELEON platform
 This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
@@ -105,10 +106,14 @@ LABEL authorization="This Dockerfile is intended to build a container image that
 Also if you want to specify the name and version of the image that will appear in the CHAIMELEON images repository,
 you can set the appropiate LABELS. For example:
 ```
-LABEL name="my_cool_tool"
+LABEL name="my-cool-tool"
 LABEL version="1.0"
 ```
-When the users list the images with `jobman images`, they will see that name and tag.
+When the users list the images with `jobman images`, they will see that name and the version as a tag. 
+Remember to increment the version if you make any change on the image because the kubernetes default policy to retrieve images is only pull 
+if the tag (version) required is not present in the node where the job will run.
+The tag `latest` will also be created pointing to the last version built.  
+
 
 ### Description, usage and license
 The users will usually use your image via [jobman](https://github.com/chaimeleon-eu/jobman#workflow-and-examples).
@@ -116,7 +121,8 @@ The command `jobman image-details -i <image_name>` will show to the user this se
  - `Description`: you can include a short description of the image, the utilities, the tools that include...
  - `Usage`: the parameters accepted, those which the user can put after the "--" in the `jobman submit` command 
             (they will be appended to the `ENTRYPOINT` of your image).
- - `License`:  a link to the license document of your application (if any). You can [add one](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) easily.
+ - `License`:  a link to the license document of your application (if any). 
+               You can [add one](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) easily.
 
 This sections will be copied from the _README.md_ file of your Github repository.  
 All of them are optional, if any of this sections are missing in your _README.md_ file, 
@@ -132,10 +138,15 @@ For that usage examples take into account that...
  - In the arguments where the user set the path for **image inputs** you should use the path of datasets (`/home/chaimeleon/datasets/`).  
    This directory is read-only and accessible using the same path in both the Desktop environment (from where the user launch jobs via jobman) and in the launched job environment.  
    In this directory there is a subdirectory for every dataset that the user selected for working. 
-   And in every dataset there is an index file that should be used for walking through the contents of the dataset. 
-   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) and use the `index.json` file that will always be in that directory, with that name, the schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple and useful examples which read this file.
+   And in every dataset directory there is an index file that should be used for walking through the contents of the dataset. 
+   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
+   and use the `index.json` file that will always be in that directory, with that name. 
+   The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
+   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple 
+   and useful examples which read this file.
  - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
-   This directory is also accessible using the same path in both the Desktop environment and the launched job environment. All the results that are not in the persistent directory will be lost at the end of the job.
+   This directory is also accessible using the same path in both the Desktop environment and the launched job environment. 
+   All the results that are not in the persistent directory will be lost at the end of the job.
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
@@ -173,7 +184,7 @@ PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;)
 echo -e "$PREVIOUS_PASSWORD\n$PASSWORD\n$PASSWORD" | (passwd $USER)
 ```
 
-For adding an init script you can do this (you should include in the ROOT part, no in the normal user part beacause `chmod` would fail): 
+For adding an init script you can do this (you should include in the ROOT part, no in the normal user part because `chmod` would fail): 
 ```
 # Add entrypoint script
 # (useful if we want to do things with environment variables defined by the user)
@@ -206,8 +217,10 @@ There are two types of image depending on how the user interact with your applic
          directly accesible from the user's local desktop browser (so the remote desktop is not needed), 
          but we can't do that due to the project restriction of downloading the medical data. 
          This is only possible in exceptional cases of trusted applications that can ensure the data can't be downloaded by the user.  
-         Usually the web apps allow download the data (directly or thru an API, if it is of type SPA) and, in this way, the user will be able to download to the remote desktop, 
-         but not to his/her local desktop, because the remote desktop app (Guacamole) is configured to allow upload but not download.
+         Usually the web apps allow download the data (directly or thru an API if it is of type SPA) so, using a private remote endpoint and a desktop within the platform, 
+         the user will be able to download data only to that remote desktop, 
+         but not to his/her local desktop, because the remote desktop connection app (Guacamole) is configured to allow upload files but not download
+         (indeed it is a web app in a public endpoint, but it is trusted and configurable to only download the video stream of desktop capture and not other files).
    
 ### (Optional) Include a desktop environment
 If your aplication has a graphical UI (or web UI), then you should install:
