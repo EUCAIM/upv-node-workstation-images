@@ -56,9 +56,14 @@ if [ -f /home/chaimeleon/persistent-shared-folder/apps/jobman/jobman.tar.gz ]; t
     cp /home/chaimeleon/persistent-shared-folder/apps/jobman/jobman.tar.gz .
     tar xzf jobman.tar.gz
     ln -s /home/chaimeleon/.local/lib/jobman/bin/jobman /home/chaimeleon/.local/bin/
-    #The settings file customized for CHAIMELEON platform
+fi
+
+#Jobman configuration for CHAIMELEON platform
+if [ -x "/home/chaimeleon/persistent-shared-folder/apps/jobman/" ]; then
     mkdir /home/chaimeleon/.jobman
     cp /home/chaimeleon/persistent-shared-folder/apps/jobman/settings.json /home/chaimeleon/.jobman/
+    # Set the list of datasets which will be used by jobs: copy the same list of datasets used by this desktop.
+    echo "$DATASETS_LIST" > /home/chaimeleon/.jobman/datasets.txt
 fi
 
 if [ -n "$GUACAMOLE_USER" ]; then
