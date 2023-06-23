@@ -29,7 +29,7 @@ def cmd(command, exit_on_error=True):
 login_done = False
 uploaded_images = []
 
-def upload_image(image):
+def upload_image(image: str, latest_tag=False):
     global login_done, uploaded_images
     if input("Do you want to upload the image? [Y/n] ").lower() == "n": return
     while True:
@@ -42,13 +42,20 @@ def upload_image(image):
             login_done = True
         else:
             if input("Abort upload? [y/N] ").lower() == "y": return
+            
+    if latest_tag:
+        latest_tag = image[0:image.find(':')] + ":latest"
+        if image.find("cuda") > 0: latest_tag += "-cuda"
+        if input("Do you want to tag as "+latest_tag+"? [Y/n] ").lower() == "n": return
+        cmd("docker tag "+image+ " " +latest_tag, exit_on_error=False)
+        cmd("docker push " +latest_tag, exit_on_error=False)
     
 def logout():
     if input("Do you want to logout? [y/N] ").lower() == "y": 
         cmd("docker logout "+REGISTRY_HOST)
 
 def remove_local_image(image):
-    if input("Do you want to remove the local image '"+image+"'? [Y/n] ").lower() != "n": 
+    if input("Do you want to remove the local image '"+image+"'? [y/N] ").lower() == "y": 
         cmd("docker rmi "+image)
     
 
@@ -70,7 +77,7 @@ def build_ubuntu_python(gpu=None):
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
         cmd("docker run -it --rm --name testing01 "+target_image+" bash")
 
-    upload_image(target_image)
+    upload_image(target_image, latest_tag=True)
 
 class AI_TOOL(enum.Enum):
    tensorflow = 1
@@ -98,7 +105,7 @@ def build_ubuntu_python_aitool(aitool:AI_TOOL, gpu=None):
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
         cmd("docker run -it --rm --name testing01 "+target_image+" bash")
 
-    upload_image(target_image)
+    upload_image(target_image, latest_tag=True)
 
 def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
@@ -228,7 +235,9 @@ if __name__ == '__main__':
 
     if image == "all":
         for image in IMAGES[1:]: build(image, gpu=False)
-        for image in IMAGES[1:]: build(image, gpu=True)
+        for image in IMAGES[1:]: 
+            if not image.find("desktop") > 0:  # Skip build GPU images for desktops, currently not used because the GPU is only available for jobs
+                build(image, gpu=True)
     else:
         build(image)
 
