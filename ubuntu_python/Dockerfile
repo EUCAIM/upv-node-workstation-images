@@ -65,6 +65,18 @@ COPY --chown=chaimeleon:chaimeleon application-examples /home/chaimeleon/applica
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 
+# Install udocker to allow the user to launch Docker containers without being root
+RUN mkdir -p /home/chaimeleon/.local/lib \
+    && cd /home/chaimeleon/.local/lib \
+    && curl -L https://github.com/indigo-dc/udocker/releases/download/1.3.9/udocker-1.3.9.tar.gz > udocker-1.3.9.tar.gz \
+    && tar zxvf udocker-1.3.9.tar.gz \
+    && export PATH=`pwd`/udocker-1.3.9/udocker:$PATH \
+    && sed -i '1s/python/python3/' /home/chaimeleon/.local/lib/udocker-1.3.9/udocker/maincmd.py \
+    && udocker install \
+    && rm udocker-1.3.9.tar.gz
+
+ENV PATH="${PATH}:/home/chaimeleon/.local/lib/udocker-1.3.9/udocker"
+
 ## Enable autocompletion
 #RUN echo "source /etc/bash_completion" >> /home/chaimeleon/.bashrc
 RUN poetry config virtualenvs.create false
