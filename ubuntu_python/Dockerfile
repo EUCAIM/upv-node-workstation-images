@@ -30,17 +30,19 @@ RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
         bash-completion ca-certificates curl iputils-ping netcat \
         man-db net-tools traceroute vim parallel \
-        python3-pip gnupg2 xattr pv bsdmainutils python3-opencv  && \
+        python3-pip gnupg2 xattr pv bsdmainutils python3-opencv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install required python packages (basic libraries for working with datasets)
 # First upgrade some essential packages to avoid later warnings/errors, because ubuntu packages is not always up-to-date
-# 2023-03-31 Added gdcm pylibjpeg pylibjpeg-libjpeg as required for visualizing some dicom files which use that format in the pixel array.
+# python-gdcm, pylibjpeg and pylibjpeg-libjpeg required (by pydicom) for visualizing some dicom files which use that format in the pixel array.
 RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt && \
-    pip3 install --no-cache-dir keras && \
-    pip3 install --no-cache-dir -U scikit-learn && \
-    pip3 install --no-cache-dir matplotlib scikit-image pandas pydicom gdcm pylibjpeg pylibjpeg-libjpeg
+    pip3 install --no-cache-dir \
+        tqdm argparse \
+        keras scipy matplotlib scikit-learn scikit-image pandas \
+        pydicom python-gdcm pylibjpeg pylibjpeg-libjpeg \
+        dicom2nifti simpleitk h5py nibabel
 
 # Install poetry: popular dependecies manager, and used in the Quibim platform to install dependencies required for the image analysis modules.
 # And disable virtual environments (in a container usually there is only one project, one environment)
