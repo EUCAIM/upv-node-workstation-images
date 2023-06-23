@@ -22,6 +22,7 @@ LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 USER root
 #RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
 
+# libxkbcommon-x11-0, libxcb-icccm4, libxcb-image0, libxcb-keysyms1, libxcb-randr0, libxcb-render-util0 are required by itk-snap
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -32,7 +33,8 @@ RUN apt update && \
     add-apt-repository ppa:mozillateam/ppa && \
     apt update && \
     apt install -y --no-install-recommends \
-                xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei  && \
+                xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei \
+                libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 && \
     apt install -y --no-install-recommends \
                 lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme && \
     rm -rf /var/lib/apt/lists/* && \
@@ -80,6 +82,18 @@ COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
 RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
 
 EXPOSE 2222
+
+########## itk-snap installation
+RUN cd /tmp \
+    && curl -o itk-snap.tgz 'https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz' \
+    && tar xzf itk-snap.tgz \
+    && cp -av ./itksnap-*/* /usr/local/ \
+    && rm -rf ./itksnap-*/ itk-snap.tgz
+
+# http://www.nitrc.org/frs/downloadlink.php/13395
+# https://sourceforge.net/projects/itk-snap/files/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz/download
+# https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz
+# https://sourceforge.net/projects/itk-snap/files/latest/download
 
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
