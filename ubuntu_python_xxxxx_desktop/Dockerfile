@@ -36,7 +36,7 @@ RUN apt update && \
                 xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei \
                 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 && \
     apt install -y --no-install-recommends \
-                lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme && \
+                lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme xterm && \
     rm -rf /var/lib/apt/lists/* && \
     ln -s /usr/bin/firefox-esr /usr/bin/firefox
     
@@ -55,6 +55,18 @@ RUN pip3 install --no-cache-dir guacli
 
 EXPOSE 5900
 
+########## SSH service installation
+RUN apt update && \
+    apt install -y --no-install-recommends openssh-server && \
+    apt autoclean -y && \
+    apt autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+        
+COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
+RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
+
+EXPOSE 2222
+
 ########## jobman installation
 # The nodesource's script adds the PPA and do apt update
 RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
@@ -70,18 +82,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
 #   && npx tsc \
 #   && ln -s /opt/jobman/bin/jobman /usr/bin/
 #   && cp src/settings.json /home/chaimeleon/.jobman/
-
-########## SSH service installation
-RUN apt update && \
-    apt install -y --no-install-recommends openssh-server && \
-    apt autoclean -y && \
-    apt autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
-        
-COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
-RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
-
-EXPOSE 2222
 
 ########## itk-snap installation
 RUN cd /tmp \
