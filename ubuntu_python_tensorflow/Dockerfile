@@ -43,7 +43,7 @@ RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu
 # set the environment variable for the final container environment 
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 # Installation of Tensorflow
-RUN pip3 install --no-cache-dir tensorflow==2.9.3
+RUN pip3 install --no-cache-dir tensorflow==2.12.0
 
 
 # Verify cudnn (required only for cuda version, for use GPU):
