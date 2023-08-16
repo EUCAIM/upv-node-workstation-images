@@ -19,10 +19,12 @@ You will be interactively asked to select which image to build, with or without 
 
 ## Other images in CHAIMELEON platform
  - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
+ - [Analitical Engine - new version](https://github.com/chaimeleon-eu/analytical-engine) from Bahia
  - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) from BGU
  - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) from Imperial
  - [Non-imaging Data Augmentation](https://github.com/chaimeleon-eu/image_batch_non-imaging-aug) from Imperial
  - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) from Quibim
+ - [SHAP Explainability Radiomics](https://github.com/chaimeleon-eu/image_batch_shap_explainability_radiomics) from University of Maastricht
 
 ## How to integrate your application in CHAIMELEON platform
 The normal procedure to integrate an application is creating a docker image which includes it and all the dependencies/libraries required to execute it.

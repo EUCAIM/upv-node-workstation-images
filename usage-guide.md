@@ -70,3 +70,33 @@ Once you need to launch the execution on the overall dataset (or using a GPU) yo
 CHAIMELEON provides a command line tool named jobman specifically designed to manage batch processes (jobs). 
 This tool allows the efficient distribution of the computational resources available in CHAIMELEON by launching the workloads as jobs managed by Kubernetes. 
 Each desktop has jobman available as a command. There is an example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb)
+
+Jobman gives access to 21 advanced computational resources that are organized in a queue. 
+There are four types of resources and are labeled as small-gpu, medium-gpu, large-gpu and no-gpu. 
+The features of these resource types are the following*:
+ - small-gpu. This queue provides 8 resources. Thus, it can execute 8 batch jobs concurrently (from different users). 
+              Each resource has 4 cores, 32 GB RAM and a GPU Nvidia A30 with 6 GB.
+              In this queue, the time limit for each batch job is 16 hours. If the job is not done within this time, it will be automatically deleted.
+ - medium-gpu. This queue provides 4 resources. Thus, it can execute 4 batch jobs concurrently. 
+               Each resource has 8 cores, 64 GB RAM and a GPU Nvidia A30 with 12 GB.
+               In this queue, the time limit for each batch job is 24 hours. If the job is not done within this time, it will be automatically deleted.
+ - large-gpu. This queue provides 5 resources. Thus, it can execute 5 batch jobs concurrently. 
+              Each resource has 8 cores, 64 GB RAM and a GPU Nvidia V100 with 32 GB.
+              In this queue, the time limit for each batch job is 24 hours. If the job is not done within this time, it will be automatically deleted.
+ - no-gpu. This queue provides 4 resources. Thus, it can execute 4 batch jobs concurrently. 
+           Each resource has 8 cores, 64 GB RAM without GPU.
+           In this queue, the time limit for each batch job is 8 hours. If the job is not done within this time, it will be automatically deleted.
+           
+* This are rough numbers, we can change them according to demand.
+
+You can launch batch jobs from your desktop using the Jobman Client tool (jobman) at any time (24x7), taking into account the following points:
+ - The queue of Jobman follows a First Input First Output (FIFO) policy by type of resource required.
+ - Each user can only have one batch job active (waiting in the queue or running). 
+   As an example, if a user launches a job as small-gpu, s(he) won’t be able to launch another one (no-gpu, small-gpu, medium-gpu or large-gpu) until that job ends or (s)he deletes it.
+ - If a user launches a type of batch job and all resources of this type are busy, the job will wait for its execution in the queue until the previous launched jobs targeting the same resource type ends. 
+   Both waiting and running are considered active batch jobs. 
+   As an example, if a user launches a batch job targeting a large-gpu resource, and there are 5 large-gpu jobs running at this moment, 
+   the new job will be enqueued and considered active until one large-gpu resource is released.
+ - Resources used by jobs launched by jobman are independent of those assigned to the desktops. 
+   Thus, a participant can always employ his/her respective desktop for executing processes locally without launching through jobman, even if s(he) already has an active batch job launched with jobman.
+

@@ -48,7 +48,13 @@ def upload_image(image: str, latest_tag=False):
         if image.find("cuda") > 0: latest_tag += "-cuda"
         if input("Do you want to tag as "+latest_tag+"? [Y/n] ").lower() == "n": return
         cmd("docker tag "+image+ " " +latest_tag, exit_on_error=False)
-        cmd("docker push " +latest_tag, exit_on_error=False)
+        while True:
+            ret = cmd("docker push " +latest_tag, exit_on_error=False)
+            if ret == 0: 
+                uploaded_images.append(latest_tag)
+                break
+            if input("Uploading error. Do you want to retry? [Y/n] ").lower() == "n": return
+
     
 def logout():
     if input("Do you want to logout? [y/N] ").lower() == "y": 

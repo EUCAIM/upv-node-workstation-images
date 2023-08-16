@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if curl --connect-timeout 4 pypi.org; then
+if curl --connect-timeout 4 pypi.org 2> /dev/null; then
     # if there is connection to Internet, upgrade pip and keyrings.alt to avoid warnings
-    pip3 install --upgrade pip
-    pip3 install --upgrade keyrings.alt
+    pip3 install --upgrade pip > /dev/null 2>&1
+    pip3 install --upgrade keyrings.alt > /dev/null 2>&1
 fi
 
 # The usual path for binaries of apps installed by the user
