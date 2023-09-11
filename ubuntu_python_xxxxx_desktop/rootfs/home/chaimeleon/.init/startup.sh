@@ -32,7 +32,13 @@ if [ -z "$PASSWORD" ]; then
 fi
 echo "Changing password for the user $USER"
 #echo "$USER:$PASSWORD" | chpasswd
-echo -e "$PREVIOUS_PASSWORD\n$PASSWORD\n$PASSWORD" | (passwd $USER)
+if [ $(whoami) == 'root' ]; then 
+    echo -e "$PASSWORD\n$PASSWORD" | (passwd $USER)
+    # add the user "chaimeleon" to the group "sudo"
+    usermod -aG sudo chaimeleon
+else
+    echo -e "$PREVIOUS_PASSWORD\n$PASSWORD\n$PASSWORD" | (passwd $USER)
+fi
 
 HOME=/home/$USER
 #[ -d "/dev/snd" ] && chgrp -R adm /dev/snd

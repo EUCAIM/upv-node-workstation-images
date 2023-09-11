@@ -3,7 +3,7 @@
 set -e
 [ "$DEBUG" == 'true' ] && set -x
 
-echo "> Starting SSHD"
+echo "> Setting up SSHD..."
 
 ## Update MOTD
 #if [ -v MOTD ]; then
@@ -15,6 +15,10 @@ echo "> Starting SSHD"
 mkdir -p /home/chaimeleon/.custom_ssh
 SSHD_CONFIG_FILE=/home/chaimeleon/.custom_ssh/sshd_config
 ALGORITHMS="rsa ecdsa ed25519"
+
+if [ $(whoami) == 'root' ]; then 
+    mkdir /run/sshd
+fi
 
 echo "
 Port 2222
