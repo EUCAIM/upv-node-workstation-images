@@ -11,9 +11,9 @@ ARG TARGET_VERSION="unknown"
 #ARG BASE_VERSION="unknown"
 #ARG TARGET_VERSION="unknown"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library/ubuntu_python_${AI_TOOL}_desktop:${BASE_VERSION}${CUDA_VERSION}
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library/ubuntu-python-${AI_TOOL}-desktop:${BASE_VERSION}${CUDA_VERSION}
 
-LABEL name="ubuntu_python_${AI_TOOL}_desktop_jupyter"
+LABEL name="ubuntu-python-${AI_TOOL}-desktop-jupyter"
 LABEL version="${TARGET_VERSION}${CUDA_VERSION}"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${AI_TOOL}, ${CUDA_VERSION}, lxde desktop, vnc and ssh services, and jupyter notebooks web service."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"

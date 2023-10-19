@@ -7,8 +7,8 @@ and increase the version in the variables defined at the beginning.
 You should also increase the version of the images that are based on the changed image.  
 These are the dependencies of images:
 ```
- - ubuntu_python |-> ubuntu_python_tensorflow --> ubuntu_python_tensorflow_desktop --> ubuntu_python_tensorflow_desktop_jupyter
-                 |-> ubuntu_python_pytorch --> ubuntu_python_pytorch_desktop --> ubuntu_python_pytorch_desktop_jupyter
+ - ubuntu-python |-> ubuntu-python-tensorflow --> ubuntu-python-tensorflow-desktop --> ubuntu-python-tensorflow-desktop-jupyter
+                 |-> ubuntu-python-pytorch  --> ubuntu-python-pytorch-desktop   --> ubuntu-python-pytorch-desktop-jupyter
 ```
 
 Then simply run the script:
@@ -46,7 +46,7 @@ It is recommended to add the label `version` (see [Labels](#labels)), increment 
 ### User guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
 So if you have not seen yet the user guide, it is a good moment:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/application-examples/dataset-access-guide.ipynb
 
 It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, 
 you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. 
@@ -56,8 +56,8 @@ Then you will be able to open Jupyter Notebooks and find the user guide in the s
 This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
 In this repository you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
 You can take them as examples: 
-  - without desktop (for batch jobs): ubuntu_python, ubuntu_python_tensorflow, ubuntu_python_pytorch
-  - with desktop and browser (for interactive applications, GUI or WebUI): ubuntu_python_xxxxx_desktop, ubuntu_python_xxxxx_desktop_jupyter
+  - without desktop (for batch jobs): ubuntu-python, ubuntu-python-tensorflow, ubuntu-python-pytorch
+  - with desktop and browser (for interactive applications, GUI or WebUI): ubuntu-python-xxxxx-desktop, ubuntu-python-xxxxx-desktop-jupyter
 
 If your application requires python and some of the tools included in one of these images, you can take it as the base for your dockerfile, 
 putting it in the `FROM` instruction. 
@@ -131,7 +131,7 @@ All of them are optional, if any of this sections are missing in your _README.md
 then it will not be copied to the image and will be empty in the `jobman image details` command.
 
 You can take the _README.md_ of any of our images as an example, like this:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/README.md
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/README.md
 
 #### Usage examples
 In the "Usage" section of your readme.md it is recommended to add some examples, as you can see in the previous link. 
@@ -144,7 +144,7 @@ For that usage examples take into account that...
    Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
    and use the `index.json` file that will always be in that directory, with that name. 
    The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
-   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu_python/application-examples) you can find some simple 
+   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/application-examples) you can find some simple 
    and useful examples which read this file.
  - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
    This directory is also accessible using the same path in both the Desktop environment and the launched job environment. 
@@ -230,7 +230,7 @@ If your aplication has a graphical UI (or web UI), then you should install:
  - a VNC service for let the user access to the remote desktop thru our Guacamole service
  - a SSH service for let the user upload files to the remote desktop thru our Guacamole service
  
-You can take the dockerfile in `ubuntu_python_xxxxx_desktop` as an example or as the base for your dockerfile (putting it in the `FROM` instruction of yours).
+You can take the dockerfile in `ubuntu-python-xxxxx-desktop` as an example or as the base for your dockerfile (putting it in the `FROM` instruction of yours).
 In this example "lxde" package is installed as a desktop environment (with other uselful tools), "x11vnc" package for the VNC service
 and "openssh-server" package for the SSH service.  
 It is important also to mention the installation of "supervisor" as a service to start and keep running the rest of services. 
@@ -238,7 +238,7 @@ It is required and common in dockerized apps with more than one service.
   
 #### Include a browser 
 If your application has a web interface then you can install a browser, for example with: ``` apt install firefox ```.
-In our example `ubuntu_python_xxxxx_desktop_jupyter` it is included.
+In our example `ubuntu-python-xxxxx-desktop-jupyter` it is included.
 
 Also you may want to add an init script for starting the browser and go to initial web page of your application.
   

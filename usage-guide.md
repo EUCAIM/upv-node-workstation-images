@@ -5,7 +5,7 @@ and to manage (launch, monitor) batch processes (jobs) on the computational reso
 
 There is a dedicated guide to access and explore datasets, 
 and it includes the launching and monitoring of a batch process (job) with jobman:
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/application-examples/dataset-access-guide.ipynb
 
 ## Deployment and deletion of desktops
 You can deploy and delete a desktop in the CHAIMELEON platform as many times as you considers. 
@@ -36,7 +36,7 @@ There are three important directories in the remote desktop and also in jobs (th
   - `/home/chaimeleon/datasets`
     All the datasets you selected to work with. 
     There is a read-only directory for each and labelled with its Persistent Unique Identifier (PID) in CHAIMELEON.
-    More details of how they are organized in the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb).
+    More details of how they are organized in the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/application-examples/dataset-access-guide.ipynb).
     
   - `/home/chaimeleon/persistent-home`
     Private persistent storage: for your algorithms, results and whatever you need for the work.
@@ -69,7 +69,8 @@ Once you need to launch the execution on the overall dataset (or using a GPU) yo
 ## Jobman client tool 
 CHAIMELEON provides a command line tool named jobman specifically designed to manage batch processes (jobs). 
 This tool allows the efficient distribution of the computational resources available in CHAIMELEON by launching the workloads as jobs managed by Kubernetes. 
-Each desktop has jobman available as a command. There is an example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu_python/application-examples/dataset-access-guide.ipynb)
+Each desktop has jobman available as a command. 
+There is an example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/application-examples/dataset-access-guide.ipynb)
 
 Jobman gives access to 21 advanced computational resources that are organized in a queue. 
 There are four types of resources and are labeled as small-gpu, medium-gpu, large-gpu and no-gpu. 

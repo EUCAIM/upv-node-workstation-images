@@ -11,7 +11,7 @@ ARG TARGET_VERSION="unknown"
 
 FROM $IMAGE_NAME
 
-LABEL name="ubuntu_python"
+LABEL name="ubuntu-python"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and other tools."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"

@@ -5,10 +5,10 @@ ARG TARGET_VERSION="unknown"
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda11"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu_python:${BASE_VERSION}${CUDA_VERSION}
+FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu-python:${BASE_VERSION}${CUDA_VERSION}
 # FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime        We can build from a container with pytorch already installed (untested alternative)
 
-LABEL name="ubuntu_python_pytorch"
+LABEL name="ubuntu-python-pytorch"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and pyTorch."
 LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"

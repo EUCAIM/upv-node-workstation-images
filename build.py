@@ -73,11 +73,11 @@ def build_ubuntu_python(gpu=None):
     IMAGE_BASE = "nvidia/cuda:11.8.0-runtime-ubuntu22.04" if gpu else "ubuntu:22.04"
     CUDA_VERSION = "cuda11" if gpu else ""
     
-    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_BATCH+"ubuntu_python:"+TARGET_VERSION+CUDA_VERSION
+    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_BATCH+"ubuntu-python:"+TARGET_VERSION+CUDA_VERSION
     cmd("docker build -t "+target_image
        +" --build-arg IMAGE_NAME="+IMAGE_BASE+" --build-arg CUDA_VERSION="+CUDA_VERSION
        +" --build-arg TARGET_VERSION="+TARGET_VERSION
-       +" ubuntu_python")
+       +" ubuntu-python")
     
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
@@ -101,11 +101,11 @@ def build_ubuntu_python_aitool(aitool:AI_TOOL, gpu=None):
     
     CUDA_VERSION="cuda11" if gpu else ""
 
-    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_BATCH+"ubuntu_python_"+aitool.name+":"+TARGET_VERSION+CUDA_VERSION
+    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_BATCH+"ubuntu-python-"+aitool.name+":"+TARGET_VERSION+CUDA_VERSION
     cmd("docker build -t "+target_image
        +" --build-arg BASE_VERSION="+BASE_VERSION+" --build-arg CUDA_VERSION="+CUDA_VERSION
        +" --build-arg TARGET_VERSION="+TARGET_VERSION
-       +" ubuntu_python_"+aitool.name)
+       +" ubuntu-python-"+aitool.name)
 
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
@@ -125,11 +125,11 @@ def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
 
     CUDA_VERSION="cuda11" if gpu else ""
 
-    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_DESKTOP+"ubuntu_python_"+aitool.name+"_desktop:"+TARGET_VERSION+CUDA_VERSION
+    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_DESKTOP+"ubuntu-python-"+aitool.name+"-desktop:"+TARGET_VERSION+CUDA_VERSION
     cmd("docker build -t "+target_image
        +" --build-arg AI_TOOL="+aitool.name+" --build-arg BASE_VERSION="+BASE_VERSION+" --build-arg CUDA_VERSION="+CUDA_VERSION
        +" --build-arg TARGET_VERSION="+TARGET_VERSION
-       +" ubuntu_python_xxxxx_desktop")
+       +" ubuntu-python-xxxxx-desktop")
 
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
@@ -141,7 +141,7 @@ def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
            +' -e GUACAMOLE_PASSWORD="XXXXXXXXXXXX" '
            +' -e GUACD_HOST="10.98.114.250" '
            +' -e SSH_ENABLE_PASSWORD_AUTH=true '
-           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu_python_'+aitool.name+'_desktop '
+           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu-python-'+aitool.name+'-desktop '
            +' -e GATEWAY_PORTS=true '
            +' -e TCP_FORWARDING=true '
            +' --name testing01 '
@@ -168,11 +168,11 @@ def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
 
     CUDA_VERSION="cuda11" if gpu else ""
 
-    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_DESKTOP+"ubuntu_python_"+aitool.name+"_desktop_jupyter:"+TARGET_VERSION+CUDA_VERSION
+    target_image = REGISTRY_HOST+REGISTRY_PATH_FOR_DESKTOP+"ubuntu-python-"+aitool.name+"-desktop-jupyter:"+TARGET_VERSION+CUDA_VERSION
     cmd("docker build -t "+target_image
        +" --build-arg AI_TOOL="+aitool.name+" --build-arg BASE_VERSION="+BASE_VERSION+" --build-arg CUDA_VERSION="+CUDA_VERSION
        +" --build-arg TARGET_VERSION="+TARGET_VERSION
-       +" ubuntu_python_xxxxx_desktop_jupyter")
+       +" ubuntu-python-xxxxx-desktop-jupyter")
 
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
@@ -184,7 +184,7 @@ def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
            +' -e GUACAMOLE_PASSWORD="XXXXXXXXXXXX" '
            +' -e GUACD_HOST="10.98.114.250" '
            +' -e SSH_ENABLE_PASSWORD_AUTH=true '
-           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu_python_'+aitool.name+'_desktop '
+           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu-python-'+aitool.name+'-desktop '
            +' -e GATEWAY_PORTS=true '
            +' -e TCP_FORWARDING=true '
            +' --name testing01 '
@@ -200,26 +200,26 @@ def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
     upload_image(target_image)
 
 
-IMAGES = ["all", "ubuntu_python", 
-          "ubuntu_python_tensorflow", "ubuntu_python_pytorch", 
-          "ubuntu_python_tensorflow_desktop", "ubuntu_python_pytorch_desktop",
-          "ubuntu_python_tensorflow_desktop_jupyter", "ubuntu_python_pytorch_desktop_jupyter"]
+IMAGES = ["all", "ubuntu-python", 
+          "ubuntu-python-tensorflow", "ubuntu-python-pytorch", 
+          "ubuntu-python-tensorflow-desktop", "ubuntu-python-pytorch-desktop",
+          "ubuntu-python-tensorflow-desktop-jupyter", "ubuntu-python-pytorch-desktop-jupyter"]
 
 
 def build(image, gpu=None):
-    if image == "ubuntu_python":
+    if image == "ubuntu-python":
         build_ubuntu_python(gpu)
-    elif image == "ubuntu_python_tensorflow":
+    elif image == "ubuntu-python-tensorflow":
         build_ubuntu_python_aitool(AI_TOOL.tensorflow, gpu)
-    elif image == "ubuntu_python_pytorch":
+    elif image == "ubuntu-python-pytorch":
         build_ubuntu_python_aitool(AI_TOOL.pytorch, gpu)
-    elif image == "ubuntu_python_tensorflow_desktop":
+    elif image == "ubuntu-python-tensorflow-desktop":
         build_ubuntu_python_aitool_desktop(AI_TOOL.tensorflow, gpu)
-    elif image == "ubuntu_python_pytorch_desktop":
+    elif image == "ubuntu-python-pytorch-desktop":
         build_ubuntu_python_aitool_desktop(AI_TOOL.pytorch, gpu)
-    elif image == "ubuntu_python_tensorflow_desktop_jupyter":
+    elif image == "ubuntu-python-tensorflow-desktop-jupyter":
         build_ubuntu_python_aitool_desktop_jupyter(AI_TOOL.tensorflow, gpu)
-    elif image == "ubuntu_python_pytorch_desktop_jupyter":
+    elif image == "ubuntu-python-pytorch-desktop-jupyter":
         build_ubuntu_python_aitool_desktop_jupyter(AI_TOOL.pytorch, gpu)
 
 if __name__ == '__main__':
