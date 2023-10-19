@@ -49,6 +49,7 @@ COPY rootfs/etc /etc/
 COPY rootfs/usr /usr/ 
 COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
 RUN chmod +x /home/chaimeleon/.init/startup.sh && \
+    chmod +x /home/chaimeleon/.local/bin/install-jobman && \
     chmod +x /usr/local/bin/xvfb.sh
 
 RUN pip3 install --no-cache-dir guacli
