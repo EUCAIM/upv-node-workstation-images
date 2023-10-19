@@ -26,11 +26,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Get the image up to date and install utility tools
 # 2023-02-07 Added python3-opencv now installed with apt because pip package (opencv-contrib-python) compiles from source and takes about 30 min, 
 #            and may require apt-package build-essential.
+# 2023-10-18 It seem now the base image not includes the nvidia-smi command. Added nvidia-utils-525 just for that.
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
         bash-completion ca-certificates curl iputils-ping netcat \
         man-db net-tools traceroute vim parallel \
         python3-pip gnupg2 xattr pv bsdmainutils python3-opencv && \
+    if [ ! -z "$CUDA_VERSION" ] ; then apt-get -y install --no-install-recommends nvidia-utils-525; fi  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
