@@ -8,16 +8,16 @@ REGISTRY_HOST = "harbor.chaimeleon-eu.i3m.upv.es"
 REGISTRY_PATH_FOR_BATCH = "/chaimeleon-library-batch/"
 REGISTRY_PATH_FOR_DESKTOP = "/chaimeleon-library/"
 
-ubuntu_python_version = "3.5"
+ubuntu_python_version = "3.6"
 
-ubuntu_python_tensorflow_version = "3.5"
-ubuntu_python_pytorch_version = "3.5"
+ubuntu_python_tensorflow_version = "3.6"
+ubuntu_python_pytorch_version = "3.6"
 
-ubuntu_python_tensorflow_desktop_version = "3.9"
-ubuntu_python_pytorch_desktop_version = "3.9"
+ubuntu_python_tensorflow_desktop_version = "3.12"
+ubuntu_python_pytorch_desktop_version = "3.11"
 
-ubuntu_python_tensorflow_desktop_jupyter_version = "3.9"
-ubuntu_python_pytorch_desktop_jupyter_version = "3.9"
+ubuntu_python_tensorflow_desktop_jupyter_version = "3.12"
+ubuntu_python_pytorch_desktop_jupyter_version = "3.11"
 
 
 def cmd(command, exit_on_error=True):
@@ -92,10 +92,10 @@ class AI_TOOL(enum.Enum):
 def build_ubuntu_python_aitool(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
-    if aitool == AI_TOOL.tensorflow.value:
+    if aitool == AI_TOOL.tensorflow:
         TARGET_VERSION = ubuntu_python_tensorflow_version
         BASE_VERSION = ubuntu_python_version
-    else:  # aitool == AI_TOOL.pytorch.value
+    else:  # aitool == AI_TOOL.pytorch
         TARGET_VERSION = ubuntu_python_pytorch_version
         BASE_VERSION = ubuntu_python_version
     
@@ -116,10 +116,10 @@ def build_ubuntu_python_aitool(aitool:AI_TOOL, gpu=None):
 def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
-    if aitool == AI_TOOL.tensorflow.value:
+    if aitool == AI_TOOL.tensorflow:
         TARGET_VERSION = ubuntu_python_tensorflow_desktop_version
         BASE_VERSION = ubuntu_python_tensorflow_version
-    else:  # aitool == AI_TOOL.pytorch.value
+    else:  # aitool == AI_TOOL.pytorch
         TARGET_VERSION = ubuntu_python_pytorch_desktop_version
         BASE_VERSION = ubuntu_python_pytorch_version
 
@@ -159,10 +159,10 @@ def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
 def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
     if gpu==None: gpu = input("Do you want to build with CUDA? [y/N] ").lower() == "y"
 
-    if aitool == AI_TOOL.tensorflow.value:
+    if aitool == AI_TOOL.tensorflow:
         TARGET_VERSION = ubuntu_python_tensorflow_desktop_jupyter_version
         BASE_VERSION = ubuntu_python_tensorflow_desktop_version
-    else:  # aitool == AI_TOOL.pytorch.value
+    else:  # aitool == AI_TOOL.pytorch
         TARGET_VERSION = ubuntu_python_pytorch_desktop_jupyter_version
         BASE_VERSION = ubuntu_python_pytorch_desktop_version
 
