@@ -34,7 +34,10 @@ RUN apt-get -y update && \
         python3-pip gnupg2 xattr pv bsdmainutils python3-opencv && \
     if [ ! -z "$CUDA_VERSION" ] ; then apt-get -y install --no-install-recommends nvidia-utils-525; fi  && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/bin/python3 /usr/bin/python
+# That symbolic link python -> python3 can avoid possible errors to newbies ("python command not found"),
+# although can also cause errors in old python2 scripts, but for now we don't have python2 nor old python2 scripts.
 
 # Install required python packages (basic libraries for working with datasets)
 # First upgrade some essential packages to avoid later warnings/errors, because ubuntu packages is not always up-to-date
