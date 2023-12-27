@@ -38,10 +38,10 @@ USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon
 
 # Installation of cudnn libraries (required by tensorflow) only in case of the "cuda" version (GPU support)
-RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu11==8.7.0.84 && \
-                                     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib ; fi
+RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu11==8.7.0.84 ; fi
 # set the environment variable for the final container environment 
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
+
 # Installation of Tensorflow
 RUN pip3 install --no-cache-dir tensorflow==2.12.0
 
