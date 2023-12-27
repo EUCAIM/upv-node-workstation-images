@@ -96,6 +96,16 @@ RUN cd /tmp \
 # https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz
 # https://sourceforge.net/projects/itk-snap/files/latest/download
 
+########## helm installation (required for the script delete-this-desktop)
+RUN wget https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz -O helm.tgz \
+    && tar xzf helm.tgz \
+    && mv linux-amd64/helm /home/chaimeleon/.local/bin/ \
+    && rm -rf helm.tgz linux-amd64
+
+########## install delete-this-desktop
+RUN chmod +x /home/chaimeleon/.local/bin/delete-this-desktop /usr/bin/lxde-logout
+
+
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon

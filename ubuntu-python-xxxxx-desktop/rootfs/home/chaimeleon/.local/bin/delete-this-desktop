@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ "$HELM_APP_NAME" == "" ]; then
+    echo 'Error: $HELM_APP_NAME undefined'
+    read
+    exit
+fi
+
+
+echo 'This desktop will be deleted, please be sure all your work has been saved in the persistent-home.'
+echo 'Continue? (y/n)' && read RES
+if [ "$RES" == "y" ]; then     
+    echo 'Removing...'
+    helm uninstall $HELM_APP_NAME
+    read
+fi
+
