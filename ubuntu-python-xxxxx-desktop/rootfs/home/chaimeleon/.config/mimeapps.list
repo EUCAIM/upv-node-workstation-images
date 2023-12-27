@@ -1,0 +1,9 @@
+[Added Associations]
+application/dicom=itk-snap.desktop;
+application/nifti=itk-snap.desktop;
+text/plain=org.xfce.mousepad.desktop;
+
+[Default Applications]
+application/dicom=itk-snap.desktop
+application/nifti=itk-snap.desktop
+text/plain=org.xfce.mousepad.desktop

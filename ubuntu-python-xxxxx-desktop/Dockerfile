@@ -105,6 +105,9 @@ RUN wget https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz -O helm.tgz \
 ########## install delete-this-desktop
 RUN chmod +x /home/chaimeleon/.local/bin/delete-this-desktop /usr/bin/lxde-logout
 
+########## apply the new mime types defined in /usr/share/mime/packages
+RUN update-mime-database /usr/share/mime
+
 
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
