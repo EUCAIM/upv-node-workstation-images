@@ -65,7 +65,10 @@ RUN echo "chaimeleon:chaimeleon" | chpasswd
 ADD run.sh /home/chaimeleon/.init/run.sh
 RUN chmod +x /home/chaimeleon/.init/run.sh
 
-COPY --chown=chaimeleon:chaimeleon application-examples /home/chaimeleon/application-examples/
+# COPY --chown=chaimeleon:chaimeleon application-examples /home/chaimeleon/application-examples/
+COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
+RUN chmod +x /home/chaimeleon/.local/bin/install-upload-result
+
 
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon

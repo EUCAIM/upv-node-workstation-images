@@ -8,6 +8,7 @@ if [ $REPO/jobman.tar.gz -nt ~/.local/lib/jobman.tar.gz ]; then
     PREV_DIR=$(pwd)
     cd ~/.local/lib
     cp ~/persistent-shared-folder/apps/jobman/jobman.tar.gz .
+    rm -rf ./jobman
     tar xzf jobman.tar.gz
     cd $PREV_DIR
     ln -sf ~/.local/lib/jobman/bin/jobman ~/.local/bin/

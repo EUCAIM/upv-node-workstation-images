@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+REPO=~/persistent-shared-folder/apps/upload-result
+
+# if the local package does not exist or is older than the one from the repo...
+if [ $REPO/upload-result -nt ~/.local/bin/upload-result ]; then
+    echo "Installing the last versión of upload-result..."
+    cp ~/persistent-shared-folder/apps/upload-result/upload-result ~/.local/bin/
+    chmod +x ~/.local/bin/upload-result
+    echo "Upload-result installed."
+    
+else 
+    echo "Upload-result is up to date."
+fi
