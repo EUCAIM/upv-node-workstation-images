@@ -46,7 +46,7 @@ It is recommended to add the label `version` (see [Labels](#labels)), increment 
 ### User guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
 So if you have not seen yet the user guide, it is a good moment:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/application-examples/dataset-access-guide.ipynb
+https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb
 
 It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, 
 you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. 
@@ -144,7 +144,7 @@ For that usage examples take into account that...
    Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
    and use the `index.json` file that will always be in that directory, with that name. 
    The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
-   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/application-examples) you can find some simple 
+   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/rootfs/home/chaimeleon/application-examples) you can find some simple 
    and useful examples which read this file.
  - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
    This directory is also accessible using the same path in both the Desktop environment and the launched job environment. 
