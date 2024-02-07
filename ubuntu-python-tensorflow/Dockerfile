@@ -33,19 +33,33 @@ RUN apt-get -y update && \
 # Upgrade pip and keyrings to avoid warnings and errors
 RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 
+# fix error "Could not load library libcudnn_cnn_infer.so.8. Error: libnvrtc.so: cannot open shared object file: No such file or directory"
+RUN cd /usr/local/cuda/targets/x86_64-linux/lib && ln -s libnvrtc.so.11.2 libnvrtc.so
+
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
 WORKDIR /home/chaimeleon
 
-# Installation of cudnn libraries (required by tensorflow) only in case of the "cuda" version (GPU support)
-RUN if [ -n "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir nvidia-cudnn-cu11==8.7.0.84 ; fi
-# set the environment variable for the final container environment 
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
-
 # Installation of Tensorflow
-RUN pip3 install --no-cache-dir tensorflow==2.12.0
+# The extra "and-cuda" is included in the version ".post1" and installs cudnn, nvcc and other libraries 
+# required by tensorflow in the "cuda" version of this image (GPU support).
+RUN if [ -n "$CUDA_VERSION" ] ; then \
+       pip3 install --no-cache-dir tensorflow[and-cuda]==2.15.0.post1 ; \
+    else \
+       pip3 install --no-cache-dir tensorflow==2.15.0 ; \
+    fi
+                                                                
+# Set some environment variables for the final container environment...
+# It seems not needed in the new versions or installing with the "and-cuda" extra.
+#ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
+# Fix error "libdevice not found":
+# libdevice is included in the pip package nvidia-cuda-nvcc-cu12==12.2.140 which is included in the "and-cuda" extra;
+# once installed you can get the path for xla_gpu_cuda_data_dir with: 
+#   dirname $(dirname $(dirname $(find / -name libdevice.10.bc 2>/dev/null)))
+# in xla_gpu_cuda_data_dir should exist the path nvvm/libdevice/libdevice.10.bc
+ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cuda_nvcc
 
-
+####################################
 # Verify cudnn (required only for cuda version, for use GPU):
 ## ls /home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.8
 
@@ -53,4 +67,5 @@ RUN pip3 install --no-cache-dir tensorflow==2.12.0
 ## import tensorflow as tf
 ## print(tf.reduce_sum(tf.random.normal([1000, 1000])))
 ## print(tf.config.list_physical_devices('GPU'))
+####################################
 
