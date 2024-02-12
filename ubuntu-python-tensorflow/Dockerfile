@@ -34,7 +34,7 @@ RUN apt-get -y update && \
 RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 
 # fix error "Could not load library libcudnn_cnn_infer.so.8. Error: libnvrtc.so: cannot open shared object file: No such file or directory"
-RUN cd /usr/local/cuda/targets/x86_64-linux/lib && ln -s libnvrtc.so.11.2 libnvrtc.so
+RUN if [ -n "$CUDA_VERSION" ] ; then cd /usr/local/cuda/targets/x86_64-linux/lib && ln -s libnvrtc.so.11.2 libnvrtc.so ; fi
 
 ############### Now change to normal user ################
 USER chaimeleon:chaimeleon
