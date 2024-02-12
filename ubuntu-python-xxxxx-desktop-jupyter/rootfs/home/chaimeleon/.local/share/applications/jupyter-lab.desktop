@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Jupyter Lab
+Exec=firefox http://localhost:8888/lab
+Path=/home/chaimeleon

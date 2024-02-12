@@ -22,11 +22,16 @@ LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 USER root
     
 RUN pip install --no-cache-dir jupyter
+#RUN pip install --no-cache-dir jupyterlab    it seems now already included in jupyter package (from v7 jupyterNotebook is based on jupyterLab)
 
 COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
-#RUN chown -R chaimeleon:chaimeleon /home/chaimeleon \
-RUN chmod +x /home/chaimeleon/.init/startup_jupyter.sh && \
-    echo '@firefox http://localhost:8888' >> /etc/xdg/lxsession/LXDE/autostart
+
+# - Delete the "Run Jupyter" start menu entries
+# - Add execution permission to the start jupyter script
+# - Autostart firefox with the web page of the jupyter service which is already running (initiated by startup_jupyter.sh)
+RUN rm -f /usr/local/share/applications/jupyterlab.desktop /usr/local/share/applications/jupyter-notebook.desktop \
+ && chmod +x /home/chaimeleon/.init/startup_jupyter.sh \
+ && echo '@firefox http://localhost:8888' >> /etc/xdg/lxsession/LXDE/autostart
 
 #EXPOSE 8888
 
