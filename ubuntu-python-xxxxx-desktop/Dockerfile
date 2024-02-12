@@ -86,7 +86,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
 
 ########## itk-snap installation
 RUN cd /tmp \
-    && curl -o itk-snap.tgz 'https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz' \
+    && curl -o itk-snap.tgz 'https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.2/itksnap-4.0.2-Linux-gcc64.tar.gz' \
     && tar xzf itk-snap.tgz \
     && cp -av ./itksnap-*/* /usr/local/ \
     && rm -rf ./itksnap-*/ itk-snap.tgz
