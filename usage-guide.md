@@ -74,11 +74,21 @@ You can embed your algorithm and all its dependencies in a docker image, upload 
 Once uploaded the image as a tar.gz file you will need to load it and then run. This is an example of how to do that with an alpine image:
 ```
 udocker load -i ~/persistent-home/alpine-3.9.tar.gz
-udocker run alpine:3.9 echo hello
+udocker run --rm alpine:3.9 echo hello
 ```
-Usually you will want to run that in a job (with more resources than the desktop) so this is how you can do that:
+You probably want to access to the datasets directory and to your persistent home to write results.
+In that case you should mount those directories with `-v`:
 ```
-jobman submit -- "bash -c \"udocker load -i ~/persistent-home/alpine-3.9.tar.gz && udocker run alpine:3.9 echo hello\""
+udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
+            alpine:3.9 ls -lh /home/chaimeleon/persistent-home
+```
+Note when you mount the `datasets` directory you must mount also de `datalake` directory in order to provide destination to the symlinks.
+
+At the end, usually you will want to run that in a job (with more resources than the desktop) so this is how you can do that with jobman:
+```
+jobman submit -- "udocker load -i ~/persistent-home/alpine-3.9.tar.gz \
+                  && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
+                             alpine:3.9 ls -lh /home/chaimeleon/persistent-home"
 ```
 For more details of `jobman` command see the chapter [Jobman client tool](#jobman-client-tool).
 
@@ -92,11 +102,36 @@ Once you need to launch the execution on the overall dataset (or using a GPU) yo
 CHAIMELEON provides a command line tool named "jobman" specifically designed to manage batch processes (jobs). 
 This tool allows the efficient distribution of the computational resources available in CHAIMELEON by launching the workloads as jobs managed by Kubernetes. 
 Each desktop has `jobman` available as a command. 
-There is an example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+There is a basic example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
 
+You can always see some usage examples executing the command without arguments:
+```
+$ jobman
+jobman version '1.3.14-BETA'
+Checkout jobman source code, releases, and documentation at: https://github.com/chaimeleon-eu/jobman
+
+Usage examples:
+
+      jobman images
+      jobman image-details -i ubuntu-python
+      jobman submit -i ubuntu-python -j job1 -r no-gpu -- python persistent-home/myScript.py
+      jobman list
+      jobman logs -j job1
+      jobman delete -j job1
+      jobman submit -i ubuntu-python:latest-cuda -r small-gpu -- nvidia-smi
+
+Type jobman --help to see a  list of supported commands and more.
+
+```
+
+The first examples are shown in the dataset access guide.  
+The last example is to submit a job with the `ubuntu-python` image, using the `latest-cuda` version (important if you want the cuda libraries and tools are included in order to use the GPU) and using the resources flavor (`-r` argument) `small-gpu`.  
+All the resources flavors are detailed in the next chapter.
+
+### Resources flavors
 Jobman gives access to 21 advanced computational resources that are organized in a queue. 
-There are four types of resources and are labeled as `small-gpu`, `medium-gpu`, `large-gpu` and `no-gpu`. 
-The features of these resource types are the following*:
+There are four types of resources and are labeled as `small-gpu`, `medium-gpu`, `large-gpu` and `no-gpu`. These are the resources flavors.
+The features of each of these resource flavors are the following*:
  - `small-gpu`  
    This queue provides 8 resources. Thus, it can execute 8 batch jobs concurrently (from different users).  
    Each resource has 4 cores, 32 GB RAM and a GPU Nvidia A30 with 6 GB.  

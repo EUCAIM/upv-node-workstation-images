@@ -48,7 +48,7 @@ RUN if [ -n "$CUDA_VERSION" ] ; then \
     else \
        pip3 install --no-cache-dir tensorflow==2.15.0 ; \
     fi
-                                                                
+
 # Set some environment variables for the final container environment...
 # It seems not needed in the new versions or installing with the "and-cuda" extra.
 #ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
