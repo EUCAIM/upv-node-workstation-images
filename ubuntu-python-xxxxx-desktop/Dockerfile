@@ -96,6 +96,18 @@ RUN cd /tmp \
 # https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.1/itksnap-4.0.1-20230320-Linux-gcc64.tar.gz
 # https://sourceforge.net/projects/itk-snap/files/latest/download
 
+########## itk-snap (old version) 3.6 installation
+RUN cd /tmp \
+    && curl -o itk-snap.tgz 'https://kumisystems.dl.sourceforge.net/project/itk-snap/itk-snap/3.6.0/itksnap-3.6.0-20170401-Linux-x86_64.tar.gz' \
+    && tar xzf itk-snap.tgz \
+    && cp -av ./itksnap-*/lib/* /usr/local/lib/ \
+    && cp -av ./itksnap-*/bin/itksnap /usr/local/bin/itksnap-3.6 \
+    && rm -rf ./itksnap-*/ itk-snap.tgz
+RUN apt update && \
+    apt install -y --no-install-recommends libglu1-mesa && \
+    rm -rf /var/lib/apt/lists/*
+
+
 ########## helm installation (required for the script delete-this-desktop)
 RUN wget https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz -O helm.tgz \
     && tar xzf helm.tgz \

@@ -13,11 +13,11 @@ ubuntu_python_version = "3.7"
 ubuntu_python_tensorflow_version = "3.8"
 ubuntu_python_pytorch_version = "3.7"
 
-ubuntu_python_tensorflow_desktop_version = "3.14"
-ubuntu_python_pytorch_desktop_version = "3.13"
+ubuntu_python_tensorflow_desktop_version = "3.15"
+ubuntu_python_pytorch_desktop_version = "3.14"
 
-ubuntu_python_tensorflow_desktop_jupyter_version = "3.14"
-ubuntu_python_pytorch_desktop_jupyter_version = "3.13"
+ubuntu_python_tensorflow_desktop_jupyter_version = "3.15"
+ubuntu_python_pytorch_desktop_jupyter_version = "3.14"
 
 
 def cmd(command, exit_on_error=True):
