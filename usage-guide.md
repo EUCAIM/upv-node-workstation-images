@@ -4,7 +4,7 @@ The desktop will be the unique way to access the contents of datasets, AI framew
 and to manage (launch, monitor) batch processes (jobs) on the computational resources provided by CHAIMELEON.
 
 There is a dedicated guide to access and explore datasets, 
-and it includes the launching and monitoring of a batch process (job) with jobman:
+and it includes the launching and monitoring of a batch process (job) with jobman:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb
 
 ## Deployment and deletion of desktops
@@ -69,6 +69,25 @@ you can upload all the installation packages to somewhere in the persistent-home
 You will find a default init.sh file in your persistent-home with some examples to install your own tools/packages.  
 That script will be executed automatically at the beginning of the execution of every desktop or job created.
 
+Take into account that you will need to upload the package you require but also all the dependencies (some of them may be already installed in the platform but some not).
+
+#### Upload and install python packages
+In case of python usually you can download a package and all the dependencies with:
+```
+pip download <the_package_you_want>
+```
+Here you can find a practical use case in which the package "lifelines" is installed:  
+https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-python-packages.md
+
+#### Upload and install source code python packages
+Some python packages are distributed as source code, usually when the extension of file is .tar.gz instead of .whl.
+In that cases, once downloaded the source code package, pip will compile it to generate the binary files. 
+But it can require other dependecies in that step which may not be satisfied in the platform.
+So our recommendations in case of source code packages is to build the wheel with the binaries (the .whl file) locally and then upload it to the platform ready to directly install, instead of upload the .tar.gz package and try to install that (which means compile there).
+
+Here you can find a practical use case in which the package "pyradiomics" (distributed as source code) is installed:  
+https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-source-code-python-packages.md
+
 ### Running an image with uDocker
 You can embed your algorithm and all its dependencies in a docker image, upload it to your desktop and then run it with uDocker.  
 Once uploaded the image as a tar.gz file you will need to load it and then run. This is an example of how to do that with an alpine image:
@@ -129,9 +148,9 @@ The last example is to submit a job with the `ubuntu-python` image, using the `l
 All the resources flavors are detailed in the next chapter.
 
 ### Resources flavors
-Jobman gives access to 21 advanced computational resources that are organized in a queue. 
-There are four types of resources and are labeled as `small-gpu`, `medium-gpu`, `large-gpu` and `no-gpu`. These are the resources flavors.
-The features of each of these resource flavors are the following*:
+Jobman gives access to 21 advanced computational resources that are organized in a queue.  
+There are four types of resources and are labeled as `small-gpu`, `medium-gpu`, `large-gpu` and `no-gpu`. 
+These are the resources flavors, and the features of each of these are the following*:
  - `small-gpu`  
    This queue provides 8 resources. Thus, it can execute 8 batch jobs concurrently (from different users).  
    Each resource has 4 cores, 32 GB RAM and a GPU Nvidia A30 with 6 GB.  
