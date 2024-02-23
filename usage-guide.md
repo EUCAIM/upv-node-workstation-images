@@ -123,7 +123,9 @@ jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
      && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
      nvidia/cuda:11.8.0-runtime-ubuntu22.04 nvidia-smi"
 ```
-For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).
+For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).  
+Note for this example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
+and just adding the missing apt package "nvidia-utils-525" in order to make available de command `nvidia-smi`.
 
 
 ## Hardware resources
