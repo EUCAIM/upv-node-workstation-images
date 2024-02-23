@@ -86,7 +86,7 @@ Saved ./wrapt-1.16.0-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinu
 Saved ./six-1.16.0-py2.py3-none-any.whl
 Successfully downloaded lifelines autograd autograd-gamma formulaic matplotlib numpy pandas scipy contourpy cycler fonttools future interface-meta kiwisolver packaging pillow pyparsing python-dateutil pytz typing-extensions tzdata wrapt six
 ```
-Now we can close the container (it will be deleted due to the arg `--rm` that we put previously) and see the result files which are in the temporal directory that we created and mounted in the container:
+Now we can exit from the container (it will be deleted due to the arg `--rm` that we put previously) and see the result files which are in the temporal directory (that we created and mounted previously in the container):
 ```
 root@e3d0287e10f3:/tmp/host-tmp/lifelines# exit
 user1@host:~$ ls -lh /tmp/lifelines

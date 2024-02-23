@@ -1,7 +1,7 @@
 #### Build wheel to install a python package
-Some python packages are distributed as source code, usually when the extension of file is .tar.gz instead of .whl.
+Some python packages are distributed as source code, usually when the extension of file is `.tar.gz` instead of `.whl`.  
 In that cases, once downloaded the source code package, pip will compile it to generate the binary files. 
-But it can require other dependecies in that step which may not be satisfied in the platform.
+But it can require other dependecies in that step which may not be satisfied in the platform.  
 So our recommendations in case of source code packages is to build the wheel with the binaries (the .whl file) locally and then upload it to the platform ready to directly install, instead of upload the .tar.gz package and try to install that (which means compile there).
 
 Let's see an example of how to generate the wheel for the package pyradiomics.
@@ -117,7 +117,7 @@ root@7ad713eee5a0:/tmp/host-tmp/pyradiomics# mv /root/.cache/pip/wheels/91/c5/13
 root@7ad713eee5a0:/tmp/host-tmp/pyradiomics# mv /root/.cache/pip/wheels/fc/ab/d4/5da2067ac95b36618c629a5f93f809425700506f72c9732fac/docopt-0.6.2-py2.py3-none-any.whl .
 root@7ad713eee5a0:/tmp/host-tmp/pyradiomics# rm pyradiomics-3.0.1.tar.gz docopt-0.6.2.tar.gz
 ```
-Now we can close the container (it will be deleted due to the arg `--rm` that we put previously) and see the result files which are in the temporal directory that we created and mounted in the container:
+Now we can exit from the container (it will be deleted due to the arg `--rm` that we put previously) and see the result files which are in the temporal directory (that we created and mounted previously in the container):
 ```
 root@7ad713eee5a0:/tmp/host-tmp/pyradiomics# exit
 user1@host:~$ ls -lh /tmp/pyradiomics

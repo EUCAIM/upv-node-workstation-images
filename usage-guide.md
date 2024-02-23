@@ -72,27 +72,31 @@ That script will be executed automatically at the beginning of the execution of 
 Take into account that you will need to upload the package you require but also all the dependencies (some of them may be already installed in the platform but some not).
 
 #### Upload and install python packages
-In case of python usually you can download a package and all the dependencies with:
-```
-pip download <the_package_you_want>
-```
 Here you can find a practical use case in which the package "lifelines" is installed:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-python-packages.md
 
 #### Upload and install source code python packages
-Some python packages are distributed as source code, usually when the extension of file is .tar.gz instead of .whl.
+Some python packages are distributed as source code, usually when the extension of file is `.tar.gz` instead of `.whl`.  
 In that cases, once downloaded the source code package, pip will compile it to generate the binary files. 
-But it can require other dependecies in that step which may not be satisfied in the platform.
+But it can require other dependecies in that step which may not be satisfied in the platform.  
 So our recommendations in case of source code packages is to build the wheel with the binaries (the .whl file) locally and then upload it to the platform ready to directly install, instead of upload the .tar.gz package and try to install that (which means compile there).
 
 Here you can find a practical use case in which the package "pyradiomics" (distributed as source code) is installed:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-source-code-python-packages.md
 
 ### Running an image with uDocker
-You can embed your algorithm and all its dependencies in a docker image, upload it to your desktop and then run it with uDocker.  
-Once uploaded the image as a tar.gz file you will need to load it and then run. This is an example of how to do that with an alpine image:
+You can embed your algorithm and all its dependencies in a docker image, upload it to your remote desktop and then run it with uDocker.  
+
+For this basic example we have an alpine image in our docker local repository, so we can save the image to a file with:
 ```
-udocker load -i ~/persistent-home/alpine-3.9.tar.gz
+docker save alpine:3.9 -o alpine-3.9.tar.gz
+```
+Now we can upload the tar.gz file to the desktop, just drag and drop in the browser window 
+and at the end of transference they will be available in the home directory of the remote desktop. 
+You should move to the persistent-home to make it available to all your desktops and jobs.  
+In order to use the image, first it has to be loaded, and then you can run it:
+```
+udocker load -i ~/persistent-home/alpine-3.9.tar.gz alpine
 udocker run --rm alpine:3.9 echo hello
 ```
 You probably want to access to the datasets directory and to your persistent home to write results.
@@ -101,15 +105,26 @@ In that case you should mount those directories with `-v`:
 udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
             alpine:3.9 ls -lh /home/chaimeleon/persistent-home
 ```
-Note when you mount the `datasets` directory you must mount also de `datalake` directory in order to provide destination to the symlinks.
+Note when the `datasets` directory is mounted, the `datalake` directory must be mounted also in order to provide destination to the symlinks.
 
 At the end, usually you will want to run that in a job (with more resources than the desktop) so this is how you can do that with jobman:
 ```
-jobman submit -- "udocker load -i ~/persistent-home/alpine-3.9.tar.gz \
+jobman submit -- "udocker load -i ~/persistent-home/alpine-3.9.tar.gz alpine \
                   && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
                              alpine:3.9 ls -lh /home/chaimeleon/persistent-home"
 ```
 For more details of `jobman` command see the chapter [Jobman client tool](#jobman-client-tool).
+
+And if you want to run a job with GPU resources you must add the "-r" argument with the resource flavor you want (for example `small-gpu`) 
+and use for the host container one of the images with GPU libraries, i.e. with the tag `latest-cuda`:
+```
+jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
+    "udocker load -i ~/persistent-home/nvidia-cuda-11.8.0-runtime-ubuntu22.04.tar.gz nvidia/cuda \
+     && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
+     nvidia/cuda:11.8.0-runtime-ubuntu22.04 nvidia-smi"
+```
+For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).
+
 
 ## Hardware resources
 Each desktop has 1 core and 8 GB of RAM. The system can automatically increase to 2 cores if there are available resources.
