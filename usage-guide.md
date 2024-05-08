@@ -6,16 +6,22 @@ and to manage (launch, monitor) batch processes (jobs) on the computational reso
 ## Deployment and deletion of desktops
 In [this video](https://drive.google.com/file/d/1KQxLBEtO_iw08JlfNtDZdKgICZJ2RD_N) you can see a short demo of deployment of a desktop.
 
-You should go to the green buton at the top right side and open the "Apps Dashboard".
-Then you should ensure your namespace is selected in "Current context" at top right side: it should be `user-<yourUserName>`.
+To deploy a desktop or whatever interactive application you should go to the green buton at the top right side and open the "Apps Dashboard".
+
+![Go to apps dashboard](usage-guide-other/img/go-to-apps-dashboard.png)
+
+In the Apps Dashboard you should ensure your namespace is selected in "Current context" at top right side: it should be `user-<yourUserName>`.
+
 ![Select namespace and catalog](usage-guide-other/img/select-namespace-and-catalog.png)
 
 Now you can go to the "Catalog" and deploy a workstation in the CHAIMELEON platform. 
 The most common are those that start with "desktop-" and "jupyter-".  
 NOTE: if it is your first time, we recommend to select one with "jupyter" 
-because you will be able to open the "dataset access guide" notebook directly in the remote desktop to execute the python code.
+because you will be able to open the "dataset access guide" notebook directly in the remote desktop to execute the python code step by step
+as we will see in the next chapter.
 
 When deploying, just put some name and the id of dataset (or datasets) you are going to work with:
+
 ![Deployment params](usage-guide-other/img/deployment-params.png)
 
 You can leave the "Dataset list" empty if you don't require one today in your work session.  
@@ -24,12 +30,13 @@ Alternatively you can search for the dataset you want to access in the initial w
 then click on "More" to go to the details, dropdown "Actions" and you will see the item "Use on Apps Dashboard".
 This way the "Dataset list" field will be filled automatically.
 
-Finally, read carefully the "Installation Notes" and, when the deployment is "Ready" with one or more pods 
+Finally, after you push the "DEPLOY" button, read carefully the "Installation Notes" and, when the deployment is "Ready" with one or more pods 
 (usually it takes few seconds, but depending on demand up to a minute), 
 then you can go to the guacamole link and there you will see the connection to your desktop.
+
 ![Deployment ready and access link](usage-guide-other/img/deployment-ready-and-access-link.png)
 
-You can deploy and delete a desktop in the CHAIMELEON platform as many times as you considers. 
+You can deploy and delete a desktop in the CHAIMELEON platform as many times as you consider. 
 Each deployment using one or more datasets will be logged in the Tracer Service.
 But you can have only one active desktop at a time.  
 Keep in mind a desktop may be removed automatically if you don't connect to it for more than 7 days.
@@ -45,6 +52,21 @@ the input method for keyboard and mouse, to adjust the zoom and disconect from t
 
 You can see the complete user manual of this tool here: https://guacamole.apache.org/doc/gug/using-guacamole.html
 
+### Software resources. 
+Each desktop has installed the following software:  
+  - OS: Ubuntu 22.04 with lxde (graphical desktop environment)  
+  - Basic software and libraries: python 3.10, pip, opencv, keras, scipy, scikit-learn, scikit-image, matplotlib, pandas, numpy, pydicom, pillow, dicom2nifti, simpleitk, h5py, nibabel.  
+  - AI Frameworks: TensorFlow, PyTorch  
+  - Development environment and other tools: JupyterNotebooks, Itk-snap, vim, poetry  
+  - Container Engine: uDocker
+
+### There is no Internet access
+Things like "apt get", "pip install", "git clone", "wget", "curl" or any access to a web page out of the platform will fail.  
+Network connectivity is strongly restricted within the CHAIMELEON platform due to the project general requirement to not allow the medical data to go out.
+Applications running in the CHAIMELEON platform do not allow downloading/uploading data from/to external sources (from Internet), 
+only there is connectivity to services running within the platform.  
+So if you need to install something see the chapter "[Software packages and dependency libraries installation](#software-packages-and-dependency-libraries-installation)".
+
 ### Explore the contents of a dataset
 There is a dedicated guide of how to access and explore the contents of datasets, 
 and it includes the launching and monitoring of a batch process (job) with jobman:  
@@ -55,16 +77,8 @@ but you can open it directly in the remote desktop to test the dataset access by
 Just ensure you deployed a "jupyter" type desktop, open Jupyter Notebook (there is a desktop shortcut), 
 go to `application-examples` (in `home` directory) and open `dataset-access-guide.ipynb`.
 
-### Software resources. 
-Each desktop has installed the following software:  
-  - OS: Ubuntu 22.04 with lxde (graphical desktop environment)  
-  - Basic software and libraries: python 3.10, pip, opencv, keras, scipy, scikit-learn, scikit-image, matplotlib, pandas, numpy, pydicom, pillow, dicom2nifti, simpleitk, h5py, nibabel.  
-  - AI Frameworks: TensorFlow, PyTorch  
-  - Development environment and other tools: JupyterNotebooks, Itk-snap, vim, poetry  
-  - Container Engine: uDocker
-
 ## Special directories
-There are three important directories in the remote desktop and also in jobs (they will be always in the same paths):
+There are two important directories in the remote desktop and also in jobs (they will be always in the same paths):
   - `/home/chaimeleon/datasets`  
     All the datasets you selected to work with.  
     There is a read-only directory for each and labelled with its Persistent Unique Identifier (PID) in CHAIMELEON.  
@@ -75,18 +89,15 @@ There are three important directories in the remote desktop and also in jobs (th
     Private persistent storage: for your algorithms, results and whatever you need for the work.  
     If the desktop is deleted and redeployed afterwards, this folder persists and is remounted on the new instance.  
     On the other hand the access to files in it is a bit slower, so you should use the normal home (`/home/chaimeleon`) or `/tmp/` for temporal files if you want your algorithm/workflow go faster.
-    
+
+Other useful directories:
   - `/home/chaimeleon/shared-folder`  
-    Public persistent storage where you can share files with the other CHAIMELEON users.
+    Public persistent storage where you can share files with the other CHAIMELEON users
+    and you will find other useful resources like documentation, applications, docker images 
+    and python packages (from pypi.org which you can install with `pip`, see the "example 4" in `~/persistent-home/init.sh`). 
   
   - `/home/chaimeleon/application-examples`  
     Here you can find some simple application examples including the dataset access guide.
-
-### There is no Internet access
-Things like "apt get", "pip install", "git clone", "wget", "curl" or any access to a web page out of the platform will fail.  
-Network connectivity is strongly restricted within the CHAIMELEON platform due to the project general requirement to not allow the medical data to go out.
-Applications running in the CHAIMELEON platform do not allow downloading/uploading data from/to external sources (from Internet), 
-only there is connectivity to services running within the platform.
 
 ## Software packages and dependency libraries installation
 There are two methods to satisfy the dependencies of your training algorithm or to make available in the CHAIMELEON platform any tool you need but not currently available: 
@@ -106,7 +117,7 @@ you can upload all the installation packages to somewhere in the persistent-home
 You will find a default init.sh file in your persistent-home with some examples to install your own tools/packages.  
 That script will be executed automatically at the beginning of the execution of every desktop or job created.
 
-Take into account that you will need to upload the package you require but also all the dependencies (some of them may be already installed in the platform but some not).
+Take into account that, as there is no Internet access, you will need to upload the package you require but also all the dependencies (some of them may be already installed in the platform but some not).
 
 #### Upload and install python packages
 Here you can find a practical use case in which the package "lifelines" is installed:  
@@ -116,7 +127,8 @@ https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/
 Some python packages are distributed as source code, usually when the extension of file is `.tar.gz` instead of `.whl`.  
 In that cases, once downloaded the source code package, pip will compile it to generate the binary files. 
 But it can require other dependecies in that step which may not be satisfied in the platform.  
-So our recommendations in case of source code packages is to build the wheel with the binaries (the .whl file) locally and then upload it to the platform ready to directly install, instead of upload the .tar.gz package and try to install that (which means compile there).
+So our recommendations in case of source code packages is to build the wheel with the binaries (the .whl file) locally 
+and then upload it to the platform ready to directly install, instead of upload the .tar.gz package and try to install that (which means compile there).
 
 Here you can find a practical use case in which the package "pyradiomics" (distributed as source code) is installed:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-source-code-python-packages.md
