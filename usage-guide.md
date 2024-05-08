@@ -162,7 +162,7 @@ jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
 ```
 For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).  
 Note for this example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
-and just adding the missing apt package "nvidia-utils-525" in order to make available de command `nvidia-smi`.
+and just adding the missing apt package "nvidia-utils-525" in order to make available the command `nvidia-smi`.
 
 
 ## Hardware resources
