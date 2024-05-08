@@ -3,16 +3,36 @@ Once a user is registered, s(he) will be able to deploy a desktop using the Apps
 The desktop will be the unique way to access the contents of datasets, AI frameworks and software libraries, 
 and to manage (launch, monitor) batch processes (jobs) on the computational resources provided by CHAIMELEON.
 
-There is a dedicated guide to access and explore datasets, 
-and it includes the launching and monitoring of a batch process (job) with jobman:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb
-
 ## Deployment and deletion of desktops
+In [this video](https://drive.google.com/file/d/1KQxLBEtO_iw08JlfNtDZdKgICZJ2RD_N) you can see a short demo of deployment of a desktop.
+
+You should go to the green buton at the top right side and open the "Apps Dashboard".
+Then you should ensure your namespace is selected in "Current context" at top right side: it should be `user-<yourUserName>`.
+![Select namespace and catalog](usage-guide-other/img/select-namespace-and-catalog.png)
+
+Now you can go to the "Catalog" and deploy a workstation in the CHAIMELEON platform. 
+The most common are those that start with "desktop-" and "jupyter-".  
+NOTE: if it is your first time, we recommend to select one with "jupyter" 
+because you will be able to open the "dataset access guide" notebook directly in the remote desktop to execute the python code.
+
+When deploying, just put some name and the id of dataset (or datasets) you are going to work with:
+![Deployment params](usage-guide-other/img/deployment-params.png)
+
+You can leave the "Dataset list" empty if you don't require one today in your work session.  
+
+Alternatively you can search for the dataset you want to access in the initial web page, 
+then click on "More" to go to the details, dropdown "Actions" and you will see the item "Use on Apps Dashboard".
+This way the "Dataset list" field will be filled automatically.
+
+Finally, read carefully the "Installation Notes" and, when the deployment is "Ready" with one or more pods 
+(usually it takes few seconds, but depending on demand up to a minute), 
+then you can go to the guacamole link and there you will see the connection to your desktop.
+![Deployment ready and access link](usage-guide-other/img/deployment-ready-and-access-link.png)
+
 You can deploy and delete a desktop in the CHAIMELEON platform as many times as you considers. 
-Each deployment using one or more datesets will be logged in the Tracer Service.
-But you can have only one active desktop at a time. 
-A desktop may be removed automatically if you don't connect to it for more than 7 days.
-The steps to deploy a desktop can be seen in [this video](https://drive.google.com/file/d/1KQxLBEtO_iw08JlfNtDZdKgICZJ2RD_N).
+Each deployment using one or more datasets will be logged in the Tracer Service.
+But you can have only one active desktop at a time.  
+Keep in mind a desktop may be removed automatically if you don't connect to it for more than 7 days.
 
 ## Once in the remote desktop
 To show/hide the Guacamole menu: CTRL+SHIFT+ALT
@@ -21,7 +41,19 @@ You can upload files using this menu or simply drag and drop on the browser wind
 You will find the files uploaded in the home directory (/home/chaimeleon).
 
 The Guacamole menu also allows you to manage the remote clipboard (if you use Chrome you can simply allow the synchronization of the clipboard),
-the input method for keybloard and mouse, to adjust the zoom and disconect from the remote desktop.
+the input method for keyboard and mouse, to adjust the zoom and disconect from the remote desktop.
+
+You can see the complete user manual of this tool here: https://guacamole.apache.org/doc/gug/using-guacamole.html
+
+### Explore the contents of a dataset
+There is a dedicated guide of how to access and explore the contents of datasets, 
+and it includes the launching and monitoring of a batch process (job) with jobman:  
+[dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+
+It is in Jupyter Notebook format, Github prints it very well, 
+but you can open it directly in the remote desktop to test the dataset access by yourself executing the python code in situ.
+Just ensure you deployed a "jupyter" type desktop, open Jupyter Notebook (there is a desktop shortcut), 
+go to `application-examples` (in `home` directory) and open `dataset-access-guide.ipynb`.
 
 ### Software resources. 
 Each desktop has installed the following software:  
@@ -36,7 +68,8 @@ There are three important directories in the remote desktop and also in jobs (th
   - `/home/chaimeleon/datasets`  
     All the datasets you selected to work with.  
     There is a read-only directory for each and labelled with its Persistent Unique Identifier (PID) in CHAIMELEON.  
-    More details of how they are organized in the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+    More details of how they are organized in the 
+    [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
     
   - `/home/chaimeleon/persistent-home`  
     Private persistent storage: for your algorithms, results and whatever you need for the work.  
@@ -45,21 +78,25 @@ There are three important directories in the remote desktop and also in jobs (th
     
   - `/home/chaimeleon/shared-folder`  
     Public persistent storage where you can share files with the other CHAIMELEON users.
+  
+  - `/home/chaimeleon/application-examples`  
+    Here you can find some simple application examples including the dataset access guide.
 
-## Data download/upload disabled 
+### There is no Internet access
+Things like "apt get", "pip install", "git clone", "wget", "curl" or any access to a web page out of the platform will fail.  
 Network connectivity is strongly restricted within the CHAIMELEON platform due to the project general requirement to not allow the medical data to go out.
 Applications running in the CHAIMELEON platform do not allow downloading/uploading data from/to external sources (from Internet), 
 only there is connectivity to services running within the platform.
 
 ## Software packages and dependency libraries installation
 There are two methods to satisfy the dependencies of your training algorithm or to make available in the CHAIMELEON platform any tool you need but not currently available: 
-  - You can upload the package and install it as a normal user.
-  - You can build a docker image locally, upload the image file and then run it with uDocker.
+  - You can upload the package and install it as a normal user (not sudo/root).
+  - You can build a docker image locally (in your PC), upload the image file and then run it with uDocker.
   
-The two options are detailed in the next two chapters.
+The two options are detailed in the next two chapters.  
 
 ### Upload software package and autoinstall
-You can upload your own files (e.g. source code, software packages, dependency libraries, models, etc.) to the desktop. 
+You can [upload](#once-in-the-remote-desktop) your own files (e.g. source code, software packages, dependency libraries, models, etc.) to the desktop. 
 That way you can install any package you miss, but only as a normal user (you don't have root privileges in the remote desktop).
 If your required software package needs to be installed as root, then use the uDocker method (see the next chapter).
 

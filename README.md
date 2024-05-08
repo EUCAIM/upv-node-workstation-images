@@ -30,7 +30,8 @@ You will be interactively asked to select which image to build, with or without 
 The normal procedure to integrate an application is creating a docker image which includes it and all the dependencies/libraries required to execute it.
 
 There are some conditions that the image must fulfill, as explained in the next chapter, which is a guide for developers to design the image.  
-Once the you have the dockerfile describing your image, you should upload it (with all the files needed for building the image) to a new repository in the [chaimeleon-eu](https://github.com/chaimeleon-eu) organization. 
+Once you have the dockerfile describing your image, you should upload it (with all the files needed for building the image) to a new repository in the 
+[chaimeleon-eu](https://github.com/chaimeleon-eu) organization in Github. 
 To easily find the repos in the organization, the name should be in the format `image_batch_YOUR_APPLICATION_NAME` or `image_interactive_YOUR_APPLICATION_NAME`.  
 We will check the image is according to the guide and then we will build and upload it to the CHAIMELEON image repository.
 So the users will see it in: 
@@ -46,11 +47,7 @@ It is recommended to add the label `version` (see [Labels](#labels)), increment 
 ### User guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
 So if you have not seen yet the user guide, it is a good moment:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb
-
-It is in Jupyter Notebook format, Github prints it very well but, if you want to open and try the dataset access by yourself, 
-you can go to the [catalog](https://chaimeleon-eu.i3m.upv.es/apps/) and deploy any of the interactive applications with Jupyter. 
-Then you will be able to open Jupyter Notebooks and find the user guide in the subdirectory `application-examples` in the home directory.
+https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#explore-the-contents-of-a-dataset
 
 ## How to design a workstation image for the CHAIMELEON platform
 This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
