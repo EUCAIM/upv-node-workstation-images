@@ -11,7 +11,7 @@ echo 'This desktop will be deleted, please be sure all your work has been saved 
 echo 'Continue? (y/n)' && read RES
 if [ "$RES" == "y" ]; then     
     echo 'Removing...'
-    echo 'Now you can close this tab of your browser or press [CTRL]+[SHIFT]+[ALT] to show the Guacamole menu.'
+    echo 'Now you can close this tab of your browser or press [CTRL]+[SHIFT]+[ALT] to show the Guacamole menu and disconnect.'
     helm uninstall $HELM_APP_NAME
     read
 fi

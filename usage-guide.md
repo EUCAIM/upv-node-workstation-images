@@ -60,6 +60,10 @@ Each desktop has installed the following software:
   - Development environment and other tools: JupyterNotebooks, Itk-snap, vim, poetry  
   - Container Engine: uDocker
 
+Other tools/libraries available to install from persistent-shared-folder (see [Special directories](#special-directories)):
+  - Development environment: VSCode
+  - Python packages: catboost, lifelines, pyradiomics, pywavelets
+
 ### There is no Internet access
 Things like "apt get", "pip install", "git clone", "wget", "curl" or any access to a web page out of the platform will fail.  
 Network connectivity is strongly restricted within the CHAIMELEON platform due to the project general requirement to not allow the medical data to go out.
@@ -91,7 +95,7 @@ There are two important directories in the remote desktop and also in jobs (they
     On the other hand the access to files in it is a bit slower, so you should use the normal home (`/home/chaimeleon`) or `/tmp/` for temporal files if you want your algorithm/workflow go faster.
 
 Other useful directories:
-  - `/home/chaimeleon/shared-folder`  
+  - `/home/chaimeleon/persistent-shared-folder`  
     Public persistent storage where you can share files with the other CHAIMELEON users
     and you will find other useful resources like documentation, applications, docker images 
     and python packages (from pypi.org which you can install with `pip`, see the "example 4" in `~/persistent-home/init.sh`). 
