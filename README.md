@@ -18,18 +18,19 @@ python build.py
 You will be interactively asked to select which image to build, with or without CUDA, if you want to test, upload, etc.
 
 ## Other images in CHAIMELEON platform
- - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
- - [Analitical Engine - new version](https://github.com/chaimeleon-eu/analytical-engine) from Bahia
- - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) from BGU
- - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) from Imperial
+ - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) (private repository) from BGU
+ - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) (private repository) from Imperial
  - [Non-imaging Data Augmentation](https://github.com/chaimeleon-eu/image_batch_non-imaging-aug) from Imperial
- - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) from Quibim
+ - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) (private repository) from Quibim
  - [SHAP Explainability Radiomics](https://github.com/chaimeleon-eu/image_batch_shap_explainability_radiomics) from University of Maastricht
+ - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
+ - [Analitical Engine - new version](https://github.com/chaimeleon-eu/analytical-engine) (private repository) from Bahia
 
 ## How to integrate your application in CHAIMELEON platform
 The normal procedure to integrate an application is creating a docker image which includes it and all the dependencies/libraries required to execute it.
 
-There are some conditions that the image must fulfill, as explained in the next chapter, which is a guide for developers to design the image.  
+There are some conditions that the image must fulfill, as explained in the [next chapter](#how-to-design-a-workstation-image-for-the-chaimeleon-platform), 
+which is a guide for developers to design the image.  
 Once you have the dockerfile describing your image, you should upload it (with all the files needed for building the image) to a new repository in the 
 [chaimeleon-eu](https://github.com/chaimeleon-eu) organization in Github. 
 To easily find the repos in the organization, the name should be in the format `image_batch_YOUR_APPLICATION_NAME` or `image_interactive_YOUR_APPLICATION_NAME`.  
@@ -49,12 +50,31 @@ Before being a developer you should be a user: this way you can understand what 
 So if you have not seen yet the user guide, it is a good moment:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#explore-the-contents-of-a-dataset
 
+### Testing your application in the platform
+Before the integration of your application as an image in the platform, you can try to run it just as an application (python script or whatever).  
+To do so, just upload the files (script or binary executable and all the dependencies) to your remote desktop and run it directly in the remote desktop
+using a dataset from `/home/chaimeleon/datasets/` and writing the results for example in `/home/chaimeleon/persistent-home/my-app-results/`.  
+If you don't know yet how to upload and install tools or dependencies see 
+[here](https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#software-packages-and-dependency-libraries-installation).  
+If your application has a lot of dependencies we recommend jumpping to the next chapter to test it directly an image.  
+If you don't know yet how to execute you application or how your application should walk through the dataset contents see the user guide (go to the previous chapter).
+
+### Testing your application as an image in the platform
+Before the integration of your application as an image in the internal repository of the platform you can try to build it locally in your computer, upload and run it in the remote desktop.  
+If you don't know yet how to do that see 
+[here](https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#running-an-image-with-udocker)
+
 ## How to design a workstation image for the CHAIMELEON platform
-This is a guide to create a container image for a workstation or batch job to be deployed by users in the CHAIMELEON platform.
+If you already tested your application as an image in the platform as suggested at the end of the previous chapter, you have done a big part of the work.
+With that, you are able to run your own application in the platform as any other user can do with his/her own. 
+But in this chapter it is explained **how to adjust your image to be included in the internal repository of the platform**
+and so all the users (not only you) can see it and run it (with `jobman submit -i yourApp` in case of non-interactive or using the catalog of interactive applications in that other case).
+
+This is a guide to create a container image for a workstation or batch job to be deployed by other users in the CHAIMELEON platform.  
 In this repository you can inspect the dockerfiles used to build all the images created by UPV for the CHAIMELEON project. 
 You can take them as examples: 
-  - without desktop (for batch jobs): ubuntu-python, ubuntu-python-tensorflow, ubuntu-python-pytorch
-  - with desktop and browser (for interactive applications, GUI or WebUI): ubuntu-python-xxxxx-desktop, ubuntu-python-xxxxx-desktop-jupyter
+  - without desktop (i.e. non-interactive, batch applications): ubuntu-python, ubuntu-python-tensorflow or ubuntu-python-pytorch
+  - with desktop and browser (i.e. interactive applications, GUI or WebUI): ubuntu-python-xxxxx-desktop or ubuntu-python-xxxxx-desktop-jupyter
 
 If your application requires python and some of the tools included in one of these images, you can take it as the base for your dockerfile, 
 putting it in the `FROM` instruction. 
