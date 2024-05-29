@@ -138,33 +138,39 @@ Here you can find a practical use case in which the package "pyradiomics" (distr
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-source-code-python-packages.md
 
 ### Running an image with uDocker
-You can embed your algorithm and all its dependencies in a docker image, upload it to your remote desktop and then run it with uDocker.  
+You can embed your algorithm and all its dependencies in a docker image, upload it to your remote desktop and then run it with uDocker.
+Let's see it step by step.
 
-For this basic example we have an alpine image in our docker local repository, so we can save the image to a file with:
+First you must "containerize" (aka "dockerize") your application. 
+If you don't know what's that, you can start here: https://docs.docker.com/get-started/
+Basically you should write a dockerfile and do `docker build -t myApp:1.0 .` within the directory where the dockerfile is.
+
+We are going to pull an image already built for this example with: `docker pull alpine:3.20` 
+So now we have the image in our docker local repository, and we can save it to a file with:
 ```
-docker save alpine:3.9 -o alpine-3.9.tar.gz
+docker save alpine:3.20 -o alpine-3.20.tar.gz
 ```
-Now we can upload the tar.gz file to the desktop, just drag and drop in the browser window 
-and at the end of transference they will be available in the home directory of the remote desktop. 
+And then we can upload the tar.gz file to the remote desktop, just drag and drop in the browser window 
+and at the end of transfer it will be available in the home directory of the remote desktop. 
 You should move to the persistent-home to make it available to all your desktops and jobs.  
 In order to use the image, first it has to be loaded, and then you can run it:
 ```
-udocker load -i ~/persistent-home/alpine-3.9.tar.gz alpine
-udocker run --rm alpine:3.9 echo hello
+udocker load -i ~/persistent-home/alpine-3.20.tar.gz alpine
+udocker run --rm alpine:3.20 echo hello
 ```
 You probably want to access to the datasets directory and to your persistent home to write results.
 In that case you should mount those directories with `-v`:
 ```
 udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
-            alpine:3.9 ls -lh /home/chaimeleon/persistent-home
+            alpine:3.20 ls -lh /home/chaimeleon/persistent-home
 ```
 Note when the `datasets` directory is mounted, the `datalake` directory must be mounted also in order to provide destination to the symlinks.
 
 At the end, usually you will want to run that in a job (with more resources than the desktop) so this is how you can do that with jobman:
 ```
-jobman submit -- "udocker load -i ~/persistent-home/alpine-3.9.tar.gz alpine \
+jobman submit -- "udocker load -i ~/persistent-home/alpine-3.20.tar.gz alpine \
                   && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
-                             alpine:3.9 ls -lh /home/chaimeleon/persistent-home"
+                             alpine:3.20 ls -lh /home/chaimeleon/persistent-home"
 ```
 For more details of `jobman` command see the chapter [Jobman client tool](#jobman-client-tool).
 
@@ -177,7 +183,7 @@ jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
      nvidia/cuda:11.8.0-runtime-ubuntu22.04 nvidia-smi"
 ```
 For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).  
-Note for this example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
+Note for this last example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
 and just adding the missing apt package "nvidia-utils-525" in order to make available the command `nvidia-smi`.
 
 
