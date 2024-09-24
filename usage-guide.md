@@ -37,9 +37,13 @@ then you can go to the guacamole link and there you will see the connection to y
 ![Deployment ready and access link](usage-guide-other/img/deployment-ready-and-access-link.png)
 
 You can deploy and delete a desktop in the CHAIMELEON platform as many times as you consider. 
-Each deployment using one or more datasets will be logged in the Tracer Service.
-But you can have only one active desktop at a time.  
-Keep in mind a desktop may be removed automatically if you don't connect to it for more than 7 days.
+Each deployment using one or more datasets will be logged in the Tracer Service.  
+At the end of your work session please ensure you save your work in the persistent-home directory and consider to shutdown the desktop:
+
+![Close session](usage-guide-other/img/close-session.png)
+
+That way the resources will be released (desktop removed) and so other users (or yourself later) will be able to deploy his/her desktop.  
+If you don't do it, keep in mind the desktop may be removed automatically if you don't connect to it for more than 7 days.
 
 ## Once in the remote desktop
 To show/hide the Guacamole menu: CTRL+SHIFT+ALT
