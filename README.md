@@ -192,12 +192,12 @@ and in all the launched job containers (the environment where the application ru
 ### Entrypoint and typical parameters for batch applications
 In case of bath applications it is recommended to add an entrypoint.  
 Let's take the example that your application is launched locally with:  
-`python main.py -i <input-dataset-directory-path> -o <results-output-directory>`  
+  `python main.py -i <input-dataset-directory-path> -o <results-output-directory>`  
 In that example the entrypoint should be like this:  
-`ENTRYPOINT ["python", "/home/chaimeleon/main.py"]`  
+  `ENTRYPOINT ["python", "/home/chaimeleon/main.py"]`  
 That way, the parameters will be specified by the user in the `jobman submit` command after the `--`. 
-So, an example of launch of the application as a job in the platform using jobman could be:
-`jobman submit -i my-application -- -i ~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ -o ~/persistent-home/results/`
+So, an example of launching the previous application as a job in the platform using jobman could be:  
+  `jobman submit -i my-application -- -i ~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ -o ~/persistent-home/results/`
 
 Take into account also:
  - The dataset directories will be always mounted as read-only and usually the user will put it as the input path, so don't use it to write output or temporal files. 
@@ -205,15 +205,15 @@ Take into account also:
  - In the dataset directory there is an index file that should be used for walking through the contents of the dataset 
    (see the [usage guide](#user-guide) to know how).
    Our recommendation for your algorithm is that simply accept as an input argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
-   and use the `index.json` file that will always be in that directory, with that name. 
+   and use the `index.json` file that will always be in any dataset directory, with that name. 
    The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
    and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/rootfs/home/chaimeleon/application-examples) you can find some simple 
    and useful examples which read this file.
 
 ### Environment variables for batch applications
 Some applications expect environment variables instead of command parameters.  
-In that case, an example of launch of the application as a job in the platform using jobman could be:
-`jobman submit -i my-application -- -- INPUT_DIR=~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ OUTPUT_DIR=~/persistent-home/results/`
+In that case, an example of launch of the application as a job in the platform using jobman could be:  
+  `jobman submit -i my-application -- -- INPUT_DIR=~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ OUTPUT_DIR=~/persistent-home/results/`
 
 ### Types of images depending on the UI
 There are two types of image depending on how the user interact with your application:
