@@ -18,22 +18,21 @@ python build.py
 You will be interactively asked to select which image to build, with or without CUDA, if you want to test, upload, etc.
 
 ## Other images in CHAIMELEON platform
- - [Deepfakes Detector](https://github.com/chaimeleon-eu/image_batch_deepfakesdetector) (private repository) from BGU
- - [Lung CT Harmonisation](https://github.com/chaimeleon-eu/image_batch_lungCT_harmonisation) (private repository) from Imperial
- - [Non-imaging Data Augmentation](https://github.com/chaimeleon-eu/image_batch_non-imaging-aug) from Imperial
- - [MRI Harmonization](https://github.com/chaimeleon-eu/image_batch_mri_harmonization) (private repository) from Quibim
- - [SHAP Explainability Radiomics](https://github.com/chaimeleon-eu/image_batch_shap_explainability_radiomics) from University of Maastricht
- - [Analitical Engine - Superset](https://github.com/chaimeleon-eu/helm-chart-superset) from Bahia
- - [Analitical Engine - new version](https://github.com/chaimeleon-eu/analytical-engine) (private repository) from Bahia
+Check out the Application Catalogue to see all the images available in the platform:
+https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md
+
+If you want to take one as an example for the integration of your application, you may want to select one with public dockerfile, 
+so you will be able to see all the details and even build by yourself.
 
 ## How to integrate your application in CHAIMELEON platform
-The normal procedure to integrate an application is creating a docker image which includes it and all the dependencies/libraries required to execute it.
-
-There are some conditions that the image must fulfill, as explained in the [next chapter](#how-to-design-a-workstation-image-for-the-chaimeleon-platform), 
+The normal procedure to integrate an application is creating a docker image containing the main binary or script file and all the dependencies/libraries required to execute it.
+But there are some conditions that the image must fulfill, as explained in the [next chapter](#how-to-design-a-workstation-image-for-the-chaimeleon-platform), 
 which is a guide for developers to design the image.  
-Once you have the dockerfile describing your image, you should upload it (with all the files needed for building the image) to a new repository in the 
-[chaimeleon-eu](https://github.com/chaimeleon-eu) organization in Github. 
-To easily find the repos in the organization, the name should be in the format `image_batch_YOUR_APPLICATION_NAME` or `image_interactive_YOUR_APPLICATION_NAME`.  
+
+Once you have the dockerfile describing your image, you have to made it available (with all the files needed for building the image) to us in a public or private repository, 
+in Github or any other source code repository provider. 
+And finally create a request in the [Application Catalogue](https://github.com/chaimeleon-eu/application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
+
 We will check the image is according to the guide and then we will build and upload it to the CHAIMELEON image repository.
 So the users will see it in: 
  - the list of `jobman images` command, if your application is non-interactive (batch)
@@ -42,12 +41,12 @@ So the users will see it in:
 The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
 **For notifying new images or changes in your image that require to rebuild it**, 
-please [add an issue](https://github.com/chaimeleon-eu/workstation-images/issues) to this repository or contact us by email.
+please create a request in the [Application Catalogue](https://github.com/chaimeleon-eu/application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
 It is recommended to add the label `version` (see [Labels](#labels)), increment it on every change and refer to its value in the issue.
 
-### User guide
+### First of all, check out the usage guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
-So if you have not seen yet the user guide, it is a good moment:  
+So if you have not seen yet the usage guide, it is a good moment:  
 https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#explore-the-contents-of-a-dataset
 
 ### Testing your application in the platform
@@ -56,8 +55,8 @@ To do so, just upload the files (script or binary executable and all the depende
 using a dataset from `/home/chaimeleon/datasets/` and writing the results for example in `/home/chaimeleon/persistent-home/my-app-results/`.  
 If you don't know yet how to upload and install tools or dependencies see 
 [here](https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide.md#software-packages-and-dependency-libraries-installation).  
-If your application has a lot of dependencies we recommend jumpping to the next chapter to test it directly an image.  
-If you don't know yet how to execute you application or how your application should walk through the dataset contents see the user guide (go to the previous chapter).
+If your application has a lot of dependencies we recommend jumpping to the next chapter to test it directly as an image.  
+If you don't know yet how to execute you application or how your application should walk through the dataset contents look at the usage guide (go to the previous chapter).
 
 ### Testing your application as an image in the platform
 Before the integration of your application as an image in the internal repository of the platform you can try to build it locally in your computer, upload and run it in the remote desktop.  
@@ -86,7 +85,7 @@ This is a template for the dockerfile (some details are explained in the next ch
 FROM ...
 
 LABEL name="..."
-LABEL version="1.0"
+LABEL version="0.1"
 LABEL authorization="..."
 
 ############## Things done by the root user ##############
@@ -114,6 +113,7 @@ RUN mkdir -p /home/chaimeleon/datasets && \
 ADD ...
 
 WORKDIR /home/chaimeleon
+ENTRYPOINT ["python", "/home/chaimeleon/main.py"]
 ```
 
 ### Labels
@@ -122,50 +122,16 @@ then we need that you include an authorization as a LABEL in Dockerfile like thi
 ```
 LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
 ```
-Also if you want to specify the name and version of the image that will appear in the CHAIMELEON images repository,
+Also you should specify the name and version of the image that will appear in the CHAIMELEON images repository,
 you can set the appropiate LABELS. For example:
 ```
 LABEL name="my-cool-tool"
-LABEL version="1.0"
+LABEL version="0.1"
 ```
 When the users list the images with `jobman images`, they will see that name and the version as a tag. 
 Remember to increment the version if you make any change on the image because the kubernetes default policy to retrieve images is only pull 
 if the tag (version) required is not present in the node where the job will run.
 The tag `latest` will also be created pointing to the last version built.  
-
-
-### Description, usage and license
-The users will usually use your image via [jobman](https://github.com/chaimeleon-eu/jobman#workflow-and-examples).
-The command `jobman image-details -i <image_name>` will show to the user this sections:
- - `Description`: you can include a short description of the image, the utilities, the tools that include...
- - `Usage`: the parameters accepted, those which the user can put after the "--" in the `jobman submit` command 
-            (they will be appended to the `ENTRYPOINT` of your image).
- - `License`:  a link to the license document of your application (if any). 
-               You can [add one](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) easily.
-
-This sections will be copied from the _README.md_ file of your Github repository.  
-All of them are optional, if any of this sections are missing in your _README.md_ file, 
-then it will not be copied to the image and will be empty in the `jobman image details` command.
-
-You can take the _README.md_ of any of our images as an example, like this:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/README.md
-
-#### Usage examples
-In the "Usage" section of your readme.md it is recommended to add some examples, as you can see in the previous link. 
-For that usage examples take into account that...
- - Although you can put generic examples with `docker run`, you should put (additionally or instead) examples with `jobman submit`.
- - In the arguments where the user set the path for **image inputs** you should use the path of datasets (`/home/chaimeleon/datasets/`).  
-   This directory is read-only and accessible using the same path in both the Desktop environment (from where the user launch jobs via jobman) and in the launched job environment.  
-   In this directory there is a subdirectory for every dataset that the user selected for working. 
-   And in every dataset directory there is an index file that should be used for walking through the contents of the dataset. 
-   Our recommendation for your algorithm is that simply accept as an argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
-   and use the `index.json` file that will always be in that directory, with that name. 
-   The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
-   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/rootfs/home/chaimeleon/application-examples) you can find some simple 
-   and useful examples which read this file.
- - In the arguments of type **result paths**, you should use the path of persistent home (`/home/chaimeleon/persistent-home/`).  
-   This directory is also accessible using the same path in both the Desktop environment and the launched job environment. 
-   All the results that are not in the persistent directory will be lost at the end of the job.
 
 ### There is no Internet access in run time
 Things like "apt get", "pip install", "git clone", or any download from a server out of the platform must be in the dockerfile (image build time) not in init scripts (run time). 
@@ -215,6 +181,39 @@ ENTRYPOINT ["/home/chaimeleon/.init/run.sh"]
 ### Directories for mounting volumes
 Finally some directories should be created in the user home, where the volumes (datasets, persistent-home, persistent-shared-folder) 
 will be mounted when the container is created into the platform.
+```
+RUN mkdir -p /home/chaimeleon/datasets && \
+    mkdir -p /home/chaimeleon/persistent-home && \
+    mkdir -p /home/chaimeleon/persistent-shared-folder
+```
+The volumes will be mounted and accessible in the same path in all Desktop containers (the environment from where the user launches jobs via jobman) 
+and in all the launched job containers (the environment where the application runs).  
+
+### Entrypoint and typical parameters for batch applications
+In case of bath applications it is recommended to add an entrypoint.  
+Let's take the example that your application is launched locally with:  
+`python main.py -i <input-dataset-directory-path> -o <results-output-directory>`  
+In that example the entrypoint should be like this:  
+`ENTRYPOINT ["python", "/home/chaimeleon/main.py"]`  
+That way, the parameters will be specified by the user in the `jobman submit` command after the `--`. 
+So, an example of launch of the application as a job in the platform using jobman could be:
+`jobman submit -i my-application -- -i ~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ -o ~/persistent-home/results/`
+
+Take into account also:
+ - The dataset directories will be always mounted as read-only and usually the user will put it as the input path, so don't use it to write output or temporal files. 
+   You should use `/tmp` to write temporal files.
+ - In the dataset directory there is an index file that should be used for walking through the contents of the dataset 
+   (see the [usage guide](#user-guide) to know how).
+   Our recommendation for your algorithm is that simply accept as an input argument the path of dataset (`/home/chaimeleon/datasets/<dataset-id>`) 
+   and use the `index.json` file that will always be in that directory, with that name. 
+   The schema is [here](https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json), 
+   and [HERE](https://github.com/chaimeleon-eu/workstation-images/tree/main/ubuntu-python/rootfs/home/chaimeleon/application-examples) you can find some simple 
+   and useful examples which read this file.
+
+### Environment variables for batch applications
+Some applications expect environment variables instead of command parameters.  
+In that case, an example of launch of the application as a job in the platform using jobman could be:
+`jobman submit -i my-application -- -- INPUT_DIR=~/datasets/87f3be56-4725-45c3-9baa-d338de530f73/ OUTPUT_DIR=~/persistent-home/results/`
 
 ### Types of images depending on the UI
 There are two types of image depending on how the user interact with your application:
@@ -280,6 +279,13 @@ You can reduce the size of your container image a lot with a few changes:
    In that case just add the required package in the list of packages to install, 
    don't rely on your required package will be recommended by the other package.  
    Example: `apt-get -y install --no-install-recommends python3-pip`
+ - If you use _poetry_ to install dependencies, remove pip and poetry caches after `poetry install`. 
+   It is important to do that in the same `RUN` command. 
+   Example: 
+   ```
+   RUN poetry install \
+    && pip cache purge && rm -rf ~/.cache/pypoetry/*
+   ```
 
 ---
 
