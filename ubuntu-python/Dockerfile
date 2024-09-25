@@ -30,8 +30,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
         bash-completion ca-certificates curl iputils-ping netcat \
-        man-db net-tools traceroute vim parallel \
-        python3-pip gnupg2 xattr pv bsdmainutils python3-opencv && \
+        man-db net-tools traceroute vim parallel unzip zip 7zip unrar \
+        python3-pip python3-venv python3-virtualenv gnupg2 xattr pv bsdmainutils python3-opencv && \
     if [ ! -z "$CUDA_VERSION" ] ; then apt-get -y install --no-install-recommends nvidia-utils-525; fi  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \

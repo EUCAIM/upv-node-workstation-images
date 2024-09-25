@@ -70,7 +70,7 @@ EXPOSE 2222
 
 ########## jobman installation
 # The nodesource's script adds the PPA and do apt update
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt install -y --no-install-recommends  nodejs git \
     && rm -rf /var/lib/apt/lists/*
 ## Currently only dependencies are installed here.
@@ -86,7 +86,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - \
 
 ########## itk-snap installation
 RUN cd /tmp \
-    && curl -o itk-snap.tgz 'https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.2/itksnap-4.0.2-Linux-gcc64.tar.gz' \
+    && curl -L -o itk-snap.tgz 'https://netcologne.dl.sourceforge.net/project/itk-snap/itk-snap/4.0.2/itksnap-4.0.2-Linux-gcc64.tar.gz' \
     && tar xzf itk-snap.tgz \
     && cp -av ./itksnap-*/* /usr/local/ \
     && rm -rf ./itksnap-*/ itk-snap.tgz
@@ -98,7 +98,7 @@ RUN cd /tmp \
 
 ########## itk-snap (old version) 3.6 installation
 RUN cd /tmp \
-    && curl -o itk-snap.tgz 'https://kumisystems.dl.sourceforge.net/project/itk-snap/itk-snap/3.6.0/itksnap-3.6.0-20170401-Linux-x86_64.tar.gz' \
+    && curl -L -o itk-snap.tgz 'https://kumisystems.dl.sourceforge.net/project/itk-snap/itk-snap/3.6.0/itksnap-3.6.0-20170401-Linux-x86_64.tar.gz' \
     && tar xzf itk-snap.tgz \
     && cp -av ./itksnap-*/lib/* /usr/local/lib/ \
     && cp -av ./itksnap-*/bin/itksnap /usr/local/bin/itksnap-3.6 \
