@@ -56,6 +56,10 @@ the input method for keyboard and mouse, to adjust the zoom and disconect from t
 
 You can see the complete user manual of this tool here: https://guacamole.apache.org/doc/gug/using-guacamole.html
 
+### Downloads from remote desktop
+Any type of download from remote desktop is disabled, whether files or even text from clipboard. This is a project restriction agreed by the consortium to prevent take data (medical images or clinical data) out of platform. Only results like AI models or tools developed, once trained with the datasets in the platform, can be extracted upon prior request.  
+So, taking this into account, the normal workflow is to develop your algorithm as much as possible in your local computer, then upload just to test or train with the platform datasets and finally request for download the trained model. That model may be scanned and analysed by human or automated tools to ensure no dataset nor part of it is contained.
+
 ### Software resources. 
 Each desktop has installed the following software:  
   - OS: Ubuntu 22.04 with lxde (graphical desktop environment)  
@@ -146,11 +150,12 @@ You can embed your algorithm and all its dependencies in a docker image, upload 
 Let's see it step by step.
 
 First you must "containerize" (aka "dockerize") your application. 
-If you don't know what's that, you can start here: https://docs.docker.com/get-started/
+If you don't know what's that, you can start here: https://docs.docker.com/get-started/.
 Basically you should write a dockerfile and do `docker build -t myApp:1.0 .` within the directory where the dockerfile is.
 
-We are going to pull an image already built for this example with: `docker pull alpine:3.20` 
-So now we have the image in our docker local repository, and we can save it to a file with:
+For this example, we are going to pull an image already built with: `docker pull alpine:3.20`
+
+Whether we have pulled an image or built our own, now we have the image in our docker local repository, and we can save it to a file with:
 ```
 docker save alpine:3.20 -o alpine-3.20.tar.gz
 ```
@@ -188,7 +193,8 @@ jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
 ```
 For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).  
 Note for this last example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
-and just adding the missing apt package "nvidia-utils-525" in order to make available the command `nvidia-smi`.
+and just adding the missing apt package "nvidia-utils-525" in order to make available the command `nvidia-smi`
+(it's a simple dockerfile you can see [here](https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/Dockerfile-custom-image-based-on-nvidia-cuda)).
 
 
 ## Hardware resources
