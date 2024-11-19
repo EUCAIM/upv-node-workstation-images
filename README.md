@@ -18,7 +18,7 @@ python build.py
 You will be interactively asked to select which image to build, with or without CUDA, if you want to test, upload, etc.
 
 ## Other images in CHAIMELEON platform
-Check out the Application Catalogue to see all the images available in the platform:
+Check out the Application Catalogue to see all the images available in the platform:  
 https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md
 
 If you want to take one as an example for the integration of your application, you may want to select one with public dockerfile, 
@@ -36,13 +36,16 @@ And finally create a request in the [Application Catalogue](https://github.com/c
 We will check the image is according to the guide and then we will build and upload it to the CHAIMELEON image repository.
 So the users will see it in: 
  - the list of `jobman images` command, if your application is non-interactive (batch)
- - the catalog of applications to deploy, if your application is of type interactive.
+   ![jobman images](img/jobman-images.png)
+ - the catalog of applications to deploy, if your application is of type interactive
+   ![app dashboard catalog](img/app-dashboard-catalog.png)
+ - obviously also in the [Application Catalogue] (https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md)
 
 The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
 **For notifying new images or changes in your image that require to rebuild it**, 
 please create a request in the [Application Catalogue](https://github.com/chaimeleon-eu/application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
-It is recommended to add the label `version` (see [Labels](#labels)), increment it on every change and refer to its value in the issue.
+It is recommended to add the label `version` in the dockerfile (see [Labels](#labels)), increment it on every change and include the new version number in the request.
 
 ### First of all, check out the usage guide
 Before being a developer you should be a user: this way you can understand what is the expected behaviour of any application in the platform.  
@@ -122,15 +125,15 @@ then we need that you include an authorization as a LABEL in Dockerfile like thi
 ```
 LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
 ```
-Also you should specify the name and version of the image that will appear in the CHAIMELEON images repository,
+Also you should specify the **name** and **version** of the image that will appear in the CHAIMELEON images repository,
 you can set the appropiate LABELS. For example:
 ```
 LABEL name="my-cool-tool"
 LABEL version="0.1"
 ```
-When the users list the images with `jobman images`, they will see that name and the version as a tag. 
+When the users list the images with `jobman images`, they will see that name and the version as a tag for the image.  
 Remember to increment the version if you make any change on the image because the kubernetes default policy to retrieve images is only pull 
-if the tag (version) required is not present in the node where the job will run.
+if the tag (version) required is not present in the node where the job will run.  
 The tag `latest` will also be created pointing to the last version built.  
 
 ### There is no Internet access in run time
