@@ -36,7 +36,7 @@ WORKDIR /home/chaimeleon
 # for cpu and for cuda 11.8
 RUN pip3 install --no-cache-dir typing-extensions && \
     if [ -z "$CUDA_VERSION" ] ; then pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu ; \
-                                else pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu118 ; fi
+                                else pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 ; fi
 
 
 # Verify pyTorch: https://pytorch.org/get-started/locally/#linux-verification

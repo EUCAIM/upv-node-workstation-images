@@ -11,7 +11,7 @@ REGISTRY_PATH_FOR_DESKTOP = "/chaimeleon-library/"
 ubuntu_python_version = "3.9"
 
 ubuntu_python_tensorflow_version = "3.10"
-ubuntu_python_pytorch_version = "3.9"
+ubuntu_python_pytorch_version = "3.10"
 
 ubuntu_python_tensorflow_desktop_version = "3.17"
 ubuntu_python_pytorch_desktop_version = "3.16"
