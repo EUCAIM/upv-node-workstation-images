@@ -23,6 +23,7 @@ USER root
 #RUN sed -i 's#http://archive.ubuntu.com/ubuntu/#mirror://mirrors.ubuntu.com/mirrors.txt#' /etc/apt/sources.list;
 
 # libxkbcommon-x11-0, libxcb-icccm4, libxcb-image0, libxcb-keysyms1, libxcb-randr0, libxcb-render-util0 are required by itk-snap
+# lxhotkey-plugin-openbox required to fix error opening the global hotkeys configuration window
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && \
     apt install -y --no-install-recommends \
@@ -36,7 +37,7 @@ RUN apt update && \
                 xvfb x11vnc vim-tiny wget less firefox-esr ttf-wqy-zenhei \
                 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 && \
     apt install -y --no-install-recommends \
-                lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme xterm && \
+                lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme xterm lxhotkey-plugin-openbox && \
     rm -rf /var/lib/apt/lists/* && \
     ln -s /usr/bin/firefox-esr /usr/bin/firefox
     

@@ -30,7 +30,7 @@ But there are some conditions that the image must fulfill, as explained in the [
 which is a guide for developers to design the image.  
 
 Once you have the dockerfile describing your image, you have to made it available (with all the files needed for building the image) to us in a public or private repository, 
-in Github or any other source code repository provider. 
+in [Github](https://github.com/new) or any other source code repository provider. 
 And finally create a request in the [Application Catalogue](https://github.com/chaimeleon-eu/application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
 
 We will check the image is according to the guide and then we will build and upload it to the CHAIMELEON image repository.
@@ -39,7 +39,7 @@ So the users will see it in:
    ![jobman images](img/jobman-images.png)
  - the catalog of applications to deploy, if your application is of type interactive
    ![app dashboard catalog](img/app-dashboard-catalog.png)
- - obviously also in the [Application Catalogue] (https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md)
+ - obviously also in the [Application Catalogue](https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md)
 
 The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
