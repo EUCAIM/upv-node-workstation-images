@@ -5,13 +5,12 @@ ARG TARGET_VERSION="unknown"
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda11"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu-python:${BASE_VERSION}${CUDA_VERSION}
+FROM harbor.eucaim-node.i3m.upv.es/library-batch/ubuntu-python:${BASE_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu-python-tensorflow"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and tensorflow."
-LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
+LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the platform images repository."
 
 ############## Things done by the root user ##############
 USER root
@@ -37,8 +36,8 @@ RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 RUN if [ -n "$CUDA_VERSION" ] ; then cd /usr/local/cuda/targets/x86_64-linux/lib && ln -s libnvrtc.so.11.2 libnvrtc.so ; fi
 
 ############### Now change to normal user ################
-USER chaimeleon:chaimeleon
-WORKDIR /home/chaimeleon
+USER ds:ds
+WORKDIR /home/ds
 
 # Installation of Tensorflow
 # The extra "and-cuda" is included in the version ".post1" and installs cudnn, nvcc and other libraries 
@@ -51,17 +50,17 @@ RUN if [ -n "$CUDA_VERSION" ] ; then \
 
 # Set some environment variables for the final container environment...
 # It seems not needed in the new versions or installing with the "and-cuda" extra.
-#ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
+#ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/ds/.local/lib/python3.10/site-packages/nvidia/cudnn/lib"
 # Fix error "libdevice not found":
 # libdevice is included in the pip package nvidia-cuda-nvcc-cu12==12.2.140 which is included in the "and-cuda" extra;
 # once installed you can get the path for xla_gpu_cuda_data_dir with: 
 #   dirname $(dirname $(dirname $(find / -name libdevice.10.bc 2>/dev/null)))
 # in xla_gpu_cuda_data_dir should exist the path nvvm/libdevice/libdevice.10.bc
-ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cuda_nvcc
+ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/home/ds/.local/lib/python3.10/site-packages/nvidia/cuda_nvcc
 
 ####################################
 # Verify cudnn (required only for cuda version, for use GPU):
-## ls /home/chaimeleon/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.8
+## ls /home/ds/.local/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.8
 
 # Verify tensorflow: https://www.tensorflow.org/install/pip?hl=es-419#step-by-step_instructions
 ## import tensorflow as tf

@@ -139,15 +139,15 @@ Note the two biggest packages (SimpleITK and numpy) are already installed in the
 
 We should move to the persistent-home to make them available to all our desktops or jobs (we make a directory "my-tools" there for all our packages):
 ```
-chaimeleon@jupyter-tensorflow-test-699949bf4-z2fv:~$ mkdir -p ~/persistent-home/my-tools
-chaimeleon@jupyter-tensorflow-test-699949bf4-z2fv:~$ mv ~/*.whl ~/persistent-home/my-tools/
+ds@jupyter-tensorflow-test-699949bf4-z2fv:~$ mkdir -p ~/persistent-home/my-tools
+ds@jupyter-tensorflow-test-699949bf4-z2fv:~$ mv ~/*.whl ~/persistent-home/my-tools/
 ```
 Now we can easily install pyradiomics with:
 ```
-chaimeleon@jupyter-tensorflow-test-699949bf4-z2fv:~$ pip install --no-index --find-links ~/persistent-home/my-tools pyradiomics
+ds@jupyter-tensorflow-test-699949bf4-z2fv:~$ pip install --no-index --find-links ~/persistent-home/my-tools pyradiomics
 ```
 And even we can add that same command line in our `init.sh` script to automatically install on every desktop or jobs that we launch in the platform:
 ```
-chaimeleon@jupyter-tensorflow-test-699949bf4-z2fv:~$ echo 'pip install --no-index --find-links ~/persistent-home/my-tools pyradiomics' > ~/persistent-home/init.sh
+ds@jupyter-tensorflow-test-699949bf4-z2fv:~$ echo 'pip install --no-index --find-links ~/persistent-home/my-tools pyradiomics' > ~/persistent-home/init.sh
 ```
 

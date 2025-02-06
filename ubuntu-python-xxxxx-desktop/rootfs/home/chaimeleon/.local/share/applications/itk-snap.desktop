@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=itk-snap
-Comment=Open biomedical images and do segmentations
-Exec=itksnap
-Path=/home/chaimeleon

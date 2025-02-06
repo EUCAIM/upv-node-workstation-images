@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+REPO=~/persistent-shared-folder/apps/jobman
+
+# if the local package does not exist or is older than the one from the repo...
+if [ $REPO/jobman.tar.gz -nt ~/.local/lib/jobman.tar.gz ]; then
+    echo "Installing the last versión of jobman..."
+    PREV_DIR=$(pwd)
+    cd ~/.local/lib
+    cp ~/persistent-shared-folder/apps/jobman/jobman.tar.gz .
+    rm -rf ./jobman
+    tar xzf jobman.tar.gz
+    cd $PREV_DIR
+    ln -sf ~/.local/lib/jobman/bin/jobman ~/.local/bin/
+
+    echo "Configuring jobman for this platform"
+    mkdir -p ~/.jobman
+    if [ -f ~/.jobman/settings.json ]; then
+        mv ~/.jobman/settings.json ~/.jobman/settings.json.bak
+        echo "Found previous settings file, moved to ~/.jobman/settings.json.bak"
+    fi
+    cp $REPO/settings.json ~/.jobman/
+    # Set the list of datasets which will be used by jobs: copy the same list of datasets used by this desktop.
+    echo "$DATASETS_LIST" > ~/.jobman/datasets.txt
+    
+    echo "Jobman installed and configured."
+    
+else 
+    echo "Jobman is up to date."
+fi

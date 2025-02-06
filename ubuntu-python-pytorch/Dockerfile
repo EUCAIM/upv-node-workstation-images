@@ -5,14 +5,13 @@ ARG TARGET_VERSION="unknown"
 ## Uncomment or include in "docker build --build-arg" for building with CUDA
 #ARG CUDA_VERSION="cuda11"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu-python:${BASE_VERSION}${CUDA_VERSION}
+FROM harbor.eucaim-node.i3m.upv.es/library-batch/ubuntu-python:${BASE_VERSION}${CUDA_VERSION}
 # FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime        We can build from a container with pytorch already installed (untested alternative)
 
 LABEL name="ubuntu-python-pytorch"
 LABEL version="${TARGET_VERSION}$CUDA_VERSION"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${CUDA_VERSION} and pyTorch."
-LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
-LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the CHAIMELEON images repository."
+LABEL authorization="This Dockerfile is intended to build a container image that will be publicly accessible in the platform images repository."
 
 ############## Things done by the root user ##############
 USER root
@@ -27,8 +26,8 @@ RUN apt-get -y update && \
 RUN pip3 install --no-cache-dir --upgrade pip keyrings.alt
 
 ############### Now change to normal user ################
-USER chaimeleon:chaimeleon
-WORKDIR /home/chaimeleon
+USER ds:ds
+WORKDIR /home/ds
 
 #RUN pip3 install --no-cache-dir torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html   # for CUDA 10.1, includes CUDNN 1.7
 #RUN pip3 install --no-cache-dir torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0   # for CUDA 10.2, includes CUDNN 1.7

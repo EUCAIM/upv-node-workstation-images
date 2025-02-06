@@ -4,9 +4,9 @@ import argparse
 import enum
 import os
 
-REGISTRY_HOST = "harbor.chaimeleon-eu.i3m.upv.es"
-REGISTRY_PATH_FOR_BATCH = "/chaimeleon-library-batch/"
-REGISTRY_PATH_FOR_DESKTOP = "/chaimeleon-library/"
+REGISTRY_HOST = "harbor.eucaim-node.i3m.upv.es"
+REGISTRY_PATH_FOR_BATCH = "/library-batch/"
+REGISTRY_PATH_FOR_DESKTOP = "/library/"
 
 ubuntu_python_version = "3.9"
 
@@ -134,14 +134,9 @@ def build_ubuntu_python_aitool_desktop(aitool:AI_TOOL, gpu=None):
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
         cmd('docker run -d --rm -p 15900:5900 -p 3322:22'
-           +' -e VNC_PASSWORD="chaimeleon" '
-           +' -e PASSWORD="chaimeleon" '
-           +' -e GUACAMOLE_URL=https://chaimeleon-eu.i3m.upv.es/guacamole/ '
-           +' -e GUACAMOLE_USER="guacamoleuser" '
-           +' -e GUACAMOLE_PASSWORD="XXXXXXXXXXXX" '
-           +' -e GUACD_HOST="10.98.114.250" '
+           +' -e VNC_PASSWORD="test" '
+           +' -e PASSWORD="test" '
            +' -e SSH_ENABLE_PASSWORD_AUTH=true '
-           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu-python-'+aitool.name+'-desktop '
            +' -e GATEWAY_PORTS=true '
            +' -e TCP_FORWARDING=true '
            +' --name testing01 '
@@ -177,14 +172,9 @@ def build_ubuntu_python_aitool_desktop_jupyter(aitool:AI_TOOL, gpu=None):
     if input("Do you want to run the container for testing? [y/N] ").lower() == "y":
         print("OK, when you end the testing write 'exit' to stop and remove the container.")
         cmd('docker run -d --rm -p 15900:5900 -p 3322:22'
-           +' -e VNC_PASSWORD="chaimeleon" '
-           +' -e PASSWORD="chaimeleon" '
-           +' -e GUACAMOLE_URL=https://chaimeleon-eu.i3m.upv.es/guacamole/ '
-           +' -e GUACAMOLE_USER="guacamoleuser" '
-           +' -e GUACAMOLE_PASSWORD="XXXXXXXXXXXX" '
-           +' -e GUACD_HOST="10.98.114.250" '
+           +' -e VNC_PASSWORD="test" '
+           +' -e PASSWORD="test" '
            +' -e SSH_ENABLE_PASSWORD_AUTH=true '
-           +' -e GUACAMOLE_CONNECTION_NAME=testing-ubuntu-python-'+aitool.name+'-desktop '
            +' -e GATEWAY_PORTS=true '
            +' -e TCP_FORWARDING=true '
            +' --name testing01 '

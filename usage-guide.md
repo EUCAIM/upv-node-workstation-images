@@ -1,7 +1,7 @@
 # Workstation Usage Guide
 Once a user is registered, s(he) will be able to deploy a desktop using the Apps Dashboard. 
 The desktop will be the unique way to access the contents of datasets, AI frameworks and software libraries, 
-and to manage (launch, monitor) batch processes (jobs) on the computational resources provided by CHAIMELEON.
+and to manage (launch, monitor) batch processes (jobs) on the computational resources provided by the platform.
 
 ## Deployment and deletion of desktops
 In [this video](https://drive.google.com/file/d/1KQxLBEtO_iw08JlfNtDZdKgICZJ2RD_N) you can see a short demo of deployment of a desktop.
@@ -14,7 +14,7 @@ In the Apps Dashboard you should ensure your namespace is selected in "Current c
 
 ![Select namespace and catalog](usage-guide-other/img/select-namespace-and-catalog.png)
 
-Now you can go to the "Catalog" and deploy a workstation in the CHAIMELEON platform. 
+Now you can go to the "Catalog" and deploy a workstation in the platform. 
 The most common are those that start with "desktop-" and "jupyter-".  
 NOTE: if it is your first time, we recommend to select one with "jupyter" 
 because you will be able to open the "dataset access guide" notebook directly in the remote desktop to execute the python code step by step
@@ -30,26 +30,28 @@ Alternatively you can search for the dataset you want to access in the initial w
 then click on "More" to go to the details, dropdown "Actions" and you will see the item "Use on Apps Dashboard".
 This way the "Dataset list" field will be filled automatically.
 
-Finally, after you push the "DEPLOY" button, read carefully the "Installation Notes" and, when the deployment is "Ready" with one or more pods 
-(usually it takes few seconds, but depending on demand up to a minute), 
-then you can go to the guacamole link and there you will see the connection to your desktop.
+Finally, when you push the "DEPLOY" button your desktop/application will be allocated in the platform. 
+Usually it takes few seconds, but depending on demand up to a minute. 
+If it takes more than that is because there are not enough free resources in the platform. You can delete other desktop you have deployed previously, if any, or just wait.  
+When the deployment is "Ready" with one or more pods, read carefully the "Installation Notes":
+you can go to the guacamole link and there you will see the connection to your desktop.
 
 ![Deployment ready and access link](usage-guide-other/img/deployment-ready-and-access-link.png)
 
-You can deploy and delete a desktop in the CHAIMELEON platform as many times as you consider. 
+You can deploy and delete a desktop in the platform as many times as you consider. 
 Each deployment using one or more datasets will be logged in the Tracer Service.  
 At the end of your work session please ensure you save your work in the persistent-home directory and consider to shutdown the desktop:
 
 ![Close session](usage-guide-other/img/close-session.png)
 
-That way the resources will be released (desktop removed) and so other users (or yourself later) will be able to deploy his/her desktop.  
+That way the resources will be released (desktop removed) and so other users (or yourself later) will be able to deploy a desktop.  
 If you don't do it, keep in mind the desktop may be removed automatically if you don't connect to it for more than 7 days.
 
 ## Once in the remote desktop
 To show/hide the Guacamole menu: CTRL+SHIFT+ALT
 
 You can upload files using this menu or simply drag and drop on the browser window. 
-You will find the files uploaded in the home directory (/home/chaimeleon).
+You will find the files uploaded in the home directory (/home/ds).
 
 The Guacamole menu also allows you to manage the remote clipboard (if you use Chrome you can simply allow the synchronization of the clipboard),
 the input method for keyboard and mouse, to adjust the zoom and disconect from the remote desktop.
@@ -57,8 +59,12 @@ the input method for keyboard and mouse, to adjust the zoom and disconect from t
 You can see the complete user manual of this tool here: https://guacamole.apache.org/doc/gug/using-guacamole.html
 
 ### Downloads from remote desktop
-Any type of download from remote desktop is disabled, whether files or even text from clipboard. This is a project restriction agreed by the consortium to prevent take data (medical images or clinical data) out of platform. Only results like AI models or tools developed, once trained with the datasets in the platform, can be extracted upon prior request.  
-So, taking this into account, the normal workflow is to develop your algorithm as much as possible in your local computer, then upload just to test or train with the platform datasets and finally request for download the trained model. That model may be scanned and analysed by human or automated tools to ensure no dataset nor part of it is contained.
+Any type of download from remote desktop is disabled, whether files or even text from clipboard. 
+This is a project restriction agreed by the consortium to prevent take data (medical images or clinical data) out of platform. 
+Only results like AI models or tools developed, once trained with the datasets in the platform, can be extracted upon prior request.  
+So, taking this into account, the normal workflow is to develop your algorithm as much as possible in your local computer, 
+then upload just to test or train with the platform datasets and finally request for download the trained model if you want. 
+That model may be scanned and analysed by human or automated tools to ensure no dataset nor part of it is contained.
 
 ### Software resources. 
 Each desktop has installed the following software:  
@@ -74,8 +80,8 @@ Other tools/libraries available to install from persistent-shared-folder (see [S
 
 ### There is no Internet access
 Things like "apt get", "git clone", "wget", "curl" or any access to a web page or service out of the platform will fail\*.  
-Network connectivity to outside is strongly restricted within the CHAIMELEON platform due to the project general requirement to not allow the medical data to go out.
-Applications running in the CHAIMELEON platform do not allow downloading/uploading data from/to external sources (from Internet), 
+Network connectivity to outside is strongly restricted in the platform environment due to the project general requirement to not allow the medical data to go out.
+Applications running in the platform do not allow downloading/uploading data from/to external sources (from Internet), 
 only there is connectivity to services running within the platform.
 
 \* As an exception you can do "pip install" if you use the index provided by the PyPi mirror in the platform.  
@@ -84,7 +90,7 @@ If you need to install something see the chapter "[Software packages and depende
 ### Explore the contents of a dataset
 There is a dedicated guide of how to access and explore the contents of datasets, 
 and it includes the launching and monitoring of a batch process (job) with jobman:  
-[dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+[dataset access guide](ubuntu-python/rootfs/home/ds/application-examples/dataset-access-guide.ipynb).
 
 It is in Jupyter Notebook format, Github prints it very well, 
 but you can open it directly in the remote desktop to test the dataset access by yourself executing the python code in situ.
@@ -93,44 +99,48 @@ go to `application-examples` (in `home` directory) and open `dataset-access-guid
 
 ## Special directories
 There are two important directories in the remote desktop and also in jobs (they will be always in the same paths):
-  - `/home/chaimeleon/datasets`  
+  - `/home/ds/datasets`  
     All the datasets you selected to work with.  
-    There is a read-only directory for each and labelled with its Persistent Unique Identifier (PID) in CHAIMELEON.  
+    There is a read-only directory for each and labelled with its ID in the platform (the same as in the Dataset-explorer web page).  
     More details of how they are organized in the 
-    [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+    [dataset access guide](ubuntu-python/rootfs/home/ds/application-examples/dataset-access-guide.ipynb).
     
-  - `/home/chaimeleon/persistent-home`  
-    Private persistent storage: for your algorithms, results and whatever you need for the work.  
+  - `/home/ds/persistent-home`  
+    Private persistent storage: for your algorithms, results and whatever you want to save.  
     If the desktop is deleted and redeployed afterwards, this folder persists and is remounted on the new instance.  
-    On the other hand the access to files in it is a bit slower, so you should use the normal home (`/home/chaimeleon`) or `/tmp/` for temporal files if you want your algorithm/workflow go faster.
+    On the other hand the access to files in it is a bit slower, 
+    so you should use the normal home (`/home/ds`) or `/tmp/` for temporal files if you want your algorithm/workflow go faster.
 
 Other useful directories:
-  - `/home/chaimeleon/persistent-shared-folder`  
-    Public persistent storage where you can share files with the other CHAIMELEON users
-    and you will find other useful resources like documentation, applications, docker images 
-    and python packages (from pypi.org which you can install with `pip`, see the "example 4" in `~/persistent-home/init.sh`). 
+  - `/home/ds/persistent-shared-folder`  
+    Public persistent storage where you can share files with the other users in the platform
+    and you will find other useful resources here like documentation, applications, container images 
+    and python packages (from pypi.org which you can install with `pip`, see the "example 5" in `~/persistent-home/init.sh`). 
   
-  - `/home/chaimeleon/application-examples`  
+  - `/home/ds/application-examples`  
     Here you can find some simple application examples including the dataset access guide.
 
 ## Software packages and dependency libraries installation
-There are some methods to satisfy the dependencies of your training algorithm or to make available in the CHAIMELEON platform any tool you need but not currently available: 
+There are some methods to satisfy the dependencies of your training algorithm or to get any tool you need in the remote desktop or your jobs in the platform: 
   - You can upload any package and install it as a normal user (not sudo/root).
   - For standard python packages you can use `pip install ...`, again as a normal user (not sudo/root).
-  - You can build a docker image locally (in your PC) with all the required dependencies, upload the image file and then run it in the platform with uDocker.
+  - You can build a docker image locally (in your personal computer) with all the required dependencies, upload the image file and then run it in the platform with uDocker.
   
 All that options are detailed in the next chapters.  
 
 ### Upload software packages
-You can [upload](#once-in-the-remote-desktop) your own files (e.g. source code, software packages, dependency libraries, models, etc.) to the remote desktop. Usually you want to put all the your uploaded packages to somewhere in the persistent-home directory (for example: `~/persistent-home/my-tools/`).
+You can [upload](#once-in-the-remote-desktop) your own files (e.g. source code, software packages, dependency libraries, models, etc.) to the remote desktop. 
+Usually you want to put all the your uploaded packages to somewhere in the persistent-home directory (for example: `~/persistent-home/my-tools/`).
 
-That way you can install any package you miss, but only as a normal user (you don't have root privileges in the remote desktop).
+That way you can install any package you miss, but only as a normal user (you don't have root privileges in the remote desktop nor in jobs).
 If your required software package needs to be installed as root, then use the uDocker method (see the next chapter [Running an image with uDocker](#running-an-image-with-udocker)).
 
 ### Install packages with pip
-As the most common packages required in the IA development are python packages, a PyPi mirror has been deployed in the platform and so you can install any popular python package with `pip install ...`.
+As the most common packages required in the AI development are python packages, a PyPi mirror has been deployed in the platform 
+and so you can install any popular python package with `pip install ...`.
 
-The general images in the platform provided by UPV are already configured to use the mirror, but if you need to install some additional package in a specific application image or your own custom image you will have to configure pip to use that mirror in the platform:
+The general images in the platform provided by UPV are already configured to use the mirror, 
+but if you need to install some additional package in a specific application image or your own custom image you will have to configure pip to use that mirror in the platform:
 ```
 mkdir -p $HOME/.config/pip
 echo '[global]
@@ -155,8 +165,7 @@ But it can require other dependecies in that step which may not be satisfied in 
 So in that special cases may be better to build the wheel with the binaries (the .whl file) locally 
 and then upload it to the platform ready to directly install.
 
-Here you can find a practical use case in which the package "pyradiomics" (distributed as source code) is installed:  
-https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/upload-and-install-source-code-python-packages.md
+[Here](usage-guide-other/upload-and-install-source-code-python-packages.md) you can find a practical use case in which the package "pyradiomics" (distributed as source code) is installed.
 
 ### Running an image with uDocker
 Finally this is the last way to install software packages and dependencies.
@@ -164,12 +173,12 @@ This is specially useful when:
  - you need to install something (your algorithm or any tool or dependency) as root
  - you need to install a lot of dependencies and subdependencies which are hard to install (e.g. apt packages)
  - you are developing a platform application and you want to test your image before release
-You can embed your algorithm and all its dependencies in a docker image, upload it to your remote desktop and then run it with uDocker.
+You can embed your algorithm and all its dependencies in a container image, upload it to your remote desktop and then run it with uDocker.
 Let's see it step by step.
 
 First you must "containerize" (aka "dockerize") your application. 
 If you don't know what's that, you can start here: https://docs.docker.com/get-started/.
-Basically you should write a dockerfile and do `docker build -t myApp:1.0 .` within the directory where the dockerfile is.
+Basically you should write a dockerfile and do `docker build -t myApp:1.0 .` within the directory where the Dockerfile is.
 
 For this example, we are going to pull an image already built with: `docker pull alpine:3.20`
 
@@ -188,16 +197,16 @@ udocker run --rm alpine:3.20 echo hello
 You probably want to access to the datasets directory and to your persistent home to write results.
 In that case you should mount those directories with `-v`:
 ```
-udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
-            alpine:3.20 ls -lh /home/chaimeleon/persistent-home
+udocker run --rm -v /home/ds/persistent-home -v /home/ds/datasets -v /mnt/datalake \
+            alpine:3.20 ls -lh /home/ds/persistent-home
 ```
 Note when the `datasets` directory is mounted, the `datalake` directory must be mounted also in order to provide destination to the symlinks.
 
 At the end, usually you will want to run that in a job (with more resources than the desktop) so this is how you can do that with jobman:
 ```
 jobman submit -- "udocker load -i ~/persistent-home/alpine-3.20.tar.gz alpine \
-                  && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
-                             alpine:3.20 ls -lh /home/chaimeleon/persistent-home"
+                  && udocker run --rm -v /home/ds/persistent-home -v /home/ds/datasets -v /mnt/datalake \
+                             alpine:3.20 ls -lh /home/ds/persistent-home"
 ```
 For more details of `jobman` command see the chapter [Jobman client tool](#jobman-client-tool).
 
@@ -206,13 +215,13 @@ and use for the host container one of the images with GPU libraries, i.e. with t
 ```
 jobman submit -r small-gpu -i ubuntu-python:latest-cuda -- \
     "udocker load -i ~/persistent-home/nvidia-cuda-11.8.0-runtime-ubuntu22.04.tar.gz nvidia/cuda \
-     && udocker run --rm -v /home/chaimeleon/persistent-home -v /home/chaimeleon/datasets -v /mnt/datalake \
+     && udocker run --rm -v /home/ds/persistent-home -v /home/ds/datasets -v /mnt/datalake \
      nvidia/cuda:11.8.0-runtime-ubuntu22.04 nvidia-smi"
 ```
 For more details of available resource flavors see the chapter [Resources flavors](#resources-flavors).  
 Note for this last example we use a custom image based on the official nvidia/cuda:11.8.0-runtime-ubuntu22.04, 
 and just adding the missing apt package "nvidia-utils-525" in order to make available the command `nvidia-smi`
-(it's a simple dockerfile you can see [here](https://github.com/chaimeleon-eu/workstation-images/blob/main/usage-guide-other/Dockerfile-custom-image-based-on-nvidia-cuda)).
+(it's a simple dockerfile you can see [here](usage-guide-other/Dockerfile-custom-image-based-on-nvidia-cuda)).
 
 
 ## Hardware resources
@@ -222,10 +231,9 @@ The idea is just use it for interactive applications and testing/debuging your a
 Once you need to launch the execution on the overall dataset (or using a GPU) you should launch a batch job with the "jobman" command (see below).
 
 ## Jobman client tool 
-CHAIMELEON provides a command line tool named "jobman" specifically designed to manage batch processes (jobs). 
-This tool allows the efficient distribution of the computational resources available in CHAIMELEON by launching the workloads as jobs managed by Kubernetes. 
-Each desktop has `jobman` available as a command. 
-There is a basic example of use at the end of the [dataset access guide](https://github.com/chaimeleon-eu/workstation-images/blob/main/ubuntu-python/rootfs/home/chaimeleon/application-examples/dataset-access-guide.ipynb).
+All desktops in the platform provides the command `jobman` specifically designed to manage batch processes (jobs). 
+This tool allows the efficient distribution of the computational resources available in the platform by launching the workloads as jobs managed by Kubernetes. 
+There is a basic example of use at the end of the [dataset access guide](ubuntu-python/rootfs/home/ds/application-examples/dataset-access-guide.ipynb).
 
 You can always see some usage examples executing the command without arguments:
 ```
@@ -247,7 +255,8 @@ Type jobman --help to see a  list of supported commands and more.
 ```
 
 The first examples are shown in the dataset access guide.  
-The last example is to submit a job with the `ubuntu-python` image, using the `latest-cuda` version (important if you want the cuda libraries and tools are included in order to use the GPU) and using the resources flavor (`-r` argument) `small-gpu`.  
+The last example is to submit a job with the `ubuntu-python` image, using the `latest-cuda` version 
+(important if you want the cuda libraries and tools are included in order to use the GPU) and using the resources flavor (`-r` argument) `small-gpu`.  
 All the resources flavors are detailed in the next chapter.
 
 ### Resources flavors
@@ -275,12 +284,10 @@ These are the resources flavors, and the features of each of these are the follo
 
 You can launch batch jobs from your desktop using the Jobman Client tool (jobman) at any time (24x7), taking into account the following points:
  - The queue of Jobman follows a First Input First Output (FIFO) policy by type of resource required.
- - Each user can only have one batch job active (waiting in the queue or running). 
-   As an example, if a user launches a job as small-gpu, s(he) won’t be able to launch another one (no-gpu, small-gpu, medium-gpu or large-gpu) until that job ends or (s)he deletes it.
- - If a user launches a type of batch job and all resources of this type are busy, the job will wait for its execution in the queue until the previous launched jobs targeting the same resource type ends. 
+ - If a user launches a type of batch job and all resources of this type are busy, the job will wait for its execution in the queue 
+   until the previous launched jobs targeting the same resource type ends. 
    Both waiting and running are considered active batch jobs.  
    As an example, if a user launches a batch job targeting a large-gpu resource, and there are 5 large-gpu jobs running at this moment, 
-   the new job will be enqueued and considered active until one large-gpu resource is released.
+   the new job will be enqueued (and considered active) until one large-gpu resource is released.
  - Resources used by jobs launched by jobman are independent of those assigned to the desktops. 
-   Thus, a participant can always employ his/her respective desktop for executing processes locally without launching through jobman, even if s(he) already has an active batch job launched with jobman.
 

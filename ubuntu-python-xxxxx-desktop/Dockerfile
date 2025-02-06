@@ -11,12 +11,11 @@ ARG TARGET_VERSION="unknown"
 #ARG BASE_VERSION="unknown"
 #ARG TARGET_VERSION="unknown"
 
-FROM harbor.chaimeleon-eu.i3m.upv.es/chaimeleon-library-batch/ubuntu-python-${AI_TOOL}:${BASE_VERSION}${CUDA_VERSION}
+FROM harbor.eucaim-node.i3m.upv.es/library-batch/ubuntu-python-${AI_TOOL}:${BASE_VERSION}${CUDA_VERSION}
 
 LABEL name="ubuntu-python-${AI_TOOL}-desktop"
 LABEL version="${TARGET_VERSION}${CUDA_VERSION}"
 LABEL description="Container with ubuntu 22.04, python 3.10.6, ${AI_TOOL}, ${CUDA_VERSION}, lxde desktop, vnc and ssh services."
-LABEL maintainer="J. Damian Segrelles Quilis (dquilis@dsic.upv.es)"
 
 ############## Things done by the root user ##############
 USER root
@@ -24,7 +23,7 @@ USER root
 
 # libxkbcommon-x11-0, libxcb-icccm4, libxcb-image0, libxcb-keysyms1, libxcb-randr0, libxcb-render-util0 are required by itk-snap
 # lxhotkey-plugin-openbox required to fix error opening the global hotkeys configuration window
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y --no-install-recommends \
                 software-properties-common curl apache2-utils && \
@@ -48,12 +47,10 @@ RUN chmod +x /bin/tini
 
 COPY rootfs/etc /etc/
 COPY rootfs/usr /usr/ 
-COPY --chown=chaimeleon:chaimeleon rootfs/home/chaimeleon /home/chaimeleon/
-RUN chmod +x /home/chaimeleon/.init/startup.sh && \
-    chmod +x /home/chaimeleon/.local/bin/install-jobman && \
+COPY --chown=ds:ds rootfs/home/ds /home/ds/
+RUN chmod +x /home/ds/.init/startup.sh && \
+    chmod +x /home/ds/.local/bin/install-jobman && \
     chmod +x /usr/local/bin/xvfb.sh
-
-RUN pip3 install --no-cache-dir guacli
 
 EXPOSE 5900
 
@@ -64,8 +61,8 @@ RUN apt update && \
     apt autoremove -y && \
     rm -rf /var/lib/apt/lists/*
         
-COPY configure_sshd.sh /home/chaimeleon/.init/configure_sshd.sh
-RUN chmod +x /home/chaimeleon/.init/configure_sshd.sh
+COPY configure_sshd.sh /home/ds/.init/configure_sshd.sh
+RUN chmod +x /home/ds/.init/configure_sshd.sh
 
 EXPOSE 2222
 
@@ -83,7 +80,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 #   && npm install \
 #   && npx tsc \
 #   && ln -s /opt/jobman/bin/jobman /usr/bin/
-#   && cp src/settings.json /home/chaimeleon/.jobman/
+#   && cp src/settings.json /home/ds/.jobman/
 
 ########## itk-snap installation
 RUN cd /tmp \
@@ -112,36 +109,30 @@ RUN apt update && \
 ########## helm installation (required for the script delete-this-desktop)
 RUN wget https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz -O helm.tgz \
     && tar xzf helm.tgz \
-    && mv linux-amd64/helm /home/chaimeleon/.local/bin/ \
+    && mv linux-amd64/helm /home/ds/.local/bin/ \
     && rm -rf helm.tgz linux-amd64
 
 ########## install delete-this-desktop
-RUN chmod +x /home/chaimeleon/.local/bin/delete-this-desktop /usr/bin/lxde-logout
+RUN chmod +x /home/ds/.local/bin/delete-this-desktop /usr/bin/lxde-logout
 
 ########## apply the new mime types defined in /usr/share/mime/packages
 RUN update-mime-database /usr/share/mime
 
 
 ############### Now change to normal user ################
-USER chaimeleon:chaimeleon
-WORKDIR /home/chaimeleon
+USER ds:ds
+WORKDIR /home/ds
 
-ENV SUPERVISOR_CONF_FILE=/home/chaimeleon/.supervisor/conf.d/supervisord.conf
-RUN mkdir -p /home/chaimeleon/.supervisor/conf.d/ && \
+ENV SUPERVISOR_CONF_FILE=/home/ds/.supervisor/conf.d/supervisord.conf
+RUN mkdir -p /home/ds/.supervisor/conf.d/ && \
     cp /etc/supervisor/conf.d/supervisord.conf $SUPERVISOR_CONF_FILE
 
 # default values to environment variables which can be configured
-ENV VNC_HOST= \
-    VNC_PASSWORD= \
+ENV VNC_PASSWORD= \
     PASSWORD= \
     X11VNC_ARGS= \
     OPENBOX_ARGS= \
-    RESOLUTION= \
-    GUACAMOLE_URL= \
-    GUACAMOLE_USER= \
-    GUACAMOLE_PASSWORD= \
-    GUACD_HOST= \
-    GUACAMOLE_CONNECTION_NAME=
+    RESOLUTION=
 
 ########## SSH service default values to environment variables which can be configured
 ENV SSH_ENABLE_PASSWORD_AUTH= \
@@ -150,5 +141,5 @@ ENV SSH_ENABLE_PASSWORD_AUTH= \
     DISABLE_SFTP=
     
 #HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://127.0.0.1:6079/api/health
-ENTRYPOINT ["/home/chaimeleon/.init/startup.sh"]
+ENTRYPOINT ["/home/ds/.init/startup.sh"]
 

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=itk-snap-3.6
+Comment=Open biomedical images and do segmentations
+Exec=itksnap-3.6
+Path=/home/ds

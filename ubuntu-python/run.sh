@@ -7,16 +7,16 @@ if curl --connect-timeout 4 pypi.org 2> /dev/null; then
 fi
 
 # The usual path for binaries of apps installed by the user
-export PATH=$PATH:/home/chaimeleon/.local/bin
+export PATH=$PATH:/home/ds/.local/bin
 
-if [ -f /home/chaimeleon/persistent-shared-folder/apps/upload-result/upload-result ]; then
-    /home/chaimeleon/.local/bin/install-upload-result > /dev/null 2>&1
+if [ -f /home/ds/persistent-shared-folder/apps/upload-result/upload-result ]; then
+    /home/ds/.local/bin/install-upload-result > /dev/null 2>&1
 fi
 
 # Execute the user custom init script if exists
-if [ -f /home/chaimeleon/persistent-home/init.sh ]; then
+if [ -f /home/ds/persistent-home/init.sh ]; then
     echo "### Executing the user custom init script ###"
-    bash /home/chaimeleon/persistent-home/init.sh
+    bash /home/ds/persistent-home/init.sh
     echo "### End of user custom init script ###"
 fi
 

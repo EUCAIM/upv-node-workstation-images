@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=dicom2nifti
+Comment=Convert dicom files to nifti
+Exec=dicom2nifti --help
+Terminal=true
+Path=/home/ds

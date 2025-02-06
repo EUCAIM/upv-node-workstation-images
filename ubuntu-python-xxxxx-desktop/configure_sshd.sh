@@ -12,8 +12,8 @@ echo "> Setting up SSHD..."
 #fi
 
 #https://www.golinuxcloud.com/run-sshd-as-non-root-user-without-sudo/
-mkdir -p /home/chaimeleon/.custom_ssh
-SSHD_CONFIG_FILE=/home/chaimeleon/.custom_ssh/sshd_config
+mkdir -p /home/ds/.custom_ssh
+SSHD_CONFIG_FILE=/home/ds/.custom_ssh/sshd_config
 ALGORITHMS="rsa ecdsa ed25519"
 
 if [ $(whoami) == 'root' ]; then 
@@ -25,7 +25,7 @@ Port 2222
 AuthorizedKeysFile  .ssh/authorized_keys
 ChallengeResponseAuthentication no
 UsePAM yes
-PidFile /home/chaimeleon/.custom_ssh/sshd.pid
+PidFile /home/ds/.custom_ssh/sshd.pid
 AcceptEnv LANG LC_*
 # UsePrivilegeSeparation no
 HostKeyAlgorithms rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,ssh-rsa,ssh-dss
@@ -56,9 +56,9 @@ set_hostkeys() {
     done
 }
 
-create_hostkeys /home/chaimeleon/.custom_ssh
-print_hostkeys_fingerprints /home/chaimeleon/.custom_ssh
-set_hostkeys /home/chaimeleon/.custom_ssh 
+create_hostkeys /home/ds/.custom_ssh
+print_hostkeys_fingerprints /home/ds/.custom_ssh
+set_hostkeys /home/ds/.custom_ssh 
 
 # PasswordAuthentication (disabled by default)
 if [[ "${SSH_ENABLE_PASSWORD_AUTH}" == "true" ]]; then
@@ -87,7 +87,7 @@ fi
 echo "
 [program:sshd]
 priority=25
-command=/usr/sbin/sshd -D -e -f $SSHD_CONFIG_FILE -E /home/chaimeleon/.custom_ssh/sshd.log
+command=/usr/sbin/sshd -D -e -f $SSHD_CONFIG_FILE -E /home/ds/.custom_ssh/sshd.log
 " >> $SUPERVISOR_CONF_FILE
 
 #command=/usr/sbin/sshd -D -e -f /etc/ssh/sshd_config
