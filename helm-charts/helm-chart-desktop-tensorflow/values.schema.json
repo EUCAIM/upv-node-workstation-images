@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "datasets_list": {
+      "type": "string",
+      "title": "Dataset list",
+      "description": "A comma separated list of the datasets that will be available at the container. (It can be empty)",
+      "form": true
+    }
+  }
+}

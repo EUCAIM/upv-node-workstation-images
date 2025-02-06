@@ -1,0 +1,14 @@
+# Default values for the chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+datasets_list: ""
+
+requests: 
+  gpu: false
+  cpu: "1"
+  memory: "4Gi"
+
+configmaps:
+  chaimeleon: "chaimeleon"
+

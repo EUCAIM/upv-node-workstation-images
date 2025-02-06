@@ -1,0 +1,6 @@
+# Default values for desktop-tensorflow.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+datasets_list: ""
+

@@ -1,0 +1,28 @@
+apiVersion: v2
+
+name: desktop-pytorch
+# Short description (can be extended in the README.md)
+description: Workstation with pyTorch and graphical desktop environment
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: "2.3.13"
+
+# This is the version number of the application being deployed.
+# It is used for indicate the tag of the image to pull.
+appVersion: "3.16"
+
+home: https://github.com/EUCAIM/upv-node-workstation-images/tree/main/helm-charts/helm-chart-desktop-pytorch
+icon: https://raw.githubusercontent.com/EUCAIM/upv-node-workstation-images/master/helm-charts/helm-chart-desktop-pytorch/resources/logo.png
+
+sources:
+# - http://eucaim-node.i3m.upv.es/dataset-service/output-files/desktop-pytorch-2.3.13.tgz
+  - https://github.com/eucaim-node/upv-node-workstation-images
+  - https://pytorch.org/docs
+  - https://guacamole.apache.org/doc/gug/using-guacamole.html
+
+maintainers: 
+  - name: I3M-UPV
+    email: security.eucaim-node@i3m.upv.es

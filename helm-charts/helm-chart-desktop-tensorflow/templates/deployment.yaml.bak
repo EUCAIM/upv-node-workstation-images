@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "desktop-tensorflow.fullname" . }}"
+  annotations: 
+    {{- include "platform.annotations" . | nindent 4 }}
+  labels:
+    {{- include "desktop-tensorflow.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ include "desktop-tensorflow.fullname" . }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ include "desktop-tensorflow.fullname" . }}"
+    spec:
+      priorityClassName: processing-applications
+      containers:
+      - name: {{ .Chart.Name }}
+        imagePullPolicy: IfNotPresent
+        {{- if .Values.requests.gpu }}
+        image: "{{ include "platform.library-url" . }}/ubuntu-python-tensorflow-desktop:{{ .Chart.AppVersion }}cuda11"
+        {{- else }}
+        image: "{{ include "platform.library-url" . }}/ubuntu-python-tensorflow-desktop:{{ .Chart.AppVersion }}"
+        {{- end }}
+        resources:
+          requests:
+            memory: "{{ .Values.requests.memory }}"
+            cpu: "{{ .Values.requests.cpu }}"
+        {{- if .Values.requests.gpu }}
+            nvidia.com/gpu: 1
+          limits:
+            nvidia.com/gpu: 1
+        {{- end }}
+
+        ports:
+          - containerPort: 2222
+            name: sshd
+          - containerPort: 5900
+            name: vnc-gui
+        env:
+          # password for "ds" (OS and SSH) user
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "desktop-tensorflow.fullname" . }}"
+                key: container-password
+
+          # password for VNC access (empty username)
+          - name: VNC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "desktop-tensorflow.fullname" . }}"
+                key: container-password
+
+          # required by jobman
+          - name: DATASETS_LIST
+            value: "{{ .Values.datasets_list }}"
+
+          # required by upload-result
+          - name: EXTERNAL_SHARING_SERVICE_URL
+            valueFrom:
+              secretKeyRef:
+                name: "external-sharing-service-auth"
+                key: url
+          - name: EXTERNAL_SHARING_SERVICE_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: "external-sharing-service-auth"
+                key: token
+
+          # required by delete-this-desktop 
+          - name: HELM_APP_NAME
+            value: "{{ .Release.Name }}"
+
+          - name: SSH_ENABLE_PASSWORD_AUTH
+            value: "true"
+          - name: GATEWAY_PORTS
+            value: "true"
+          - name: TCP_FORWARDING
+            value: "true"

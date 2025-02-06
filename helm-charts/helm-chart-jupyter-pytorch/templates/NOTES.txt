@@ -1,0 +1,27 @@
+
+When the application is ready it will be accessible via Guacamole in the following URL: 
+  {{ include "platform.guacamole-url" . }}
+
+There should be a connection created for this desktop with the following name: 
+ + **{{ include "jupyter-pytorch.connectionName" . }}**
+It can take few seconds to appear (refresh the page if you do not see it).
+
+**IMPORTANT:** This desktop may be removed automatically if you don't connect to it for more than 7 days.
+               You should write all you want to save (algorithms, results of your jobs) in persistent-home (see below).
+
+Once in the remote desktop, a browser should be automatically opened with Jupyter Notebooks.
+If you close it, there is a shortcut in the desktop to open it again.
+
+And remember...
+
+    To show/hide the Guacamole menu: CTRL+SHIFT+ALT
+
+    In the file explorer of Jupyter or Ubuntu desktop, there will be three important directories:
+     - {{ include "platform.datasets.mount_point" . }}
+       [All the datasets you selected to work with]
+
+     - {{ include "platform.persistent_home.mount_point" . }}
+       [Private persistent storage: for your algorithms, results and whatever you need for the work]
+
+     - {{ include "platform.persistent_shared_folder.mount_point" . }}
+        [Public storage where you can share files with the other users in the platform]

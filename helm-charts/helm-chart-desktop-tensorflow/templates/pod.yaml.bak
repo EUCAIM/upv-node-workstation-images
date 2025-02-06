@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "desktop-tensorflow.fullname" . }}
+  labels:
+    {{- include "desktop-tensorflow.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+  securityContext:
+{{- if ne .Values.ceph.user "XXXXXXXXXX" }}
+    runAsUser: {{ .Values.user.uid }}
+    runAsGroup: {{ .Values.user.gid }}
+    supplementalGroups:
+    {{- toYaml .Values.dataset.gid_list  | nindent 6 }}
+{{- end }}
+  containers:
+    - name: {{ .Chart.Name }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      #image: "primage/interactive:ub1804_one2002_tf2.3.1_gpu_desktop_vnc_sshd"
+      image: "chaimeleon-eu.i3m.upv.es:10443/chaimeleon-library/ubuntu_python_tensorflow_gpu_desktop_vnc_sshd:{{ .Chart.AppVersion }}"
+      imagePullPolicy: IfNotPresent
+{{- if .Values.requestGPU }}
+      resources:
+        limits:
+          nvidia.com/gpu: 1 # requesting 1 GPU
+{{- end }}
+      volumeMounts:
+{{- if .Values.persistentUserDataVolume }}
+        - mountPath: "/home/chaimeleon/persistent-home"
+          name: persistent-user-data-volume
+{{- end }}
+{{- if ne .Values.ceph.user "XXXXXXXXXX" }}
+        - mountPath: "{{ .Values.datasets.rootfs_mount_dir}}"
+          name: rootfs
+        - mountPath: "{{ .Values.dataset.mount_point}}"
+          name: dataset
+{{- end }}
+      ports:
+        - containerPort: 2222
+          name: sshd
+        - containerPort: 5900
+          name: vnc
+      env:
+        # password for "chaimeleon" (OS and SSH) user
+        - name: PASSWORD
+          value: "{{ .Values.user.password }}"
+
+        # password for VNC access (empty username)
+        - name: VNC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "desktop-tensorflow.fullname" . }}"
+              key: vnc_password
+
+{{- if .Values.guacamoleConnectionCreation.guacamoleUserSecretName }}
+        # Parameters required for automatically create the connection in Guacamole for this container
+        - name: GUACAMOLE_URL
+          value: "{{ .Values.guacamoleConnectionCreation.guacamoleUrl }}"
+        - name: GUACD_HOST
+          value: "{{ .Values.guacamoleConnectionCreation.guacdHost }}"
+        - name: GUACAMOLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.guacamoleConnectionCreation.guacamoleUserSecretName }}"
+              key: user
+        - name: GUACAMOLE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.guacamoleConnectionCreation.guacamoleUserSecretName }}"
+              key: password
+        - name: GUACAMOLE_CONNECTION_NAME
+          value: "{{- include "desktop-tensorflow.connectionName" . }}"
+{{- end }}
+
+        - name: SSH_ENABLE_PASSWORD_AUTH
+          value: "true"
+        - name: GATEWAY_PORTS
+          value: "true"
+        - name: TCP_FORWARDING
+          value: "true"
+
+  volumes:
+{{- if .Values.persistentUserDataVolume }}
+    - name: persistent-user-data-volume
+      persistentVolumeClaim:
+        claimName: "{{ .Values.persistentUserDataVolume }}"
+{{- end }}
+{{- if ne .Values.ceph.user "XXXXXXXXXX" }}
+    - name: rootfs
+      cephfs:
+        path: "{{ .Values.datasets.rootfs_dir }}"
+        monitors:
+        {{- toYaml .Values.datasets.monitor_list | nindent 8 }}
+        user: "{{ .Values.ceph.user }}"
+        secretRef:
+          name: "{{ include "desktop-tensorflow.fullname" . }}"
+        readOnly: true
+    - name: dataset
+      cephfs:
+        path: "{{ .Values.datasets.datasets_dir }}/{{ .Values.dataset.id }}"
+        monitors:
+        {{- toYaml .Values.datasets.monitor_list | nindent 8 }}
+        user: "{{ .Values.ceph.user }}"
+        secretRef:
+          name: "{{ include "desktop-tensorflow.fullname" . }}"
+        readOnly: true  
+{{- end }}

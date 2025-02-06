@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "jupyter-pytorch.fullname" . }}"
+  annotations: 
+    {{- include "platform.annotations" . | nindent 4 }}
+  labels:
+    {{- include "jupyter-pytorch.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ include "jupyter-pytorch.fullname" . }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ include "jupyter-pytorch.fullname" . }}"
+    spec:
+      priorityClassName: processing-applications
+      containers:
+      - name: {{ .Chart.Name }}
+        imagePullPolicy: IfNotPresent
+        image: "{{ include "platform.library-url" . }}/ubuntu-python-pytorch-desktop-jupyter:{{ .Chart.AppVersion }}"        
+        ports:
+          - containerPort: 2222
+            name: sshd
+          - containerPort: 5900
+            name: vnc-gui
+        env:
+          # password for "ds" (OS and SSH) user
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "jupyter-pytorch.fullname" . }}"
+                key: container-password
+
+          # password for VNC access (empty username)
+          - name: VNC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ include "jupyter-pytorch.fullname" . }}"
+                key: container-password
+
+          # required by jobman
+          - name: DATASETS_LIST
+            value: "{{ .Values.datasets_list }}"
+          - name: JOBMAN_SERVICE_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: "jobman-service-auth"
+                key: token
+
+          # required by upload-result
+          - name: EXTERNAL_SHARING_SERVICE_URL
+            valueFrom:
+              secretKeyRef:
+                name: "external-sharing-service-auth"
+                key: url
+          - name: EXTERNAL_SHARING_SERVICE_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: "external-sharing-service-auth"
+                key: token
+
+          # required by delete-this-desktop 
+          - name: HELM_APP_NAME
+            value: "{{ .Release.Name }}"
+
+          - name: SSH_ENABLE_PASSWORD_AUTH
+            value: "true"
+          - name: GATEWAY_PORTS
+            value: "true"
+          - name: TCP_FORWARDING
+            value: "true"
