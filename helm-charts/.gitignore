@@ -1,3 +1,6 @@
 *.tgz
 *.private.sh
 history/
+chart-catalogue/
+chart-catalogue-upload-ssh-key-path
+chart-catalogue-upload-ssh-destination-path

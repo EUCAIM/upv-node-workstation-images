@@ -63,7 +63,7 @@ If you don't know yet how to execute you application or how your application sho
 ### Testing your application as an image in the platform
 Before the integration of your application as an image in the internal repository of the platform you can try to build it locally in your computer, upload and run it in the remote desktop.  
 If you don't know yet how to do that see 
-[here](usage-guide.md#running-an-image-with-udocker)
+[here](usage-guide.md#running-an-image-with-udocker).
 
 ## How to design a workstation image for the platform
 If you already tested your application as an image in the platform as suggested at the end of the previous chapter, you have done a big part of the work.
@@ -233,7 +233,7 @@ There are two types of image depending on how the user interact with your applic
  - Interactive, GUI or Web UI.  
    If your app has a user interface intended for the user to interact with, then you need to install a desktop environment, details in the next chapter.  
    If your app has a web user interface, then you need to install a desktop environment and also a web browser 
-   to let the user access to your web service running in the same machine ("http://localhost", the remote localhost)[^note].  
+   to let the user access to your web service running in the same machine (`http://localhost`, the remote localhost)[^note].  
    In order to use interactive images, **a helm chart must be created** (see the [helm chart guide](helm-charts/README.md)). 
    And once uploaded to the charts repository, a new application will appear in the platform's apps catalog and the user will be able to deploy a remote desktop with that image.
    
