@@ -19,7 +19,7 @@ You will be interactively asked to select which image to build, with or without 
 
 ## Other images in the platform
 Check out the Application Catalogue to see all the images available in the platform:  
-https://github.com/chaimeleon-eu/application-catalogue/blob/main/README.md (¿?)
+https://github.com/EUCAIM/upv-node-application-catalogue/blob/main/README.md
 
 If you want to take one as an example for the integration of your application, you may want to select one with public dockerfile, 
 so you will be able to see all the details and even build by yourself.
@@ -31,7 +31,7 @@ which is a guide for developers to design the image.
 
 Once you have the dockerfile describing your image, you have to made it available (with all the files needed for building the image) to us in a public or private repository, 
 in [Github](https://github.com/new) or any other source code repository provider. 
-And finally create a request in the [Application Catalogue](¿?).
+And finally create a request in the [Application Catalogue](https://github.com/EUCAIM/upv-node-application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
 
 We will check the image is according to the guide and then we will build and upload it to the platform image repository.
 So the users will see it in: 
@@ -39,12 +39,12 @@ So the users will see it in:
    ![jobman images](img/jobman-images.png)
  - the catalog of applications to deploy, if your application is of type interactive
    ![app dashboard catalog](img/app-dashboard-catalog.png)
- - obviously also in the [Application Catalogue](¿?)
+ - obviously also in the [Application Catalogue](https://github.com/EUCAIM/upv-node-application-catalogue/blob/main/README.md)
 
 The types of image, the _jobman_ command and the catalog are explained in the next chapters.
 
 **For notifying new images or changes in your image that require to rebuild it**, 
-please create a request in the [Application Catalogue](¿?).
+please create a request in the [Application Catalogue](https://github.com/EUCAIM/upv-node-application-catalogue/tree/main?tab=readme-ov-file#request-to-add-or-update-an-application).
 It is recommended to add the label `version` in the dockerfile (see [Labels](#labels)), increment it on every change and include the new version number in the request.
 
 ### First of all, check out the usage guide
