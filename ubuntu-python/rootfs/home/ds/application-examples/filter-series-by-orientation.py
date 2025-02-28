@@ -15,7 +15,7 @@ class Orientation(Enum):
 
 def extract_orientation(image_orientation: pydicom.multival.MultiValue):
     orientation = Orientation.UNDEFINED
-    if image_orientation is not np.nan:
+    if image_orientation is not np.nan and image_orientation is not None:
         row_cosines = np.array((image_orientation[0], image_orientation[1], image_orientation[2]), 'float32')
         col_cosines = np.array((image_orientation[3], image_orientation[4], image_orientation[5]), 'float32')
         cross_product = np.abs(np.cross(row_cosines, col_cosines))
