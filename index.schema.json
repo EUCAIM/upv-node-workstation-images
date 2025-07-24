@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/chaimeleon-eu/dataset-service/blob/main/index.schema.json",
+  "$id": "https://github.com/EUCAIM/upv-node-workstation-images/blob/main/index.schema.json",
   "title": "Dataset Index",
   "description": "The index.json is a file with a list of the studies composing the dataset (and series selected for each study). The index file should be used for walking through the contents of the dataset: images (as DICOM files) and clinical data (as json objects).",
   "type": "array",
