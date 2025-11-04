@@ -74,14 +74,14 @@ USER ds:ds
 # Install udocker to allow the user to launch Docker containers without being root
 RUN mkdir -p /home/ds/.local/lib \
     && cd /home/ds/.local/lib \
-    && curl -L https://github.com/indigo-dc/udocker/releases/download/1.3.9/udocker-1.3.9.tar.gz > udocker-1.3.9.tar.gz \
-    && tar zxvf udocker-1.3.9.tar.gz \
-    && export PATH=/home/ds/.local/lib/udocker-1.3.9/udocker:$PATH \
-    && sed -i '1s/python/python3/' /home/ds/.local/lib/udocker-1.3.9/udocker/maincmd.py \
+    && curl -L https://github.com/indigo-dc/udocker/releases/download/1.3.17/udocker-1.3.17.tar.gz > udocker-1.3.17.tar.gz \
+    && tar zxvf udocker-1.3.17.tar.gz \
+    && export PATH=/home/ds/.local/lib/udocker-1.3.17/udocker:$PATH \
+    && sed -i '1s/python/python3/' /home/ds/.local/lib/udocker-1.3.17/udocker/maincmd.py \
     && udocker install \
-    && rm udocker-1.3.9.tar.gz
+    && rm udocker-1.3.17.tar.gz
 
-ENV PATH="${PATH}:/home/ds/.local/lib/udocker-1.3.9/udocker"
+ENV PATH="${PATH}:/home/ds/.local/lib/udocker-1.3.17/udocker"
 
 ## Enable autocompletion
 #RUN echo "source /etc/bash_completion" >> /home/ds/.bashrc
