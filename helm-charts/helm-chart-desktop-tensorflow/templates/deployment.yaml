@@ -20,7 +20,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         imagePullPolicy: IfNotPresent
-        image: "{{ include "platform.library-url" . }}/ubuntu-python-tensorflow-desktop:{{ .Chart.AppVersion }}"
+        image: "{{ include "platform.public-library-url" . }}/ubuntu-python-tensorflow-desktop:{{ .Chart.AppVersion }}"
         ports:
           - containerPort: 2222
             name: sshd

@@ -62,6 +62,11 @@ eucaim-node.i3m.upv.es
 harbor.eucaim-node.i3m.upv.es:5000/library
 {{- end -}}
 
+{{/* Obtain the url of the platform's public image library. */}}
+{{- define "platform.public-library-url" -}}
+harbor.eucaim-node.i3m.upv.es/library-public
+{{- end -}}
+
 {{/* Obtain the url of the platform's dockerhub proxy. */}}
 {{- define "platform.dockerhub-proxy" -}}
 harbor.eucaim-node.i3m.upv.es/dockerhub

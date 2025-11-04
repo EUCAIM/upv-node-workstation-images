@@ -34,6 +34,17 @@ echo "======================== Generating index from chart-catalogue directory"
 helm repo index chart-catalogue
 
 echo "======================== UPLOADING"
+
+if [ ! -f chart-catalogue-upload-ssh-destination-path ]; then
+    echo "The file chart-catalogue-upload-ssh-destination-path was not found."
+    echo "Create it containing the ssh destination path if you want to upload the catalogue."
+    exit
+fi
+if [ ! -f chart-catalogue-upload-ssh-key-path ]; then
+    echo "The file chart-catalogue-upload-ssh-key-path was not found."
+    echo "Create it containing the path to the ssh key file if you want to upload the catalogue."
+    exit
+fi
 SSH_KEY=$(cat chart-catalogue-upload-ssh-key-path)
 SSH_DESTINATION=$(cat chart-catalogue-upload-ssh-destination-path)
 scp -i $SSH_KEY -r chart-catalogue/* $SSH_DESTINATION
