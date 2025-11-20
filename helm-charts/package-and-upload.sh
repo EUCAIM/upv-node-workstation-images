@@ -27,7 +27,8 @@ done
 #  helm push $chart oci://harbor.eucaim-node.i3m.upv.es/charts/
 #done
 
-echo "======================== Moving to local chart-catalogue"
+echo "======================== Creating chart-catalogue dir if not exists and moving charts to it"
+mkdir -p chart-catalogue
 mv -v *.tgz chart-catalogue/
 
 echo "======================== Generating index from chart-catalogue directory"
